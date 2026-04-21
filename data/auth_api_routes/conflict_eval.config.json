@@ -56,5 +56,86 @@
     "/apps/web/src/app/api/auth/otp/send/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Login route uses rate limiting, email normalization, and argon2 verify with timing attack protection",
+      "source": "base"
+    },
+    {
+      "description": "Login route has account lockout via login_attempts table (5 failures = 15min lock)",
+      "source": "base"
+    },
+    {
+      "description": "Login route returns generic 'Invalid email or password' error (no user enumeration)",
+      "source": "base"
+    },
+    {
+      "description": "Login route creates session with JWT token, refresh token, and ip_metadata",
+      "source": "base"
+    },
+    {
+      "description": "Login route resets failed login attempts on successful authentication",
+      "source": "base"
+    },
+    {
+      "description": "Signup validates email format (regex), length (254 max), and password length (min/max)",
+      "source": "base"
+    },
+    {
+      "description": "Signup sanitizes name by removing <>'\"& characters and truncating to 100 chars",
+      "source": "base"
+    },
+    {
+      "description": "Signup creates user with driver role and handles duplicate key constraint (23505)",
+      "source": "base"
+    },
+    {
+      "description": "OTP route validates E.164 phone format, generates 6-digit OTP, stores in sessions table",
+      "source": "base"
+    },
+    {
+      "description": "OTP route includes debug_otp only in non-production environment",
+      "source": "base"
+    },
+    {
+      "description": "Layout is a 'use client' component with QueryClient and staleTime/retry config",
+      "source": "base"
+    },
+    {
+      "description": "Login imports only { verify } from argon2 (not hash -- hash is only needed in signup)",
+      "source": "ours"
+    },
+    {
+      "description": "Layout includes <html> and <body> tags wrapping the content",
+      "source": "ours"
+    },
+    {
+      "description": "Signup has exactly one crypto import (no duplicate)",
+      "source": "ours"
+    },
+    {
+      "description": "Layout wraps children in ErrorBoundary with name='RootLayout'",
+      "source": "theirs"
+    },
+    {
+      "description": "Signup creates driver_profiles row with legal_name, dob, address (US default), status 'pending'",
+      "source": "theirs"
+    },
+    {
+      "description": "Signup has error cleanup that deletes user if driver profile creation fails",
+      "source": "theirs"
+    },
+    {
+      "description": "OTP response includes success: true, message: 'OTP sent successfully'",
+      "source": "theirs"
+    },
+    {
+      "description": "OTP dev response includes warning about debug exposure",
+      "source": "theirs"
+    },
+    {
+      "description": "OTP logging masks phone number to last 4 digits for PII safety",
+      "source": "theirs"
+    }
+  ]
 }

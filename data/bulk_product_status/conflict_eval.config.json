@@ -139,5 +139,122 @@
     "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Preview route returns 403 when user lacks MANAGE_PRODUCTS permission",
+      "source": "base"
+    },
+    {
+      "description": "Preview route returns 400 for invalid target status",
+      "source": "base"
+    },
+    {
+      "description": "Preview route returns 400 when no product ids provided",
+      "source": "base"
+    },
+    {
+      "description": "Preview route includes 'hidden' in ALLOWED_TARGETS",
+      "source": "theirs"
+    },
+    {
+      "description": "Preview route normalizeTarget maps 'hidden' to 'draft'",
+      "source": "theirs"
+    },
+    {
+      "description": "Preview route normalizeTarget maps 'pending' to 'pending_review'",
+      "source": "theirs"
+    },
+    {
+      "description": "Preview route currentStatus uses normalizeTarget for status normalization",
+      "source": "theirs"
+    },
+    {
+      "description": "Apply route returns 403 when user lacks MANAGE_PRODUCTS permission",
+      "source": "base"
+    },
+    {
+      "description": "Apply route returns 400 for invalid target status",
+      "source": "base"
+    },
+    {
+      "description": "Apply route returns 400 when no product ids provided",
+      "source": "base"
+    },
+    {
+      "description": "Apply route includes 'hidden' in ALLOWED_TARGETS",
+      "source": "theirs"
+    },
+    {
+      "description": "Apply route uses normalizeTarget function for target normalization",
+      "source": "theirs"
+    },
+    {
+      "description": "Apply route uses COALESCE+NULLIF+BTRIM for product_status in SQL from_status CASE",
+      "source": "theirs"
+    },
+    {
+      "description": "mapTargetToFields maps active to is_active=true pending_review=false",
+      "source": "base"
+    },
+    {
+      "description": "mapTargetToFields maps pending_review to is_active=false pending_review=true",
+      "source": "base"
+    },
+    {
+      "description": "mapTargetToFields maps quarantine to is_active=false pending_review=false",
+      "source": "base"
+    },
+    {
+      "description": "mapTargetToFields defaults to draft with is_active=false pending_review=false",
+      "source": "base"
+    },
+    {
+      "description": "Modal exports BulkStatusModal as default",
+      "source": "base"
+    },
+    {
+      "description": "Modal includes all five standard STATUS_OPTIONS without duplicates",
+      "source": "base"
+    },
+    {
+      "description": "Modal renders preview and apply buttons",
+      "source": "base"
+    },
+    {
+      "description": "Modal has a reason input field",
+      "source": "base"
+    },
+    {
+      "description": "Modal clamps product IDs with a 20000 cap",
+      "source": "base"
+    },
+    {
+      "description": "Modal auto-previews when modal opens or target changes",
+      "source": "base"
+    },
+    {
+      "description": "Modal shows blocked and warnings panels in preview",
+      "source": "base"
+    },
+    {
+      "description": "Modal queries confirmation history after successful apply via useQuery",
+      "source": "theirs"
+    },
+    {
+      "description": "Modal shows product history entries table with columns in success state",
+      "source": "theirs"
+    },
+    {
+      "description": "Modal includes a Copy button for bulk operation ID using navigator.clipboard",
+      "source": "theirs"
+    },
+    {
+      "description": "Modal renders separate Done and Close buttons conditionally",
+      "source": "theirs"
+    },
+    {
+      "description": "Modal shows bulk operation ID with font-mono styling",
+      "source": "ours"
+    }
+  ]
 }

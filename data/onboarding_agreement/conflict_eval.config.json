@@ -104,5 +104,176 @@
     "/apps/web/src/app/api/platform/leads/convert/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "id": "base-form-state",
+      "description": "Onboard page manages form with fullName, password, confirmPassword, dealership fields, agreement fields, and invoicePreference",
+      "category": "base"
+    },
+    {
+      "id": "base-validation",
+      "description": "Validates password >= 8 chars, password === confirmPassword, agreementAccepted, agreementPrintedName non-empty",
+      "category": "base"
+    },
+    {
+      "id": "base-submission",
+      "description": "POSTs to /api/onboarding/accept with token, password, dealership details, and agreement data",
+      "category": "base"
+    },
+    {
+      "id": "base-resolved-monthly-fee",
+      "description": "Prefers acceptedQuote total_monthly over invitation monthly_price for resolvedMonthlyFee",
+      "category": "base"
+    },
+    {
+      "id": "base-page-states",
+      "description": "Page shows loading, missing token, error, success (Setup complete), and hasStarted gate states",
+      "category": "base"
+    },
+    {
+      "id": "base-inventory-options",
+      "description": "Defines INVENTORY_SIZE_OPTIONS from 0-25 to 251+ vehicles",
+      "category": "base"
+    },
+    {
+      "id": "base-dms-sync",
+      "description": "Has wantsDmsSync checkbox and currentDmsProvider input",
+      "category": "base"
+    },
+    {
+      "id": "base-preview-token-validation",
+      "description": "Agreement preview route returns 400 for missing token and 404 for invalid/expired invitation",
+      "category": "base"
+    },
+    {
+      "id": "base-pricing-quotes",
+      "description": "Agreement preview queries pricing_quotes for accepted quotes",
+      "category": "base"
+    },
+    {
+      "id": "base-build-html",
+      "description": "Agreement preview calls buildServiceAgreementHtml to generate agreement",
+      "category": "base"
+    },
+    {
+      "id": "base-invitations-auth",
+      "description": "Invitations route requires admin role and validates email + company name",
+      "category": "base"
+    },
+    {
+      "id": "base-token-generation",
+      "description": "Uses crypto.randomBytes(32) for secure token generation",
+      "category": "base"
+    },
+    {
+      "id": "base-send-email",
+      "description": "Sends welcome email via sendEmail with Welcome to Lotly content",
+      "category": "base"
+    },
+    {
+      "id": "base-leads-auth",
+      "description": "Leads convert route uses requirePlatformAdmin for authorization",
+      "category": "base"
+    },
+    {
+      "id": "base-resend-existing",
+      "description": "Leads convert checks for existing active invitation before creating new one",
+      "category": "base"
+    },
+    {
+      "id": "base-insert-invitation",
+      "description": "Leads convert inserts into onboarding_invitations table",
+      "category": "base"
+    },
+    {
+      "id": "ours-safe-num",
+      "description": "Agreement preview defines safeNum function for safe number parsing",
+      "category": "ours"
+    },
+    {
+      "id": "ours-address-builder",
+      "description": "Agreement preview defines buildDealershipAddressFromInvitation joining state and phone with bullet separator",
+      "category": "ours"
+    },
+    {
+      "id": "ours-query-params",
+      "description": "Agreement preview accepts dealershipName, dealershipAddress, primaryContact, monthlySubscriptionFee, effectiveDate, dealerPrintedName from query params",
+      "category": "ours"
+    },
+    {
+      "id": "ours-setup-fee",
+      "description": "Agreement preview sets ONE_TIME_SETUP_FEE = 25",
+      "category": "ours"
+    },
+    {
+      "id": "ours-html-default",
+      "description": "Agreement preview defaults to html format with Content-Type text/html",
+      "category": "ours"
+    },
+    {
+      "id": "ours-pdf-format",
+      "description": "Agreement preview supports format=pdf with Content-Disposition header and filename",
+      "category": "ours"
+    },
+    {
+      "id": "ours-preview-src",
+      "description": "Onboard page builds agreementPreviewSrc URL with URLSearchParams including token, format=html, and form data",
+      "category": "ours"
+    },
+    {
+      "id": "ours-iframe-preview",
+      "description": "Onboard page renders iframe with src=agreementPreviewSrc for agreement preview",
+      "category": "ours"
+    },
+    {
+      "id": "ours-email-onboarding-url",
+      "description": "Invitations email plaintext includes Start onboarding URL",
+      "category": "ours"
+    },
+    {
+      "id": "ours-email-payload",
+      "description": "Leads convert defines buildOnboardingEmailPayload with recipient name from invitation fields and Start Onboarding button",
+      "category": "ours"
+    },
+    {
+      "id": "theirs-filename-safe",
+      "description": "Agreement preview defines filenameSafe function for safe PDF filenames",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-invitation-email",
+      "description": "Agreement preview uses invitation.email for dealershipEmail",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-token-query",
+      "description": "Agreement preview queries onboarding_invitations by token with expiry check",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-onboarding-url",
+      "description": "Invitations route builds onboardingUrl from baseUrl + token",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-30-day-expiry",
+      "description": "Invitations email mentions 30 days expiry",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-14-day-expiry",
+      "description": "Leads convert sets 14-day invitation expiry",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-sales-email",
+      "description": "Leads convert email references sales@lotlyauto.com",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-send-invite-flag",
+      "description": "Leads convert respects sendInvite flag to conditionally send email",
+      "category": "theirs"
+    }
+  ]
 }

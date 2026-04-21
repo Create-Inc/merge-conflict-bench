@@ -32,5 +32,102 @@
     "/apps/mobile/src/utils/customersFiltersStore.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "useCustomersFilters fetches /api/territories and /api/team/members with appropriate query keys",
+      "source": "base"
+    },
+    {
+      "description": "Members query enabled only when canViewTeam is truthy",
+      "source": "base"
+    },
+    {
+      "description": "useTerritoryLabel returns 'All territories' when no territoryId selected",
+      "source": "base"
+    },
+    {
+      "description": "useAssigneeLabel returns 'My customers' when canViewTeam is false, 'All assignees' otherwise",
+      "source": "base"
+    },
+    {
+      "description": "useCustomersList uses useInfiniteQuery with dedupeById and default limit 50",
+      "source": "base"
+    },
+    {
+      "description": "useCustomersSearch debounces input with setTimeout/clearTimeout",
+      "source": "base"
+    },
+    {
+      "description": "Store created with zustand, initial state includes all filter fields with null defaults",
+      "source": "base"
+    },
+    {
+      "description": "setTerritoryId coerces to integer via Math.trunc, rejects non-finite as null",
+      "source": "base"
+    },
+    {
+      "description": "setDateField accepts only 'created', defaults to 'activity'",
+      "source": "base"
+    },
+    {
+      "description": "setDateRange converts Date objects to ISO strings",
+      "source": "base"
+    },
+    {
+      "description": "Territory mapping includes subtitle from territory_type field",
+      "source": "ours"
+    },
+    {
+      "description": "Member mapping uses 'Member' fallback label and includes role subtitle",
+      "source": "ours"
+    },
+    {
+      "description": "useCustomersFilters has gcTime for cache garbage collection",
+      "source": "ours"
+    },
+    {
+      "description": "useCustomersSearch re-syncs when initialValue changes (dependency array includes initialValue)",
+      "source": "ours"
+    },
+    {
+      "description": "useCustomersSearch trims debouncedSearch via useMemo and provides stable setter via useCallback",
+      "source": "ours"
+    },
+    {
+      "description": "clearFilters preserves current search value (keepSearch pattern)",
+      "source": "ours"
+    },
+    {
+      "description": "Store initial status is empty string, datePreset is 'this_month'",
+      "source": "ours"
+    },
+    {
+      "description": "setStatus normalizes input via .trim().toLowerCase()",
+      "source": "ours"
+    },
+    {
+      "description": "useCustomersList validates territoryId as finite integer (safeTerritoryId)",
+      "source": "ours"
+    },
+    {
+      "description": "Members query filters by m.active to only show active members",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomersList normalizes dateField to 'created' or 'activity', clamps limit 1-100",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomersList supports json.customers as fallback array key",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomersList has retry function that skips 401 errors and attaches status to thrown errors",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomersList uses toQueryString helper that skips null/empty params",
+      "source": "theirs"
+    }
+  ]
 }

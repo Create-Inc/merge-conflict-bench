@@ -133,5 +133,118 @@
     "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "API route returns 403 when requireCompanyUser rejects",
+      "source": "base"
+    },
+    {
+      "description": "API route returns 403 for users without edit permission (non-Admin roles)",
+      "source": "base"
+    },
+    {
+      "description": "API route returns 400 when plan_id is missing",
+      "source": "base"
+    },
+    {
+      "description": "API route returns 404 when plan is not found",
+      "source": "base"
+    },
+    {
+      "description": "API route returns 400 when office address is not set",
+      "source": "base"
+    },
+    {
+      "description": "API route clamps max_routes between 1 and 5",
+      "source": "base"
+    },
+    {
+      "description": "API route uses mileage_status and mileage_error fields in proposed route output",
+      "source": "theirs"
+    },
+    {
+      "description": "API route has normalizeMileageStatus function mapping to estimated/skipped/pending",
+      "source": "theirs"
+    },
+    {
+      "description": "API route reports skipped_routes in response meta",
+      "source": "theirs"
+    },
+    {
+      "description": "API route skips routes when normalizedStops + 1 > 50 (too many stops)",
+      "source": "theirs"
+    },
+    {
+      "description": "API route has markSkipped helper that sets mileage_status to skipped",
+      "source": "theirs"
+    },
+    {
+      "description": "API route has markEstimated helper that sets mileage_status to estimated",
+      "source": "theirs"
+    },
+    {
+      "description": "API route filters remaining routes excluding skipped ones via normalizeMileageStatus",
+      "source": "theirs"
+    },
+    {
+      "description": "API route calls ensureMileageColumns adding mileage_status and mileage_error columns",
+      "source": "theirs"
+    },
+    {
+      "description": "API route has truncateError function that truncates at 220 characters",
+      "source": "ours"
+    },
+    {
+      "description": "Hook normalizes route with mileage_status and mileage_error properties",
+      "source": "theirs"
+    },
+    {
+      "description": "Hook tracks milesSkippedRoutes in proposedWeekSummary (not milesFailedRoutes)",
+      "source": "theirs"
+    },
+    {
+      "description": "Hook tracks milesSkippedRoutes per tech in proposedTotalsByTech",
+      "source": "theirs"
+    },
+    {
+      "description": "Hook computeClientRemaining filters by mileage_status not skipped",
+      "source": "theirs"
+    },
+    {
+      "description": "Hook exports useSplashDrivePlanner with all expected fields",
+      "source": "base"
+    },
+    {
+      "description": "Hook runs a miles loop with a max of 60 iterations",
+      "source": "base"
+    },
+    {
+      "description": "Component uses milesSkippedRoutes from proposedWeekSummary",
+      "source": "theirs"
+    },
+    {
+      "description": "Component shows status pills with mileage_status (skipped or pending)",
+      "source": "theirs"
+    },
+    {
+      "description": "Component shows mileage_error for skipped routes",
+      "source": "theirs"
+    },
+    {
+      "description": "Component renders a note about skipped routes in partial miles warning",
+      "source": "theirs"
+    },
+    {
+      "description": "Component shows 'Travel miles (est. so far)' when some but not all miles estimated",
+      "source": "ours"
+    },
+    {
+      "description": "Component renders all 7 weekday columns and Estimate miles / Print buttons",
+      "source": "base"
+    },
+    {
+      "description": "Component renders Week totals by tech table",
+      "source": "base"
+    }
+  ]
 }

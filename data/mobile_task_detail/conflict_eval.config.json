@@ -135,5 +135,162 @@
     "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "CommentCard exports as named export with isReply default false",
+      "source": "base"
+    },
+    {
+      "description": "CommentCard renders CornerDownRight icon for replies",
+      "source": "base"
+    },
+    {
+      "description": "CommentCard renders employee name and created date",
+      "source": "base"
+    },
+    {
+      "description": "CommentCard renders attachments using onOpenAttachment and Paperclip icon",
+      "source": "base"
+    },
+    {
+      "description": "CommentCard imports and renders CornerUpLeft icon for Reply button",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard renders styled Reply button with pill shape (borderRadius 999)",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard imports and uses formatDateTime",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard imports Copy icon and accepts onCopyAttachment prop",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard renders dedicated Copy button with accessibilityLabel",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard supports onLongPress on attachments for copying",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard shows long-press tip text when canCopy",
+      "source": "ours"
+    },
+    {
+      "description": "CommentCard has AvatarBubble that validates avatar URLs with http check",
+      "source": "theirs"
+    },
+    {
+      "description": "CommentCard shows raw URL subtitle under each attachment label",
+      "source": "theirs"
+    },
+    {
+      "description": "CommentCard renders initials in avatar when no valid URL",
+      "source": "theirs"
+    },
+    {
+      "description": "CommentCard uses overflow hidden on avatar container",
+      "source": "theirs"
+    },
+    {
+      "description": "CommentComposer exports as named export with Post and Attach buttons",
+      "source": "base"
+    },
+    {
+      "description": "CommentComposer renders pending files with remove buttons",
+      "source": "base"
+    },
+    {
+      "description": "CommentComposer renders reply-to section and mention candidates",
+      "source": "base"
+    },
+    {
+      "description": "CommentComposer shows text about attachments uploaded as links",
+      "source": "ours"
+    },
+    {
+      "description": "CommentComposer has border separator at top (borderTopWidth)",
+      "source": "ours"
+    },
+    {
+      "description": "CommentComposer shows tip about tapping @tag in older comments",
+      "source": "theirs"
+    },
+    {
+      "description": "CommentsSection exports as named export with MessageSquare icon",
+      "source": "base"
+    },
+    {
+      "description": "CommentsSection renders 'No comments yet' when empty",
+      "source": "base"
+    },
+    {
+      "description": "CommentsSection passes onCopy to CommentCard",
+      "source": "base"
+    },
+    {
+      "description": "CommentsSection uses marginLeft 14 and paddingLeft 18 for reply threads",
+      "source": "theirs"
+    },
+    {
+      "description": "TaskAttachments exports as named export with empty-string filtering",
+      "source": "base"
+    },
+    {
+      "description": "TaskAttachments shows edit instruction text",
+      "source": "base"
+    },
+    {
+      "description": "TaskAttachments imports Copy icon and accepts onCopyUrl prop",
+      "source": "ours"
+    },
+    {
+      "description": "TaskAttachments renders Copy button with accessibilityLabel",
+      "source": "ours"
+    },
+    {
+      "description": "TaskAttachments supports onLongPress and shows long-press tip",
+      "source": "ours"
+    },
+    {
+      "description": "TaskAttachments shows raw URL text below attachment label",
+      "source": "theirs"
+    },
+    {
+      "description": "TaskDetailsContent exports as named export with loading/error/null states",
+      "source": "base"
+    },
+    {
+      "description": "TaskDetailsContent renders TaskInfo, CommentsSection, and TaskAttachments",
+      "source": "base"
+    },
+    {
+      "description": "TaskDetailsContent uses tokenizeMentions from mentionHelpers",
+      "source": "base"
+    },
+    {
+      "description": "TaskDetailsContent uses onQuickMention prop name",
+      "source": "theirs"
+    },
+    {
+      "description": "TaskDetailsContent renders mention tokens with background color and border styling",
+      "source": "theirs"
+    },
+    {
+      "description": "TaskDetailsContent uses suppressHighlighting on mention Text elements",
+      "source": "theirs"
+    },
+    {
+      "description": "TaskDetailsContent renders mentions with @ prefix",
+      "source": "base"
+    },
+    {
+      "description": "TaskDetailsContent passes copyUrl to CommentsSection and TaskAttachments",
+      "source": "ours"
+    }
+  ]
 }

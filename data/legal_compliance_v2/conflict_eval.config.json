@@ -78,5 +78,111 @@
     "/apps/web/src/app/api/settings/legal-compliance/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "id": "base-auth-gating-get",
+      "description": "GET returns gate response when requireCompanyUser rejects",
+      "category": "base"
+    },
+    {
+      "id": "base-consent-fields",
+      "description": "GET returns eula_accepted and sms_consent_accepted booleans from legal_consents table",
+      "category": "base"
+    },
+    {
+      "id": "base-auth-gating-put",
+      "description": "PUT returns gate response when requireCompanyUser rejects",
+      "category": "base"
+    },
+    {
+      "id": "base-nothing-to-update",
+      "description": "PUT returns 400 when no consent or doc URL update is provided",
+      "category": "base"
+    },
+    {
+      "id": "base-eula-acceptance",
+      "description": "PUT accepts EULA and returns success:true",
+      "category": "base"
+    },
+    {
+      "id": "base-company-settings-table",
+      "description": "Route creates company_settings table with company_id, key, value, updated_at, composite primary key",
+      "category": "base"
+    },
+    {
+      "id": "base-agreement-card",
+      "description": "Page defines AgreementCard component with EULA and SMS agreement cards",
+      "category": "base"
+    },
+    {
+      "id": "base-can-manage",
+      "description": "Page checks isSuperAdmin, Admin permission level, Company Owner, and Admin role for canManage",
+      "category": "base"
+    },
+    {
+      "id": "ours-flat-doc-url-fields",
+      "description": "PUT accepts legal_sites_eula_url and legal_sms_opt_in_url field names for doc URL updates",
+      "category": "ours"
+    },
+    {
+      "id": "ours-get-flat-urls",
+      "description": "GET response includes flat legal_sites_eula_url and legal_sms_opt_in_url at top level",
+      "category": "ours"
+    },
+    {
+      "id": "ours-url-validation",
+      "description": "Route validates document URLs start with http:// or https://",
+      "category": "ours"
+    },
+    {
+      "id": "ours-upsert-urls",
+      "description": "Route uses ON CONFLICT...DO UPDATE for saving URLs in company_settings",
+      "category": "ours"
+    },
+    {
+      "id": "ours-delete-url",
+      "description": "Route uses DELETE FROM company_settings to clear empty URLs",
+      "category": "ours"
+    },
+    {
+      "id": "ours-doc-links-section",
+      "description": "Page has EULA and SMS document URL inputs and Save document links button",
+      "category": "ours"
+    },
+    {
+      "id": "ours-doc-save-disabled",
+      "description": "Page disables doc save when !canManage",
+      "category": "ours"
+    },
+    {
+      "id": "theirs-nested-documents",
+      "description": "GET response includes nested documents object with eula_document_url and sms_document_url",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-put-documents",
+      "description": "PUT response includes nested documents object",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-doc-url-names",
+      "description": "PUT accepts eula_document_url and sms_document_url field names",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-page-documents-ref",
+      "description": "Page reads data?.documents?.eula_document_url and sms_document_url from server data",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-doc-url-prop",
+      "description": "AgreementCard receives docUrl prop for document links",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-link2-icon",
+      "description": "Page imports Link2 icon from lucide-react for document section",
+      "category": "theirs"
+    }
+  ]
 }

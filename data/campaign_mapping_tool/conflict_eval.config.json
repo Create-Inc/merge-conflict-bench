@@ -57,7 +57,7 @@
     {
       "blockIndex": 1,
       "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/CreateMapForm.jsx",
-      "oursContent": "        <div className=\"md:col-span-2 flex items-center justify-between gap-3\">\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Map background</div>\n            <input\n              type=\"color\"\n              value={createBackgroundColor}\n              onChange={(e) => setCreateBackgroundColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n              title=\"Map background color\"\n            />\n          </div>\n          <div className=\"text-gray-500 text-xs\">\n            Used when you don’t upload an image.\n          </div>\n        </div>\n\n        <div className=\"md:col-span-2 flex items-center gap-3\">\n          <div className=\"text-gray-400 text-xs\">Grid color</div>\n          <input\n            type=\"color\"\n            value={createGridColor}\n            onChange={(e) => setCreateGridColor(e.target.value)}\n            className=\"w-10 h-10 bg-transparent\"\n          />",
+      "oursContent": "        <div className=\"md:col-span-2 flex items-center justify-between gap-3\">\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Map background</div>\n            <input\n              type=\"color\"\n              value={createBackgroundColor}\n              onChange={(e) => setCreateBackgroundColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n              title=\"Map background color\"\n            />\n          </div>\n          <div className=\"text-gray-500 text-xs\">\n            Used when you don\u2019t upload an image.\n          </div>\n        </div>\n\n        <div className=\"md:col-span-2 flex items-center gap-3\">\n          <div className=\"text-gray-400 text-xs\">Grid color</div>\n          <input\n            type=\"color\"\n            value={createGridColor}\n            onChange={(e) => setCreateGridColor(e.target.value)}\n            className=\"w-10 h-10 bg-transparent\"\n          />",
       "theirsContent": "        <div className=\"md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 items-center\">\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Grid color</div>\n            <input\n              type=\"color\"\n              value={createGridColor}\n              onChange={(e) => setCreateGridColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n            />\n          </div>\n\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Background</div>\n            <input\n              type=\"color\"\n              value={createBackgroundColor}\n              onChange={(e) => setCreateBackgroundColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n              title=\"Blank map background color\"\n            />\n            <div className=\"text-gray-500 text-xs\">\n              Used when no image is set.\n            </div>\n          </div>"
     },
     {
@@ -100,7 +100,7 @@
       "blockIndex": 1,
       "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/ToolPanel.jsx",
       "oursContent": "",
-      "theirsContent": "        </div>\n      )}\n\n      {isOwner && selectedMap && (\n        <div className=\"border-t border-gray-700 pt-3 space-y-3\">\n          <div className=\"text-gray-300 text-sm font-bold\">Map settings</div>\n\n          <div>\n            <label className=\"block text-gray-500 text-xs mb-1\">Title</label>\n            <input\n              defaultValue={selectedMap.title}\n              onBlur={(e) => {\n                const next = String(e.target.value || \"\").trim();\n                if (next && next !== selectedMap.title) {\n                  onUpdateToken({ mapId: selectedMap.id, title: next });\n                }\n                e.target.value = next || selectedMap.title;\n              }}\n              className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n            />\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">Order</label>\n              <input\n                type=\"number\"\n                defaultValue={String(selectedMap.sort_order ?? 0)}\n                onBlur={(e) => {\n                  const n = Number(e.target.value);\n                  if (!Number.isFinite(n) || n < 0) {\n                    e.target.value = String(selectedMap.sort_order ?? 0);\n                    return;\n                  }\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    sortOrder: Math.floor(n),\n                  });\n                }}\n                className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              />\n            </div>\n\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">\n                Background color\n              </label>\n              <input\n                type=\"color\"\n                value={selectedMap.background_color || \"#0b0b0b\"}\n                onChange={(e) =>\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    backgroundColor: e.target.value,\n                  })\n                }\n                className=\"w-full h-10 bg-transparent\"\n                title=\"Used when no image is set\"\n              />\n            </div>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <label className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 cursor-pointer\">\n              <Upload size={16} />\n              {uploadLoading ? \"Uploading…\" : \"Background\"}\n              <input\n                type=\"file\"\n                accept=\"image/*\"\n                className=\"hidden\"\n                onChange={(e) => onUploadMapBackground?.(e.target.files?.[0])}\n                disabled={uploadLoading || updateTokenPending}\n              />\n            </label>\n\n            <button\n              onClick={() => onClearMapBackground?.()}\n              disabled={updateTokenPending}\n              className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 disabled:opacity-50\"\n              title=\"Remove background\"\n            >\n              <ImageOff size={16} />\n              Clear\n            </button>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <button\n              onClick={() =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridEnabled: !selectedMap.grid_enabled,\n                })\n              }\n              className=\"px-3 py-2 rounded bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors text-sm font-bold\"\n            >\n              Grid: {selectedMap.grid_enabled ? \"ON\" : \"OFF\"}\n            </button>\n            <input\n              type=\"number\"\n              value={Number(selectedMap?.grid_size || 32)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridSize: Number(e.target.value) || 32,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid size\"\n            />\n            <input\n              type=\"number\"\n              step=\"0.01\"\n              value={Number(selectedMap?.grid_opacity || 0.06)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridOpacity: Number(e.target.value) || 0.06,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid opacity\"\n            />\n            <input\n              type=\"color\"\n              value={selectedMap?.grid_color || \"#ffffff\"}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridColor: e.target.value,\n                })\n              }\n              className=\"w-full h-10 bg-transparent\"\n              title=\"Grid color\"\n            />\n          </div>\n\n          <div className=\"text-gray-500 text-xs\">\n            Tip: order controls the map dropdown order. Lower comes first.\n          </div>"
+      "theirsContent": "        </div>\n      )}\n\n      {isOwner && selectedMap && (\n        <div className=\"border-t border-gray-700 pt-3 space-y-3\">\n          <div className=\"text-gray-300 text-sm font-bold\">Map settings</div>\n\n          <div>\n            <label className=\"block text-gray-500 text-xs mb-1\">Title</label>\n            <input\n              defaultValue={selectedMap.title}\n              onBlur={(e) => {\n                const next = String(e.target.value || \"\").trim();\n                if (next && next !== selectedMap.title) {\n                  onUpdateToken({ mapId: selectedMap.id, title: next });\n                }\n                e.target.value = next || selectedMap.title;\n              }}\n              className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n            />\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">Order</label>\n              <input\n                type=\"number\"\n                defaultValue={String(selectedMap.sort_order ?? 0)}\n                onBlur={(e) => {\n                  const n = Number(e.target.value);\n                  if (!Number.isFinite(n) || n < 0) {\n                    e.target.value = String(selectedMap.sort_order ?? 0);\n                    return;\n                  }\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    sortOrder: Math.floor(n),\n                  });\n                }}\n                className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              />\n            </div>\n\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">\n                Background color\n              </label>\n              <input\n                type=\"color\"\n                value={selectedMap.background_color || \"#0b0b0b\"}\n                onChange={(e) =>\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    backgroundColor: e.target.value,\n                  })\n                }\n                className=\"w-full h-10 bg-transparent\"\n                title=\"Used when no image is set\"\n              />\n            </div>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <label className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 cursor-pointer\">\n              <Upload size={16} />\n              {uploadLoading ? \"Uploading\u2026\" : \"Background\"}\n              <input\n                type=\"file\"\n                accept=\"image/*\"\n                className=\"hidden\"\n                onChange={(e) => onUploadMapBackground?.(e.target.files?.[0])}\n                disabled={uploadLoading || updateTokenPending}\n              />\n            </label>\n\n            <button\n              onClick={() => onClearMapBackground?.()}\n              disabled={updateTokenPending}\n              className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 disabled:opacity-50\"\n              title=\"Remove background\"\n            >\n              <ImageOff size={16} />\n              Clear\n            </button>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <button\n              onClick={() =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridEnabled: !selectedMap.grid_enabled,\n                })\n              }\n              className=\"px-3 py-2 rounded bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors text-sm font-bold\"\n            >\n              Grid: {selectedMap.grid_enabled ? \"ON\" : \"OFF\"}\n            </button>\n            <input\n              type=\"number\"\n              value={Number(selectedMap?.grid_size || 32)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridSize: Number(e.target.value) || 32,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid size\"\n            />\n            <input\n              type=\"number\"\n              step=\"0.01\"\n              value={Number(selectedMap?.grid_opacity || 0.06)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridOpacity: Number(e.target.value) || 0.06,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid opacity\"\n            />\n            <input\n              type=\"color\"\n              value={selectedMap?.grid_color || \"#ffffff\"}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridColor: e.target.value,\n                })\n              }\n              className=\"w-full h-10 bg-transparent\"\n              title=\"Grid color\"\n            />\n          </div>\n\n          <div className=\"text-gray-500 text-xs\">\n            Tip: order controls the map dropdown order. Lower comes first.\n          </div>"
     },
     {
       "blockIndex": 0,
@@ -161,5 +161,106 @@
     "/apps/web/src/app/api/campaigns/[id]/maps/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "GET /campaigns/[id]/maps returns 401 when unauthenticated, 400 for invalid id, 403 for non-members",
+      "source": "base"
+    },
+    {
+      "description": "GET returns maps array with activeMapId and isOwner flag",
+      "source": "base"
+    },
+    {
+      "description": "POST requires owner role, returns 403 for non-owners",
+      "source": "base"
+    },
+    {
+      "description": "PATCH requires owner role and valid mapId",
+      "source": "base"
+    },
+    {
+      "description": "DELETE requires owner role and valid mapId via searchParams",
+      "source": "base"
+    },
+    {
+      "description": "Campaign page has tab system with map, chat, call, sound, dice, characters, sessions, npcs, loot, members tabs",
+      "source": "base"
+    },
+    {
+      "description": "CampaignMapPanel imports and uses useGridStyle hook, MapCanvas, ToolPanel, CreateMapForm",
+      "source": "base"
+    },
+    {
+      "description": "CampaignMapPanel manages zoom, selectedTokenId, selectedMapId states",
+      "source": "base"
+    },
+    {
+      "description": "CampaignMapPanel has canDragToken logic: owner can drag any, player can drag own PC only",
+      "source": "base"
+    },
+    {
+      "description": "MapCanvas has zoom in/out controls, displays zoom percentage, applies transform scale",
+      "source": "base"
+    },
+    {
+      "description": "MapCanvas applies gridStyle to map area and renders tokens",
+      "source": "base"
+    },
+    {
+      "description": "useGridStyle generates CSS grid lines using linear-gradient with grid_size, grid_opacity, grid_color",
+      "source": "base"
+    },
+    {
+      "description": "useGridStyle respects grid_enabled flag and handles background_url",
+      "source": "base"
+    },
+    {
+      "description": "API route has parseHexColor function that validates 6-char hex and normalizes with hash",
+      "source": "ours"
+    },
+    {
+      "description": "API route uses parseHexColor for backgroundColor (#111827 default) and gridColor (#ffffff default)",
+      "source": "ours"
+    },
+    {
+      "description": "API route has parseGridSize (8-200) and parseGridOpacity (0-0.5) validators",
+      "source": "ours"
+    },
+    {
+      "description": "MapCanvas uses useCallback for zoom functions with 0.5-2.5 range",
+      "source": "ours"
+    },
+    {
+      "description": "useGridStyle defaults background_color to #111827",
+      "source": "ours"
+    },
+    {
+      "description": "CampaignMapPanel initializes createBackgroundColor to #111827",
+      "source": "ours"
+    },
+    {
+      "description": "API route has parseSortOrder function clamping 0-100000",
+      "source": "theirs"
+    },
+    {
+      "description": "API route POST uses sql.transaction for insert with setDefault support",
+      "source": "theirs"
+    },
+    {
+      "description": "API route POST inserts sort_order, grid_size, grid_opacity, grid_color columns",
+      "source": "theirs"
+    },
+    {
+      "description": "CreateMapForm has sort order, set default toggle, grid size/opacity, grid/background color controls",
+      "source": "theirs"
+    },
+    {
+      "description": "ToolPanel has map settings section with title editor, sort order, background color, upload/clear, grid controls",
+      "source": "theirs"
+    },
+    {
+      "description": "CampaignMapPanel manages createSortOrder and createSetDefault state and passes to CreateMapForm/ToolPanel",
+      "source": "theirs"
+    }
+  ]
 }

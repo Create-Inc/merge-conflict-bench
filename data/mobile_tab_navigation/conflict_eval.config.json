@@ -92,5 +92,106 @@
     "/apps/mobile/src/ui/icons/Icon.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "id": "base-tab-screens",
+      "description": "Layout defines dashboard, calendar, horses, chat, profile tab screens",
+      "category": "base"
+    },
+    {
+      "id": "base-hidden-tabs",
+      "description": "Layout hides old tabs: home, welcome, today, incidents, shifts with href:null",
+      "category": "base"
+    },
+    {
+      "id": "base-tab-icon-wrap",
+      "description": "TabIconWrap component animates scale and glow on focused tab icons",
+      "category": "base"
+    },
+    {
+      "id": "base-badge-counts",
+      "description": "Dashboard badge combines ownerUpdates+timeExceptions+incidents; chat shows messages; profile shows charges for OWNER",
+      "category": "base"
+    },
+    {
+      "id": "base-fetch-profile",
+      "description": "Layout fetches /api/profile on mount for userRole and userProfile",
+      "category": "base"
+    },
+    {
+      "id": "base-quick-links",
+      "description": "QuickLinksSection has horses, calendar, alerts, chat links; staff for MANAGER; tasks for OWNER",
+      "category": "base"
+    },
+    {
+      "id": "base-icon-horse",
+      "description": "Icon component handles horse name with special rendering",
+      "category": "base"
+    },
+    {
+      "id": "ours-statusbar",
+      "description": "Layout imports and renders StatusBar with style=light from expo-status-bar",
+      "category": "ours"
+    },
+    {
+      "id": "ours-fragment-wrapper",
+      "description": "Layout wraps Tabs in Fragment (<>) to include StatusBar as sibling",
+      "category": "ours"
+    },
+    {
+      "id": "ours-ui-bg",
+      "description": "Tab bar uses UI.bg for backgroundColor",
+      "category": "ours"
+    },
+    {
+      "id": "ours-ui-brass-active",
+      "description": "Tab bar uses UI.brass for tabBarActiveTintColor",
+      "category": "ours"
+    },
+    {
+      "id": "ours-icon-brass-color",
+      "description": "Tab icons pass UI.brass as color prop",
+      "category": "ours"
+    },
+    {
+      "id": "ours-glow-brass",
+      "description": "Glow overlay uses UI.brass as backgroundColor with interpolated glowOpacity",
+      "category": "ours"
+    },
+    {
+      "id": "ours-ionicons",
+      "description": "Icon.jsx uses Ionicons from @expo/vector-icons with IONICON_NAME_MAP",
+      "category": "ours"
+    },
+    {
+      "id": "ours-icon-names",
+      "description": "QuickLinksSection uses ours icon names: alertTriangle, messageCircle, users, clipboardList",
+      "category": "ours"
+    },
+    {
+      "id": "ours-ionicon-mappings",
+      "description": "IONICON_NAME_MAP maps alertTriangle->warning-outline, messageCircle->chatbubble-outline, users->people-outline, clipboardList->clipboard-outline, layoutGrid->grid-outline, user->person-outline",
+      "category": "ours"
+    },
+    {
+      "id": "ours-horse-svg",
+      "description": "Icon.jsx renders custom SVG with Svg and Path components for horse",
+      "category": "ours"
+    },
+    {
+      "id": "theirs-ui-icon-imports",
+      "description": "Layout imports UI from ../../ui/ui and Icon from ../../ui/icons",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-tab-labels",
+      "description": "Tab bar has tabBarShowLabel:true with fontSize:11 label style",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-tab-border",
+      "description": "Tab bar has borderTopWidth:1, borderTopColor:UI.border1, paddingTop:6",
+      "category": "theirs"
+    }
+  ]
 }

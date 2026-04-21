@@ -138,5 +138,110 @@
     "/apps/web/src/app/api/settings/legal-compliance/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "GET returns 403 when requireCompanyUser rejects",
+      "source": "base"
+    },
+    {
+      "description": "GET returns eula_accepted and sms_consent_accepted consent fields",
+      "source": "base"
+    },
+    {
+      "description": "GET returns nested documents object with eula_document_url and sms_document_url",
+      "source": "theirs"
+    },
+    {
+      "description": "GET returns flat legal_sites_eula_url and legal_sms_opt_in_url fields",
+      "source": "theirs"
+    },
+    {
+      "description": "GET returns flat sites_eula_url and sms_opt_in_url fields for ours-branch compat",
+      "source": "ours"
+    },
+    {
+      "description": "PUT returns 403 when requireCompanyUser rejects",
+      "source": "base"
+    },
+    {
+      "description": "API has normalizeOptionalUrl function for URL validation (must start with http/https)",
+      "source": "theirs"
+    },
+    {
+      "description": "PUT accepts legal_sites_eula_url and eula_document_url naming conventions",
+      "source": "theirs"
+    },
+    {
+      "description": "PUT accepts legal_sms_opt_in_url and sms_document_url naming conventions",
+      "source": "theirs"
+    },
+    {
+      "description": "API has saveCompanyDocSetting function (undefined=skip, null=clear, string=save)",
+      "source": "theirs"
+    },
+    {
+      "description": "API has getCompanyDocSettings that reads from company_settings table",
+      "source": "theirs"
+    },
+    {
+      "description": "PUT returns documents object in response",
+      "source": "theirs"
+    },
+    {
+      "description": "PUT accepts sites_eula_url naming from ours branch",
+      "source": "ours"
+    },
+    {
+      "description": "PUT accepts sms_opt_in_url naming from ours branch",
+      "source": "ours"
+    },
+    {
+      "description": "Page exports LegalComplianceSettingsPage as default function",
+      "source": "base"
+    },
+    {
+      "description": "Page renders AgreementCard for Sites EULA",
+      "source": "base"
+    },
+    {
+      "description": "Page renders AgreementCard for SMS opt-in agreement",
+      "source": "base"
+    },
+    {
+      "description": "Page has Back to Settings link and AuthProtection wrapper",
+      "source": "base"
+    },
+    {
+      "description": "Page has onAcceptEula and onAcceptSms callbacks checking canManage",
+      "source": "base"
+    },
+    {
+      "description": "Page has Agreement documents (optional) heading",
+      "source": "theirs"
+    },
+    {
+      "description": "Page includes saveDocsMutation for saving document links",
+      "source": "theirs"
+    },
+    {
+      "description": "Page has input fields for Sites EULA document URL and SMS agreement document URL",
+      "source": "theirs"
+    },
+    {
+      "description": "Page renders onSaveDocuments callback",
+      "source": "theirs"
+    },
+    {
+      "description": "Page reads from documents.eula_document_url with fallback to legal_sites_eula_url",
+      "source": "theirs"
+    },
+    {
+      "description": "Page tracks docInputsTouched state to prevent clobbering user edits",
+      "source": "ours"
+    },
+    {
+      "description": "Page tracks hasDocChanges to enable/disable save button",
+      "source": "ours"
+    }
+  ]
 }

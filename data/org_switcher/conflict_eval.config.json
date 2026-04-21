@@ -79,5 +79,90 @@
     "/apps/web/src/app/api/admin/organizations/delete/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "OrganizationSwitcher is a 'use client' component that fetches /api/organizations/list",
+      "source": "base"
+    },
+    {
+      "description": "Org selection persisted to localStorage under platformAdmin.selectedOrgId",
+      "source": "base"
+    },
+    {
+      "description": "Org selection read from URL param organizationId first, then localStorage fallback",
+      "source": "base"
+    },
+    {
+      "description": "switchOrganization updates URL and navigates via window.location.href",
+      "source": "base"
+    },
+    {
+      "description": "Clears lfms_branding_self when deselecting org (switching to My Organization)",
+      "source": "base"
+    },
+    {
+      "description": "Dark mode detection via document class and prefers-color-scheme media query",
+      "source": "base"
+    },
+    {
+      "description": "Dropdown shows org stats (user_count, call_count, subscription_plan)",
+      "source": "base"
+    },
+    {
+      "description": "usePlatformAdmin manages org creation form state and prefills from URL params",
+      "source": "base"
+    },
+    {
+      "description": "usePlatformAdmin loads current org from /api/organizations/current with org context",
+      "source": "base"
+    },
+    {
+      "description": "usePlatformAdmin clears localStorage and redirects to /settings after org deletion",
+      "source": "base"
+    },
+    {
+      "description": "Delete route requires auth + platform admin, accepts orgId from body or query string",
+      "source": "base"
+    },
+    {
+      "description": "Delete route validates orgId, looks up org, returns 404 if not found",
+      "source": "base"
+    },
+    {
+      "description": "Delete route logs audit trail before deletion",
+      "source": "base"
+    },
+    {
+      "description": "OrganizationSwitcher validates URL orgParam with Number.isFinite",
+      "source": "ours"
+    },
+    {
+      "description": "OrganizationSwitcher validates stored org with Number.isFinite and > 0",
+      "source": "ours"
+    },
+    {
+      "description": "OrganizationSwitcher restores org to URL via window.location.replace when URL is missing param",
+      "source": "ours"
+    },
+    {
+      "description": "usePlatformAdmin has getEffectiveSearch helper that falls back to stored org and syncs URL via replaceState",
+      "source": "ours"
+    },
+    {
+      "description": "normalizeOrgName uses Unicode NFKC normalization and whitespace collapsing",
+      "source": "ours"
+    },
+    {
+      "description": "OrganizationSwitcher uses optional chaining org?.id and String(org?.id) as key",
+      "source": "theirs"
+    },
+    {
+      "description": "normalizeOrgName uses toLowerCase for case-insensitive comparison",
+      "source": "theirs"
+    },
+    {
+      "description": "Delete route checks both name AND phrase in single condition with combined error message",
+      "source": "theirs"
+    }
+  ]
 }

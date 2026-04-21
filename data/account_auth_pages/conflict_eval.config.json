@@ -188,5 +188,122 @@
     "/apps/web/src/app/account/signup/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Signup page exports default function component with use client directive",
+      "source": "base"
+    },
+    {
+      "description": "Signup page manages formData state with name, email, password, confirmPassword",
+      "source": "base"
+    },
+    {
+      "description": "Signup page has password toggle with showPassword and showConfirmPassword states",
+      "source": "base"
+    },
+    {
+      "description": "Signup page has terms checkbox with agreedToTerms state",
+      "source": "base"
+    },
+    {
+      "description": "Signup page disables submit when loading or terms not agreed",
+      "source": "base"
+    },
+    {
+      "description": "Signup page validates email format with regex",
+      "source": "base"
+    },
+    {
+      "description": "Signup page validates password length >= 8 and passwords match",
+      "source": "base"
+    },
+    {
+      "description": "Signup page posts to /api/auth/signup",
+      "source": "base"
+    },
+    {
+      "description": "Signup page redirects to signin after success",
+      "source": "base"
+    },
+    {
+      "description": "Signup page shows success state with email verification message",
+      "source": "base"
+    },
+    {
+      "description": "Signin page uses signInWithCredentials from useAuth",
+      "source": "base"
+    },
+    {
+      "description": "Signin page has forgot password link",
+      "source": "base"
+    },
+    {
+      "description": "Signin page normalizes email to lowercase before submitting",
+      "source": "base"
+    },
+    {
+      "description": "Signin page reads message and callbackUrl from URL params",
+      "source": "base"
+    },
+    {
+      "description": "Forgot-password page validates email before submitting",
+      "source": "base"
+    },
+    {
+      "description": "Forgot-password page posts to /api/auth/forgot-password",
+      "source": "base"
+    },
+    {
+      "description": "Forgot-password page shows success state with try different email button",
+      "source": "base"
+    },
+    {
+      "description": "Reset-password page reads token and email from URL params",
+      "source": "base"
+    },
+    {
+      "description": "Reset-password page posts to /api/auth/reset-password with token, email, password",
+      "source": "base"
+    },
+    {
+      "description": "Reset-password page redirects to signin after successful reset",
+      "source": "base"
+    },
+    {
+      "description": "All pages use glassmorphism design with background image (BG_URL) and backdrop blur",
+      "source": "ours"
+    },
+    {
+      "description": "Signup page uses Home icon watermark and HOOY SOLUTIONS branding",
+      "source": "ours"
+    },
+    {
+      "description": "Signin page has remember me checkbox with localStorage persistence",
+      "source": "ours"
+    },
+    {
+      "description": "Forgot-password page has ArrowLeft back button with window.history.back()",
+      "source": "ours"
+    },
+    {
+      "description": "Signup page imports and uses useTranslation for i18n with t(creatingAccount)",
+      "source": "theirs"
+    },
+    {
+      "description": "Signin page uses useTranslation for i18n with t(signingIn), t(fillAllFields), t(incorrectCredentials)",
+      "source": "theirs"
+    },
+    {
+      "description": "Reset-password page validates token with /api/auth/reset-password/validate API",
+      "source": "theirs"
+    },
+    {
+      "description": "Reset-password page manages tokenValid state (null/true/false) with loading and invalid states",
+      "source": "theirs"
+    },
+    {
+      "description": "Reset-password page shows AlertCircle icon for invalid token state",
+      "source": "theirs"
+    }
+  ]
 }

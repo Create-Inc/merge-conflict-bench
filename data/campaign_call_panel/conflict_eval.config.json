@@ -29,5 +29,74 @@
     "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Component exports default function CampaignCallPanel with compact, showRoster, rosterMode props",
+      "source": "base"
+    },
+    {
+      "description": "safeRoomName generates slugified room name with anything- prefix",
+      "source": "base"
+    },
+    {
+      "description": "Presence query polls /api/campaigns/:id/call-presence at 5s/12s intervals",
+      "source": "base"
+    },
+    {
+      "description": "Player and viewer counts derived from presence_role field",
+      "source": "base"
+    },
+    {
+      "description": "isPlayerFull blocks non-owners from joining as player when slots full",
+      "source": "base"
+    },
+    {
+      "description": "Viewers join with (Viewer) suffix and audio/video muted by default",
+      "source": "base"
+    },
+    {
+      "description": "GM tools (toggle mic/cam, mute all, stop video, clear presence) shown for owner in full mode",
+      "source": "base"
+    },
+    {
+      "description": "shouldShowSpeakerCard derived from rosterMode === 'speaker_only'",
+      "source": "base"
+    },
+    {
+      "description": "In-room roster list with player/viewer badges and kick/role-change for owner",
+      "source": "base"
+    },
+    {
+      "description": "Compact mode shows 'Call' header text instead of 'Voice + Video Room'",
+      "source": "ours"
+    },
+    {
+      "description": "Compact iframe height is h-[180px] (ours value)",
+      "source": "ours"
+    },
+    {
+      "description": "Compact header hides player count and room name, shows only viewer count and speaking label",
+      "source": "ours"
+    },
+    {
+      "description": "normalizeDisplayName strips (Viewer) suffix for speaker matching",
+      "source": "theirs"
+    },
+    {
+      "description": "speakingPresence computed via useMemo matching normalized speakingName to presence list",
+      "source": "theirs"
+    },
+    {
+      "description": "Speaker card shows avatar and display_name from speakingPresence, with viewer count",
+      "source": "theirs"
+    },
+    {
+      "description": "Speaker card fallback shows 'No one yet.' with optional viewer count",
+      "source": "theirs"
+    },
+    {
+      "description": "shouldShowRosterList requires showRoster && !compact && rosterMode === 'full'",
+      "source": "theirs"
+    }
+  ]
 }

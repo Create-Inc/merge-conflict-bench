@@ -119,5 +119,221 @@
     "/apps/mobile/src/app/create.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "id": "base-react-imports",
+      "description": "Imports useCallback, useMemo, useState from react; View, Text, ScrollView, TouchableOpacity, ActivityIndicator, TextInput from react-native",
+      "category": "base"
+    },
+    {
+      "id": "base-expo-imports",
+      "description": "Imports StatusBar from expo-status-bar, useSafeAreaInsets, useRouter from expo-router",
+      "category": "base"
+    },
+    {
+      "id": "base-app-imports",
+      "description": "Imports useAuth, useColors, useTheme, BrandLogo, useViewerEmployee",
+      "category": "base"
+    },
+    {
+      "id": "base-normalize-role",
+      "description": "normalizeRole converts member->employee, finance->manager, coordinator->employee",
+      "category": "base"
+    },
+    {
+      "id": "base-can-create",
+      "description": "canCreateTradeShowsFromEmployee allows admin and manager roles",
+      "category": "base"
+    },
+    {
+      "id": "base-create-api",
+      "description": "createTradeShowApi POSTs to /api/tradeshows",
+      "category": "base"
+    },
+    {
+      "id": "base-create-screen-export",
+      "description": "Exports CreateScreen as default function component",
+      "category": "base"
+    },
+    {
+      "id": "base-form-state",
+      "description": "Form state includes name, start_date, end_date, city, venue, task_template_id fields",
+      "category": "base"
+    },
+    {
+      "id": "base-saving-error-state",
+      "description": "Has saving and error state management",
+      "category": "base"
+    },
+    {
+      "id": "base-name-validation",
+      "description": "Validates show name is required before submission",
+      "category": "base"
+    },
+    {
+      "id": "base-date-validation",
+      "description": "Validates start_date and end_date using usDateToIso before submission",
+      "category": "base"
+    },
+    {
+      "id": "base-navigation",
+      "description": "Navigates to /tradeshow/:id on success or falls back to tradeshows list",
+      "category": "base"
+    },
+    {
+      "id": "base-handle-back",
+      "description": "handleBack uses router.canGoBack/back/replace for navigation",
+      "category": "base"
+    },
+    {
+      "id": "base-auth-gate",
+      "description": "Shows sign in button when not authenticated",
+      "category": "base"
+    },
+    {
+      "id": "base-permission-gate",
+      "description": "Shows permission denied when canCreate is false",
+      "category": "base"
+    },
+    {
+      "id": "base-header-ui",
+      "description": "Renders Create show title with ArrowLeft back button and Plus icon",
+      "category": "base"
+    },
+    {
+      "id": "base-city-venue",
+      "description": "Has city input (Las Vegas placeholder) and venue input (Convention Center placeholder)",
+      "category": "base"
+    },
+    {
+      "id": "base-submit-button",
+      "description": "Submit button shows Create show text or ActivityIndicator while saving",
+      "category": "base"
+    },
+    {
+      "id": "base-error-display",
+      "description": "Displays error messages with COLORS.bad styling",
+      "category": "base"
+    },
+    {
+      "id": "base-payload-city-venue",
+      "description": "Submission payload includes city and venue from form",
+      "category": "base"
+    },
+    {
+      "id": "ours-calendar-import",
+      "description": "Imports Calendar from react-native-calendars for date picking",
+      "category": "ours"
+    },
+    {
+      "id": "ours-chevron-x-icons",
+      "description": "Imports ChevronLeft, ChevronRight, X from lucide-react-native",
+      "category": "ours"
+    },
+    {
+      "id": "ours-react-query",
+      "description": "Imports useQuery, useMutation, useQueryClient from @tanstack/react-query",
+      "category": "ours"
+    },
+    {
+      "id": "ours-keyboard-animated",
+      "description": "Imports KeyboardAvoidingAnimatedView for keyboard handling",
+      "category": "ours"
+    },
+    {
+      "id": "ours-modal-keyboard",
+      "description": "Imports Modal and Keyboard from react-native",
+      "category": "ours"
+    },
+    {
+      "id": "ours-date-helpers",
+      "description": "Defines pad2, normalizeUsDateInput, formatIsoToUsDate, isValidDateParts, usDateToIso helper functions",
+      "category": "ours"
+    },
+    {
+      "id": "ours-date-picker-modal",
+      "description": "Uses dateKeyOpen state, openDatePicker, closePickerToType functions; renders Calendar in Modal with onDayPress",
+      "category": "ours"
+    },
+    {
+      "id": "ours-marked-single-date",
+      "description": "markedSingleDate returns calendar marking config with selectedColor",
+      "category": "ours"
+    },
+    {
+      "id": "ours-fetch-json",
+      "description": "Defines fetchJson utility function for API calls",
+      "category": "ours"
+    },
+    {
+      "id": "ours-template-query",
+      "description": "Queries task-templates via useQuery and derives templates list",
+      "category": "ours"
+    },
+    {
+      "id": "ours-template-navigation",
+      "description": "goPrevTemplate and goNextTemplate cycle through templates wrapping at boundaries",
+      "category": "ours"
+    },
+    {
+      "id": "ours-template-creation",
+      "description": "Inline template creation modal with tplName, tplDesc, tplItems state; useMutation POSTs to /api/task-templates; invalidates query on success",
+      "category": "ours"
+    },
+    {
+      "id": "ours-memoized-styles",
+      "description": "inputStyle and labelStyle defined as memoized values",
+      "category": "ours"
+    },
+    {
+      "id": "ours-open-web-path",
+      "description": "Imports openWebPath from @/utils/openWeb for web fallback",
+      "category": "ours"
+    },
+    {
+      "id": "ours-numeric-keyboard",
+      "description": "Date inputs use numeric keyboardType",
+      "category": "ours"
+    },
+    {
+      "id": "ours-selected-template-id",
+      "description": "Submission uses selectedTemplateId for task_template_id in payload",
+      "category": "ours"
+    },
+    {
+      "id": "ours-input-refs",
+      "description": "Uses useRef for inputRefs to manage focus on date inputs",
+      "category": "ours"
+    },
+    {
+      "id": "theirs-date-fields",
+      "description": "Form has start_date and end_date fields for date entry",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-name-placeholder",
+      "description": "Trade show name input has CES 2026 placeholder",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-template-id-init",
+      "description": "task_template_id initialized as empty string in form state",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-keyboard-persist",
+      "description": "ScrollView has keyboardShouldPersistTaps=handled",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-input-styling",
+      "description": "Inputs use height:46, borderRadius:12, fontSize:14 styling",
+      "category": "theirs"
+    },
+    {
+      "id": "theirs-submit-styling",
+      "description": "Submit button uses COLORS.brand background with borderRadius:18, height:52",
+      "category": "theirs"
+    }
+  ]
 }

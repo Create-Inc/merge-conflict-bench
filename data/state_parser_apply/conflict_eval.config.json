@@ -267,7 +267,7 @@
     {
       "blockIndex": 44,
       "filePath": "/apps/web/src/app/api/schedule/report/route.js",
-      "oursContent": "\nexport async function POST(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;\n\n    const body = await request.json().catch(() => ({}));\n\n    const to = normalizeText(body?.email || body?.to);\n    if (!to) {\n      return Response.json({ error: \"email is required\" }, { status: 400 });\n    }\n\n    const includeCancelled = Boolean(body?.include_cancelled);\n    const typeFilter = String(body?.type || \"\").trim();\n    const statusFilter = String(body?.status || \"\").trim();\n\n    const tradeShowIdRaw = body?.trade_show_id ?? null;\n    const employeeIdRaw = body?.employee_id ?? null;\n\n    const result = await buildScheduleReport({\n      viewerEmployee: employee,\n      tradeShowIdRaw,\n      employeeIdRaw,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    if (result.error) {\n      return Response.json(\n        { error: result.error.message },\n        { status: result.error.status },\n      );\n    }\n\n    const report = result.report;\n\n    const subject =\n      normalizeText(body?.subject) ||\n      (report?.meta?.trade_show_name\n        ? `Schedule Report — ${report.meta.trade_show_name}`\n        : \"Schedule Report\");\n\n    const appUrl = process.env.APP_URL || \"\";\n    const scheduleUrl = appUrl ? `${appUrl}/schedule` : null;\n\n    const safe = (v) =>\n      String(v ?? \"\")\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\");\n\n    const fmtWhen = (iso) => {\n      if (!iso) return \"\";\n      try {\n        const d = new Date(iso);\n        if (Number.isNaN(d.getTime())) return String(iso);\n        return d.toISOString().replace(\"T\", \" \").slice(0, 16);\n      } catch {\n        return String(iso);\n      }\n    };\n\n    const rows = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      const location = it.location ? String(it.location) : \"\";\n\n      return `\n        <tr>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;white-space:nowrap;\">${safe(\n            when,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            type,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            title,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            show,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            person,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            status,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            location,\n          )}</td>\n        </tr>\n      `;\n    });\n\n    const itemsCount = Array.isArray(report.items) ? report.items.length : 0;\n    const headLine = report?.meta?.trade_show_name\n      ? `Schedule for <b>${safe(report.meta.trade_show_name)}</b>`\n      : \"Schedule\";\n\n    const html = `\n      <div style=\"font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111827;\">\n        <h2 style=\"margin:0 0 8px;\">${headLine}</h2>\n        <div style=\"color:#6B7280; font-size:13px; margin-bottom:14px;\">${itemsCount} item${\n          itemsCount === 1 ? \"\" : \"s\"\n        }</div>\n        ${\n          scheduleUrl\n            ? `<div style=\"margin-bottom:14px;\"><a href=\"${safe(\n                scheduleUrl,\n              )}\" style=\"color:#4F46E5;\">Open in Tradeshow 360</a></div>`\n            : \"\"\n        }\n        <table style=\"width:100%; border-collapse:collapse; font-size:13px;\">\n          <thead>\n            <tr>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">When</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Type</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Title</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Show</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Person</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Status</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Location</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rows.join(\"\\n\")}\n          </tbody>\n        </table>\n        <div style=\"color:#9CA3AF; font-size:12px; margin-top:14px;\">Sent from Tradeshow 360</div>\n      </div>\n    `;\n\n    const textLines = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      return `${when} | ${type} | ${title} | ${show} | ${person} | ${status}`;\n    });\n\n    const text = `${\n      report?.meta?.trade_show_name\n        ? `Schedule Report — ${report.meta.trade_show_name}`\n        : \"Schedule Report\"\n    }\\n\\n${textLines.join(\"\\n\")}\\n`;\n\n    await sendEmail({\n      to,\n      subject,\n      html,\n      text,\n    });\n\n    return Response.json({ ok: true });\n  } catch (error) {\n    console.error(\"POST /api/schedule/report error\", error);\n    return Response.json(\n      { error: \"Failed to email schedule report\" },\n      { status: 500 },\n    );\n  }\n}",
+      "oursContent": "\nexport async function POST(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;\n\n    const body = await request.json().catch(() => ({}));\n\n    const to = normalizeText(body?.email || body?.to);\n    if (!to) {\n      return Response.json({ error: \"email is required\" }, { status: 400 });\n    }\n\n    const includeCancelled = Boolean(body?.include_cancelled);\n    const typeFilter = String(body?.type || \"\").trim();\n    const statusFilter = String(body?.status || \"\").trim();\n\n    const tradeShowIdRaw = body?.trade_show_id ?? null;\n    const employeeIdRaw = body?.employee_id ?? null;\n\n    const result = await buildScheduleReport({\n      viewerEmployee: employee,\n      tradeShowIdRaw,\n      employeeIdRaw,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    if (result.error) {\n      return Response.json(\n        { error: result.error.message },\n        { status: result.error.status },\n      );\n    }\n\n    const report = result.report;\n\n    const subject =\n      normalizeText(body?.subject) ||\n      (report?.meta?.trade_show_name\n        ? `Schedule Report \u2014 ${report.meta.trade_show_name}`\n        : \"Schedule Report\");\n\n    const appUrl = process.env.APP_URL || \"\";\n    const scheduleUrl = appUrl ? `${appUrl}/schedule` : null;\n\n    const safe = (v) =>\n      String(v ?? \"\")\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\");\n\n    const fmtWhen = (iso) => {\n      if (!iso) return \"\";\n      try {\n        const d = new Date(iso);\n        if (Number.isNaN(d.getTime())) return String(iso);\n        return d.toISOString().replace(\"T\", \" \").slice(0, 16);\n      } catch {\n        return String(iso);\n      }\n    };\n\n    const rows = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      const location = it.location ? String(it.location) : \"\";\n\n      return `\n        <tr>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;white-space:nowrap;\">${safe(\n            when,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            type,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            title,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            show,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            person,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            status,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            location,\n          )}</td>\n        </tr>\n      `;\n    });\n\n    const itemsCount = Array.isArray(report.items) ? report.items.length : 0;\n    const headLine = report?.meta?.trade_show_name\n      ? `Schedule for <b>${safe(report.meta.trade_show_name)}</b>`\n      : \"Schedule\";\n\n    const html = `\n      <div style=\"font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111827;\">\n        <h2 style=\"margin:0 0 8px;\">${headLine}</h2>\n        <div style=\"color:#6B7280; font-size:13px; margin-bottom:14px;\">${itemsCount} item${\n          itemsCount === 1 ? \"\" : \"s\"\n        }</div>\n        ${\n          scheduleUrl\n            ? `<div style=\"margin-bottom:14px;\"><a href=\"${safe(\n                scheduleUrl,\n              )}\" style=\"color:#4F46E5;\">Open in Tradeshow 360</a></div>`\n            : \"\"\n        }\n        <table style=\"width:100%; border-collapse:collapse; font-size:13px;\">\n          <thead>\n            <tr>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">When</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Type</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Title</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Show</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Person</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Status</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Location</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rows.join(\"\\n\")}\n          </tbody>\n        </table>\n        <div style=\"color:#9CA3AF; font-size:12px; margin-top:14px;\">Sent from Tradeshow 360</div>\n      </div>\n    `;\n\n    const textLines = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      return `${when} | ${type} | ${title} | ${show} | ${person} | ${status}`;\n    });\n\n    const text = `${\n      report?.meta?.trade_show_name\n        ? `Schedule Report \u2014 ${report.meta.trade_show_name}`\n        : \"Schedule Report\"\n    }\\n\\n${textLines.join(\"\\n\")}\\n`;\n\n    await sendEmail({\n      to,\n      subject,\n      html,\n      text,\n    });\n\n    return Response.json({ ok: true });\n  } catch (error) {\n    console.error(\"POST /api/schedule/report error\", error);\n    return Response.json(\n      { error: \"Failed to email schedule report\" },\n      { status: 500 },\n    );\n  }\n}",
       "theirsContent": "\nexport async function POST(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;\n\n    const body = await request.json().catch(() => ({}));\n\n    const to = String(body?.to || body?.email || \"\").trim();\n    if (!to) {\n      return Response.json(\n        { error: \"Recipient email is required\" },\n        { status: 400 },\n      );\n    }\n\n    const tradeShowId = toIntOrNull(body?.trade_show_id);\n    const employeeId = toIntOrNull(body?.employee_id);\n    const includeCancelled = Boolean(body?.include_cancelled);\n    const typeFilter = String(body?.type || \"\").trim();\n    const statusFilter = String(body?.status || \"\").trim();\n\n    const { filtered } = await fetchScheduleReportItems({\n      viewerEmployee: employee,\n      tradeShowId,\n      employeeId,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    const count = filtered.length;\n    const subject =\n      String(body?.subject || \"\").trim() ||\n      `Schedule report (${count.toLocaleString()} items)`;\n\n    const rowsHtml = filtered\n      .slice(0, 250)\n      .map((it) => {\n        const whenText = formatWhenForEmail(it.when);\n        const showText = it.trade_show_name ? String(it.trade_show_name) : \"\";\n        const typeText = it.item_type ? String(it.item_type) : \"\";\n        const titleText = it.title ? String(it.title) : \"\";\n        const locText = it.location ? String(it.location) : \"\";\n        const statusText = it.status ? String(it.status) : \"\";\n\n        return `\n          <tr>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              whenText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              showText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              typeText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              titleText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              locText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              statusText,\n            )}</td>\n          </tr>\n        `;\n      })\n      .join(\"\");\n\n    const truncated = count > 250;\n\n    const html = `\n      <div style=\"font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;\">\n        <h2 style=\"margin:0 0 12px 0;\">Schedule report</h2>\n        <div style=\"color:#6B7280;font-size:13px;margin-bottom:14px;\">\n          Generated from Tradeshow 360.\n        </div>\n        <div style=\"margin-bottom:10px;font-size:13px;\">\n          <strong>Total:</strong> ${count.toLocaleString()} item(s)\n          ${truncated ? \"(showing first 250)\" : \"\"}\n        </div>\n        <table style=\"width:100%;border-collapse:collapse;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;\">\n          <thead>\n            <tr style=\"background:#F9FAFB;\">\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">When</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Show</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Type</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Title</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Location</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Status</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rowsHtml || '<tr><td colspan=\"6\" style=\"padding:12px;color:#6B7280;\">No items found for the selected filters.</td></tr>'}\n          </tbody>\n        </table>\n      </div>\n    `;\n\n    await sendEmail({\n      to,\n      subject,\n      html,\n      text: `Schedule report (${count} item(s))`,\n    });\n\n    return Response.json({ ok: true, sent: true, count });\n  } catch (e) {\n    console.error(\"POST /api/schedule/report error\", e);\n    return Response.json(\n      { error: e instanceof Error ? e.message : \"Failed to send email\" },\n      { status: 500 },\n    );\n  }\n}\n\nfunction escapeHtml(value) {\n  const s = value == null ? \"\" : String(value);\n  return s\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\\\"/g, \"&quot;\")\n    .replace(/'/g, \"&#039;\");\n}"
     }
   ],
@@ -275,5 +275,114 @@
     "/apps/web/src/app/api/schedule/report/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Exports GET and POST handlers and dynamic=force-dynamic",
+      "source": "base"
+    },
+    {
+      "description": "GET requires viewer employee auth, returns 401 on failure",
+      "source": "base"
+    },
+    {
+      "description": "GET returns 400 for invalid trade_show_id or employee_id",
+      "source": "base"
+    },
+    {
+      "description": "GET returns items array with meta object including warning_external_sync",
+      "source": "base"
+    },
+    {
+      "description": "GET queries reservations table with trade_shows and employees joins",
+      "source": "base"
+    },
+    {
+      "description": "GET queries travel_records table",
+      "source": "base"
+    },
+    {
+      "description": "GET queries tasks table for deadlines (due_date IS NOT NULL)",
+      "source": "base"
+    },
+    {
+      "description": "GET filters out cancelled items by default via is_cancelled filter",
+      "source": "base"
+    },
+    {
+      "description": "POST requires viewer employee auth",
+      "source": "base"
+    },
+    {
+      "description": "POST returns 400 when email recipient is missing",
+      "source": "base"
+    },
+    {
+      "description": "POST calls sendEmail with recipient, html, text, subject",
+      "source": "base"
+    },
+    {
+      "description": "POST returns ok:true, sent:true, count on success",
+      "source": "base"
+    },
+    {
+      "description": "POST returns 400 for invalid trade_show_id or employee_id in body",
+      "source": "base"
+    },
+    {
+      "description": "POST returns 500 on sendEmail failure",
+      "source": "base"
+    },
+    {
+      "description": "Type filter skips irrelevant SQL queries (type=travel skips reservations, type=deadline skips travel)",
+      "source": "ours"
+    },
+    {
+      "description": "GET response includes trade_show_name and employee_id in meta",
+      "source": "ours"
+    },
+    {
+      "description": "Items are sorted by when date ascending",
+      "source": "ours"
+    },
+    {
+      "description": "Status filter works on items",
+      "source": "ours"
+    },
+    {
+      "description": "Source has escapeHtml function for HTML entity encoding",
+      "source": "theirs"
+    },
+    {
+      "description": "Source has formatWhenForEmail function using Intl.DateTimeFormat",
+      "source": "theirs"
+    },
+    {
+      "description": "Email HTML has table with column headers: When, Show, Type, Title, Person, Location, Status",
+      "source": "theirs"
+    },
+    {
+      "description": "Email truncates at 250 rows with showing first 250 message",
+      "source": "theirs"
+    },
+    {
+      "description": "POST accepts body.email as alias for body.to",
+      "source": "theirs"
+    },
+    {
+      "description": "Source has computeTravelTitle with flight-specific logic",
+      "source": "theirs"
+    },
+    {
+      "description": "Source has inferTravelWhen and inferTravelEndsAt helpers",
+      "source": "theirs"
+    },
+    {
+      "description": "Source has computeReservationStatus, computeTravelStatus, computeTaskDeadlineStatus helpers",
+      "source": "theirs"
+    },
+    {
+      "description": "Email includes plain-text fallback (Schedule report)",
+      "source": "theirs"
+    }
+  ]
 }
