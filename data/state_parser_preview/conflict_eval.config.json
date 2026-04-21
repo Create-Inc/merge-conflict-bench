@@ -1,0 +1,166 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/shared/resolveParserSpec.js",
+      "oursContent": "// Builder-safe helper: resolve the effective parser spec + adapter from the version registry.\n//\n// Goal: Dispatch is version-driven (parser_version -> registry spec -> spec.adapter).\n// Source adapter hints are advisory only. Drift should be visible via warnings.\n\nimport {\n  normalizeParserVersionKeyStrict,\n  resolveParserVersionSpec,\n  normalizeAdapterHintForMatch,\n} from \"../versions\";\n\nexport function resolveParserSpec({ state, parser_version, sourceRow }) {\n  const raw = String(parser_version || \"\").trim();\n\n  if (!raw) {\n    return {\n      ok: false,\n      implemented: false,\n      status: 400,\n      code: \"PARSER_VERSION_REQUIRED\",\n      message: \"parser_version is required (select a version in Panel C).\",\n    };\n  }\n\n  const normalizedParserVersion = normalizeParserVersionKeyStrict(raw);\n  if (!normalizedParserVersion) {\n    return {\n      ok: false,\n      implemented: false,\n      status: 409,\n      code: \"INVALID_PARSER_VERSION\",\n      message:\n        \"parser_version must be a real registry key (for example: html_single_index_v1, html_multi_index_v1, html_json_index_v1, pdf_v1, hybrid_v1).\",\n      parser_version: raw,\n    };\n  }\n\n  const spec = resolveParserVersionSpec({\n    version_key: normalizedParserVersion,\n    state,\n    source_class: sourceRow?.source_class || null,\n  });\n\n  if (!spec?.ok) {\n    return {\n      ok: false,\n      implemented: false,\n      status: 409,\n      code: spec?.error || \"PARSER_VERSION_NOT_ALLOWED\",\n      message: \"parser_version is not allowed for this state/source_class.\",\n      parser_version: normalizedParserVersion,\n      supported_source_classes: spec?.supported_source_classes || [],\n      states: spec?.states || [\"*\"],\n    };\n  }\n\n  if (spec.implemented !== true) {\n    return {\n      ok: false,\n      implemented: false,\n      status: 409,\n      code: \"PARSER_VERSION_NOT_IMPLEMENTED\",\n      message: \"Selected parser_version is not implemented.\",\n      parser_version: normalizedParserVersion,\n      adapter_expected: spec?.adapter || null,\n    };\n  }\n\n  const warnings = [];\n\n  const hintedRaw = String(sourceRow?.adapter_hint || \"\").trim();\n  const hinted = hintedRaw ? normalizeAdapterHintForMatch(hintedRaw) : \"\";\n  const expected = String(spec?.adapter || \"\").trim();\n\n  if (hinted && expected && hinted !== expected) {\n    warnings.push({\n      code: \"SOURCE_ADAPTER_HINT_MISMATCH\",\n      message: `Source adapter_hint (${hintedRaw}) differs from selected version adapter (${expected}). Ignoring hint.`,\n      adapter_hint: hintedRaw,\n      adapter_hint_normalized: hinted,\n      adapter_selected: expected,\n    });\n  }\n\n  return {\n    ok: true,\n    spec,\n    adapterKey: expected,\n    normalizedParserVersion,\n    warnings,\n  };\n}",
+      "theirsContent": "// STEP 6E — Parser spec resolution (shared by Preview + Apply)\n//\n// Purpose:\n// - Dispatch is version-driven (parser_version -> versions registry -> spec.adapter)\n// - Source adapter hints are advisory only\n// - Drift is surfaced via warnings (never blocks)\n\nimport {\n  normalizeParserVersionKeyStrict,\n  normalizeAdapterHintForMatch,\n  resolveParserVersionSpec,\n} from \"../versions\";\n\nfunction normalizeStateCode(value) {\n  return String(value || \"\")\n    .trim()\n    .toUpperCase();\n}\n\nfunction normalizeAdapterHint(value) {\n  const raw = String(value || \"\").trim();\n  if (!raw) return null;\n  return normalizeAdapterHintForMatch(raw) || raw;\n}\n\n/**\n * Resolve the effective parser spec.\n *\n * @param {object} params\n * @param {string} params.state\n * @param {string} params.parser_version\n * @param {object} params.sourceRow - source meta (from registry list / rule_sources)\n * @returns {Promise<object>}\n */\nexport async function resolveParserSpec({ state, parser_version, sourceRow }) {\n  const s = normalizeStateCode(state);\n  const rawVersion = String(parser_version || \"\").trim();\n\n  const normalized = normalizeParserVersionKeyStrict(rawVersion);\n  if (!normalized) {\n    return {\n      ok: false,\n      implemented: false,\n      code: \"INVALID_PARSER_VERSION\",\n      message:\n        \"parser_version must be a real registry key (for example: html_single_index_v1, html_multi_index_v1, html_json_index_v1, pdf_v1, hybrid_v1).\",\n      parser_version: rawVersion,\n    };\n  }\n\n  const sourceClass = sourceRow?.source_class || null;\n\n  const resolved = resolveParserVersionSpec({\n    version_key: normalized,\n    state: s,\n    source_class: sourceClass,\n  });\n\n  if (!resolved.ok) {\n    return {\n      ok: false,\n      implemented: false,\n      code: resolved.error || \"PARSER_VERSION_NOT_ALLOWED\",\n      message: \"parser_version is not allowed for this state/source_class.\",\n      parser_version: normalized,\n      source_class: sourceClass,\n      supported_source_classes: resolved.supported_source_classes || [],\n      states: resolved.states || [\"*\"],\n    };\n  }\n\n  if (resolved.implemented !== true) {\n    return {\n      ok: false,\n      implemented: false,\n      code: \"PARSER_VERSION_NOT_IMPLEMENTED\",\n      message: \"Selected parser_version is not implemented.\",\n      parser_version: normalized,\n    };\n  }\n\n  const warnings = [];\n\n  const hinted = normalizeAdapterHint(\n    sourceRow?.adapter_hint || sourceRow?.parser_adapter_hint || null,\n  );\n  const expected = String(resolved.adapter || \"\").trim() || null;\n\n  if (hinted && expected && hinted !== expected) {\n    warnings.push({\n      code: \"SOURCE_ADAPTER_HINT_MISMATCH\",\n      message: `Source adapter_hint (${hinted}) differs from selected version adapter (${expected}). Ignoring hint.`,\n      adapter_hint: hinted,\n      adapter_selected: expected,\n    });\n  }\n\n  return {\n    ok: true,\n    spec: resolved,\n    adapterKey: expected,\n    warnings,\n    parser_version_normalized: normalized,\n  };\n}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "import { buildBaseConfigFromVersion, normalizeSourceClass } from \"../versions\";\nimport { resolveParserSpec } from \"../shared/resolveParserSpec\";",
+      "theirsContent": "import {\n  buildBaseConfigFromVersion,\n  // Strict request normalization: reject legacy \"v1\" and unknown values.\n  normalizeParserVersionKeyStrict,\n  normalizeSourceClass,\n} from \"../versions\";\nimport { resolveParserSpec } from \"../shared/resolveParserSpec\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "  // IMPORTANT: adapter_hint is advisory; do not block Apply on drift.\n  const impl = getParserImplFor({",
+      "theirsContent": "  if (!normalizedParserVersion) {\n    return {\n      valid: false,\n      error: \"INVALID_PARSER_VERSION\",\n      message:\n        \"parser_version must be a real registry key (for example: html_single_index_v1, html_multi_index_v1, html_json_index_v1, pdf_v1, hybrid_v1).\",\n      source_key: key,\n      parser_version: String(parser_version || \"\").trim(),\n    };\n  }\n\n  // STEP 6E: Resolve spec and warnings. adapter_hint drift is a WARNING.\n  const resolved = await resolveParserSpec({"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "    parser_version: resolved.normalizedParserVersion,\n    adapter_hint: null,\n    source_class: sourceClass,\n    pattern_hint: match?.pattern_hint || null,",
+      "theirsContent": "    parser_version: normalizedParserVersion,\n    sourceRow: match,"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "      parser_version: resolved.normalizedParserVersion,\n      adapter_expected: resolved.adapterKey || null,\n      warnings: Array.isArray(resolved.warnings) ? resolved.warnings : [],",
+      "theirsContent": "      parser_version: normalizedParserVersion,\n      supported_source_classes: resolved.supported_source_classes || [],\n      states: resolved.states || [\"*\"],"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "    normalizedParserVersion: resolved.normalizedParserVersion,\n    parserSpec: resolved.spec,\n    adapterKey: resolved.adapterKey,\n    warnings: Array.isArray(resolved.warnings) ? resolved.warnings : [],",
+      "theirsContent": "    normalizedParserVersion,\n    warnings: Array.isArray(resolved.warnings) ? resolved.warnings : [],"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "  const warnings = Array.isArray(resolved.warnings)\n    ? [...resolved.warnings]\n    : [];\n\n  const sourceClass = normalizeSourceClassForImpl(sourceMeta?.source_class);\n\n  const impl = getParserImplFor({",
+      "theirsContent": "  const resolved = await resolveParserSpec({"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "    parser_version: resolved.normalizedParserVersion,\n    adapter_hint: null,\n    source_class: sourceClass,\n    pattern_hint: sourceMeta?.pattern_hint || null,",
+      "theirsContent": "    parser_version: normalizedParserVersion,\n    sourceRow: {\n      ...(sourceMeta || {}),\n      // Ensure the resolver sees the correct class for gating.\n      source_class: sourceClass,\n    },"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "    err.details = {\n      message: \"No parser implementation found for this source/version.\",\n      parser_version: resolved.normalizedParserVersion,\n      adapter_expected: resolved.adapterKey || null,\n    };",
+      "theirsContent": "    err.details = {\n      message: resolved.message || \"No parser implementation found.\",\n      parser_version: normalizedParserVersion,\n    };"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+      "oursContent": "  const adapterExpected = String(resolved.adapterKey || \"\").trim();",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/dryRunHandler.js",
+      "oursContent": "    // NEW: non-blocking warnings for observability\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n",
+      "theirsContent": "    // NEW: warnings (always present; empty array when none)\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/liveApplyHandler.js",
+      "oursContent": "      // NEW: non-blocking warnings for observability\n      warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n",
+      "theirsContent": "      // NEW: warnings (always present; empty array when none)\n      warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/liveApplyHandler.js",
+      "oursContent": "    // NEW: non-blocking warnings for observability\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n",
+      "theirsContent": "    // NEW: warnings (always present; empty array when none)\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/route.js",
+      "oursContent": "      warnings: applyWarnings,",
+      "theirsContent": "      warnings,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/verificationHandler.js",
+      "oursContent": "      // NEW: non-blocking warnings for observability\n      warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n",
+      "theirsContent": "      // NEW: warnings (always present; empty array when none)\n      warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/apply/verificationHandler.js",
+      "oursContent": "    // NEW: non-blocking warnings for observability\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n",
+      "theirsContent": "    // NEW: warnings (always present; empty array when none)\n    warnings: Array.isArray(debugInfo?.warnings) ? debugInfo.warnings : [],\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/responseBuilder.js",
+      "oursContent": "    // NEW: non-blocking warnings for observability\n    warnings: Array.isArray(warnings) ? warnings : [],\n",
+      "theirsContent": "    // NEW: warnings (always present; empty array when none)\n    warnings: Array.isArray(warnings) ? warnings : [],\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "",
+      "theirsContent": "  buildBaseConfigFromVersion,\n  // NOTE: Preview/Apply must fail closed unless the value is a real registry key.\n  // This strict helper only maps legacy aliases (p4_v1, ca_P4_v1, etc.) and rejects \"v1\".\n  normalizeParserVersionKeyStrict,\n} from \"../versions\";\nimport { resolveParserSpec } from \"../shared/resolveParserSpec\";\nimport {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "    // STEP 6C/6D — Version-driven dispatch ONLY (source adapter_hint is advisory)\n    const resolvedParser = resolveParserSpec({",
+      "theirsContent": "    // STEP 6C: STRICT dispatch by parser_version key.\n    // Do NOT normalize via heuristics (no v1 -> P4/P5 fallback).\n    const normalizedParserVersion = normalizeParserVersionKeyStrict(rawVersion);\n\n    if (!normalizedParserVersion) {\n      return jsonNoStore(\n        {\n          ok: false,\n          implemented: false,\n          error: \"INVALID_PARSER_VERSION\",\n          message:\n            \"parser_version must be a real registry key (for example: html_single_index_v1, html_multi_index_v1, html_json_index_v1, pdf_v1, hybrid_v1).\",\n          state,\n          source_key: sourceMeta.source_key,\n          source_class: sourceMeta?.source_class || null,\n          parser_version: rawVersion,\n        },\n        { status: 409 },\n      );\n    }\n\n    // STEP 6E: Resolve registry spec (state/source_class gates) and compute warnings.\n    // IMPORTANT: adapter_hint drift is a WARNING (never blocks).\n    const resolved = await resolveParserSpec({"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "      parser_version: rawVersion,\n      sourceRow: sourceMeta,",
+      "theirsContent": "      parser_version: normalizedParserVersion,\n      sourceRow: sourceMeta,"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "          error: resolvedParser.code,\n          message: resolvedParser.message,",
+      "theirsContent": "          error: resolved.code || \"BAD_PARSER_VERSION\",\n          message: resolved.message || \"parser_version is not allowed.\","
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "    const normalizedParserVersion = resolvedParser.normalizedParserVersion;\n    const adapterExpected = String(resolvedParser.adapterKey || \"\").trim();\n    const warnings = Array.isArray(resolvedParser.warnings)\n      ? [...resolvedParser.warnings]\n      : [];\n\n    // Validate that this source is compatible (do NOT block on adapter_hint drift)\n    const impl = getParserImplFor({\n      state,\n      parser_version: normalizedParserVersion,\n      adapter_hint: null,\n      source_class: sourceMeta?.source_class || null,\n      pattern_hint: sourceMeta?.pattern_hint || null,\n    });",
+      "theirsContent": "    const spec = resolved.spec;\n    const adapterExpected = String(resolved.adapterKey || \"\").trim();\n    const specWarnings = Array.isArray(resolved.warnings)\n      ? resolved.warnings\n      : [];"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "    if (!impl || impl?.implemented !== true) {\n      return jsonNoStore(\n        {\n          ok: false,\n          implemented: false,\n          error: impl?.reason || \"ADAPTER_NOT_IMPLEMENTED\",\n          message: \"No parser implementation found for this source/version.\",\n          state,\n          source_key: sourceMeta.source_key,\n          parser_version: normalizedParserVersion,\n          adapter_expected: adapterExpected,\n          adapter_hint: sourceMeta?.adapter_hint || null,\n          warnings,\n        },\n        { status: 409 },\n      );\n    }\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "      parser_version_used: resolvedParser.spec?.version_key_used,",
+      "theirsContent": "      parser_version_used: spec.version_key_used,"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/admin/state-parser/preview/route.js",
+      "oursContent": "      capabilities: resolvedParser.spec?.capabilities,",
+      "theirsContent": "      capabilities: spec.capabilities,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/admin/state-parser/shared/resolveParserSpec.js",
+    "/apps/web/src/app/api/admin/state-parser/apply/config.js",
+    "/apps/web/src/app/api/admin/state-parser/apply/dryRunHandler.js",
+    "/apps/web/src/app/api/admin/state-parser/apply/liveApplyHandler.js",
+    "/apps/web/src/app/api/admin/state-parser/apply/route.js",
+    "/apps/web/src/app/api/admin/state-parser/apply/verificationHandler.js",
+    "/apps/web/src/app/api/admin/state-parser/preview/responseBuilder.js",
+    "/apps/web/src/app/api/admin/state-parser/preview/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

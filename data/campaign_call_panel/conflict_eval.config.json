@@ -1,0 +1,33 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx",
+      "oursContent": "  // in the sidebar/compact call panel, only show who is speaking + viewer count\n  const showCountsInHeader = !compact;",
+      "theirsContent": "  const iframeHeightClass = compact ? \"h-[160px]\" : \"h-[540px]\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx",
+      "oursContent": "  const iframeHeightClass = compact ? \"h-[180px]\" : \"h-[540px]\";\n",
+      "theirsContent": "  const normalizeDisplayName = (name) => {\n    if (!name) return \"\";\n    return String(name)\n      .replace(/\\s*\\(Viewer\\)\\s*$/i, \"\")\n      .trim();\n  };\n\n  const speakingPresence = useMemo(() => {\n    if (!speakingName) return null;\n    const normalized = normalizeDisplayName(speakingName).toLowerCase();\n    if (!normalized) return null;\n    return (\n      presence.find(\n        (p) => String(p.display_name || \"\").toLowerCase() === normalized,\n      ) || null\n    );\n  }, [presence, speakingName]);\n\n  const shouldShowRosterList = showRoster && !compact && rosterMode === \"full\";\n  const shouldShowSpeakerCard = rosterMode === \"speaker_only\";\n\n  const viewerCountLabel = viewerCount > 0 ? `${viewerCount}` : null;\n  const viewerInline = viewerCountLabel\n    ? ` • Viewers: ${viewerCountLabel}`\n    : \"\";\n  const countsLine = `Players: ${playerCount}/${maxLabel}${viewerInline}`;\n\n  const speakerViewersLine = viewerCount > 0 ? `Viewers: ${viewerCount}` : \"\";\n  const fallbackSpeakerLine = speakingName\n    ? `Speaking: ${speakingName}`\n    : \"No one yet.\";\n  const fallbackSpeakerWithViewers =\n    viewerCount > 0\n      ? `${fallbackSpeakerLine} • Viewers: ${viewerCount}`\n      : fallbackSpeakerLine;\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx",
+      "oursContent": "            <div className=\"text-white font-bold\">\n              {compact ? \"Call\" : \"Voice + Video Room\"}\n            </div>\n\n            {!compact ? (",
+      "theirsContent": "            <div className=\"text-white font-bold\">Voice + Video Room</div>\n            {!compact && rosterMode === \"full\" ? ("
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx",
+      "oursContent": "            {showCountsInHeader ? (\n              <div className=\"text-gray-500 text-xs mt-1\">\n                Players: {playerCount}/{maxLabel}\n                {showViewerCountOnly ? ` • Viewers: ${viewerCount}` : \"\"}\n              </div>\n            ) : null}",
+      "theirsContent": "            <div className=\"text-gray-500 text-xs mt-1\">{countsLine}</div>"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignCallPanel.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

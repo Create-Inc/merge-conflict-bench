@@ -1,0 +1,60 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/layout.jsx",
+      "oursContent": "    <html lang=\"en\">\n      <body>\n        <QueryClientProvider client={queryClient}>\n          {children}\n        </QueryClientProvider>\n      </body>\n    </html>",
+      "theirsContent": "    <QueryClientProvider client={queryClient}>\n      <ErrorBoundary name=\"RootLayout\">{children}</ErrorBoundary>\n    </QueryClientProvider>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/login/route.js",
+      "oursContent": "import { verify } from \"argon2\";\nimport crypto from \"crypto\";",
+      "theirsContent": "import { verify, hash } from \"argon2\";\nimport crypto from \"crypto\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/login/route.js",
+      "oursContent": "    // Avoid logging PII like email in production logs\n    console.log(`✅ [Login] User authenticated: ${user.user_id}`);",
+      "theirsContent": "    // ✅ PII-SAFE: Log with user_id only, never email\n    console.log(`✅ [Login] User authenticated: ${user.user_id}`);"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/signup/route.js",
+      "oursContent": "import crypto from \"crypto\";",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/signup/route.js",
+      "oursContent": "    // Avoid logging PII like email in production logs\n    console.log(`✅ [Signup] Created user: ${user.user_id}`);",
+      "theirsContent": "    // Create driver profile\n    await sql`\n      INSERT INTO driver_profiles (\n        user_id, \n        legal_name, \n        dob, \n        address, \n        status\n      )\n      VALUES (\n        ${user.user_id},\n        ${name},\n        '1990-01-01',\n        ${JSON.stringify({ street: \"\", city: \"\", state: \"\", zip: \"\", country: \"US\" })},\n        'pending'\n      )\n    `;"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/otp/send/route.js",
+      "oursContent": "    if (process.env.NODE_ENV !== \"production\") {\n      console.log(`[OTP][DEV] Send to ${phone_e164}: ${otp}`);\n    }",
+      "theirsContent": "    // In production, send SMS via Twilio/SNS\n    // TODO: Integrate with Twilio SMS API\n    console.log(`[OTP] Sent to phone ending in ***${phone_e164.slice(-4)}`);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/otp/send/route.js",
+      "oursContent": "    const responseBody = {",
+      "theirsContent": "    // ✅ SECURITY: Never expose OTP in production responses\n    const response = {\n      success: true,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/auth/otp/send/route.js",
+      "oursContent": "    };\n\n    // DEV ONLY: returning OTP makes local testing easier, but must never ship to prod.\n    if (process.env.NODE_ENV !== \"production\") {\n      responseBody.debug_otp = otp;\n    }\n\n    return Response.json(responseBody);",
+      "theirsContent": "      message: \"OTP sent successfully\",\n    };\n\n    // Only include debug OTP in development (NEVER in production)\n    if (process.env.NODE_ENV !== \"production\") {\n      response.debug_otp = otp;\n      response.warning = \"DEBUG ONLY - OTP exposed for testing\";\n    }\n\n    return Response.json(response);"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/layout.jsx",
+    "/apps/web/src/app/api/auth/login/route.js",
+    "/apps/web/src/app/api/auth/signup/route.js",
+    "/apps/web/src/app/api/auth/otp/send/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

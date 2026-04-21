@@ -1,0 +1,112 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/InventoryPage/Modals/ImportProductsModal/utils.js",
+      "oursContent": "  //\n  // ALSO: ServiceTitan exports for Materials/Equipment often include cost/unit columns.\n  // We map these too so ServiceTitan imports can mirror the file more closely.\n\n  // Fuzzy matches for cost/unit/unit price fields\n  if (k.includes(\"unitcost\") || k === \"cost\") return \"cost\";\n  if (k === \"uom\" || k === \"unit\") return \"unit\";\n",
+      "theirsContent": "\n  // NEW: IDs + variants (used to merge prices from *Variants sheets)\n  if (k === \"id\" || k.endsWith(\"itemid\")) return \"st_id\";\n  if (k === \"serviceid\" || k === \"materialid\" || k === \"equipmentid\") {\n    // On *Variants sheets these are the parent item IDs.\n    return \"st_parent_id\";\n  }\n  if (k === \"parentid\") return \"st_parent_id\";\n\n  if (k.includes(\"variantname\")) return \"variant_name\";\n  if (k === \"isdefault\" || k === \"isdefaultvariant\" || k === \"isprimary\") {\n    return \"is_default_variant\";\n  }\n\n  // ServiceTitan static pricing columns"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/InventoryPage/Modals/ImportProductsModal/utils.js",
+      "oursContent": "\n    // inventory-ish fields (for ServiceTitan materials/equipment tabs)\n    cost: \"cost\",\n    unitcost: \"cost\",\n    uom: \"unit\",\n    unit: \"unit\",",
+      "theirsContent": "\n    // Some exports use RetailPrice as the standard price field.\n    retailprice: \"default_price\",\n\n    // variants / ids (strict mappings)\n    id: \"st_id\",\n    serviceid: \"st_parent_id\",\n    materialid: \"st_parent_id\",\n    equipmentid: \"st_parent_id\",\n    parentid: \"st_parent_id\",\n    variantname: \"variant_name\",\n    isdefault: \"is_default_variant\",\n    isprimary: \"is_default_variant\","
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/InventoryPage/Modals/ImportProductsModal/utils.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": [
+    {
+      "id": "base_normalizeHeaderKey",
+      "description": "normalizeHeaderKey lowercases, strips whitespace and non-alphanumeric chars",
+      "source": "base"
+    },
+    {
+      "id": "base_is_active_shared",
+      "description": "getCanonicalKey maps isActive/Active/Enabled/Status to is_active for any target",
+      "source": "base"
+    },
+    {
+      "id": "base_products_name_sku_category",
+      "description": "Products target maps standard name, SKU, and category headers",
+      "source": "base"
+    },
+    {
+      "id": "base_products_stock_reorder_price_image_type",
+      "description": "Products target maps stock, reorder, price, image, and item_type headers",
+      "source": "base"
+    },
+    {
+      "id": "base_pricebook_static_pricing_fuzzy",
+      "description": "Pricebook fuzzy matchers for static price, member price, addon price, and standard/base/retail/total price",
+      "source": "base"
+    },
+    {
+      "id": "base_pricebook_strict_map",
+      "description": "Pricebook strict map contains name, sku, description, st_type, category, and default_price entries",
+      "source": "base"
+    },
+    {
+      "id": "base_toBoolean",
+      "description": "toBoolean parses truthy/falsy strings and returns configurable default",
+      "source": "base"
+    },
+    {
+      "id": "base_toNumber",
+      "description": "toNumber handles US/EU currency formats, accounting negatives, and non-parseable fallbacks",
+      "source": "base"
+    },
+    {
+      "id": "ours_pricebook_cost_fuzzy",
+      "description": "Pricebook fuzzy matcher maps unitcost-with-suffixes and bare cost to cost",
+      "source": "ours"
+    },
+    {
+      "id": "ours_pricebook_unit_fuzzy",
+      "description": "Pricebook fuzzy matcher maps uom and unit to unit",
+      "source": "ours"
+    },
+    {
+      "id": "ours_pricebook_cost_strict",
+      "description": "Pricebook strict map includes cost, unitcost, itemcost, cogs -> cost",
+      "source": "ours"
+    },
+    {
+      "id": "ours_pricebook_unit_strict",
+      "description": "Pricebook strict map includes uom and unit -> unit",
+      "source": "ours"
+    },
+    {
+      "id": "theirs_pricebook_id_fuzzy",
+      "description": "Pricebook fuzzy matcher maps id and *itemid to st_id",
+      "source": "theirs"
+    },
+    {
+      "id": "theirs_pricebook_parent_id_fuzzy",
+      "description": "Pricebook fuzzy matcher maps serviceid/materialid/equipmentid/parentid to st_parent_id",
+      "source": "theirs"
+    },
+    {
+      "id": "theirs_pricebook_variant_name_fuzzy",
+      "description": "Pricebook fuzzy matcher maps variantname (including suffixed) to variant_name",
+      "source": "theirs"
+    },
+    {
+      "id": "theirs_pricebook_is_default_variant_fuzzy",
+      "description": "Pricebook fuzzy matcher maps isdefault/isdefaultvariant/isprimary to is_default_variant",
+      "source": "theirs"
+    },
+    {
+      "id": "theirs_pricebook_variant_id_strict",
+      "description": "Pricebook strict map includes id, serviceid, materialid, equipmentid, parentid, variantname, isdefault, isprimary",
+      "source": "theirs"
+    },
+    {
+      "id": "theirs_pricebook_retailprice_strict",
+      "description": "Pricebook strict map maps retailprice to default_price",
+      "source": "theirs"
+    }
+  ]
+}

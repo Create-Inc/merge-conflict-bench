@@ -1,0 +1,96 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "import { StatusBar } from \"expo-status-bar\";\nimport { useBadgeCounts } from \"../../hooks/useBadgeCounts\";\nimport { UI } from \"../../ui/ui\";\nimport { Icon } from \"../../ui/icons\";",
+      "theirsContent": "import { useBadgeCounts } from \"../../hooks/useBadgeCounts\";\nimport { useTheme } from \"../../theme/ThemeProvider\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "function TabIconWrap({ focused, children }) {",
+      "theirsContent": "// ✅ UI kit + Icon wrapper\nimport { UI } from \"../../ui/ui\";\nimport { Icon } from \"../../ui/icons\";\n\nfunction TabIconWrap({ focused, children }) {"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "          backgroundColor: UI.brass,\n          opacity: glowOpacity,",
+      "theirsContent": "          backgroundColor: \"rgba(194,162,74,0.15)\", // brass glow\n          opacity: anim,"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "",
+      "theirsContent": "  // keep theme only for badges/etc if you need it later\n  useTheme();\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "",
+      "theirsContent": "  const activeColor = UI.brass;\n  const inactiveColor = UI.textSecondary;\n"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "    <>\n      <StatusBar style=\"light\" />\n      <Tabs\n        screenOptions={{\n          headerShown: false,\n          tabBarStyle: {\n            backgroundColor: UI.bg,\n            borderTopWidth: 1,\n            borderTopColor: UI.border1,\n            paddingTop: 6,\n          },\n          tabBarActiveTintColor: UI.brass,\n          tabBarInactiveTintColor: UI.muted,\n          tabBarShowLabel: true,\n          tabBarLabelStyle: {\n            fontSize: 11,\n            color: undefined,\n          },",
+      "theirsContent": "    <Tabs\n      screenOptions={{\n        headerShown: false,\n        tabBarStyle: {\n          backgroundColor: UI.surface0,\n          borderTopWidth: 1,\n          borderTopColor: UI.border1,\n          paddingTop: 6,\n        },\n        tabBarActiveTintColor: activeColor,\n        tabBarInactiveTintColor: inactiveColor,\n        tabBarShowLabel: true,\n        tabBarLabelStyle: { fontSize: 11 },\n      }}\n    >\n      <Tabs.Screen\n        name=\"dashboard\"\n        options={{\n          title: \"Dashboard\",\n          tabBarIcon: ({ color, focused }) => (\n            <TabIconWrap focused={focused}>\n              <Icon name=\"layoutGrid\" color={color} size={24} />\n            </TabIconWrap>\n          ),\n          tabBarBadge:\n            counts.ownerUpdates + counts.timeExceptions + counts.incidents > 0\n              ? counts.ownerUpdates + counts.timeExceptions + counts.incidents\n              : undefined,"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/mobile/src/app/(tabs)/_layout.jsx",
+      "oursContent": "      >\n        <Tabs.Screen\n          name=\"dashboard\"\n          options={{\n            title: \"Dashboard\",\n            tabBarIcon: ({ focused }) => (\n              <TabIconWrap focused={focused}>\n                <Icon name=\"layoutGrid\" size={24} color={UI.brass} />\n              </TabIconWrap>\n            ),\n            tabBarBadge:\n              counts.ownerUpdates + counts.timeExceptions + counts.incidents > 0\n                ? counts.ownerUpdates + counts.timeExceptions + counts.incidents\n                : undefined,\n          }}\n        />\n        <Tabs.Screen\n          name=\"calendar\"\n          options={{\n            title: \"Calendar\",\n            tabBarIcon: ({ focused }) => (\n              <TabIconWrap focused={focused}>\n                <Icon name=\"calendar\" size={24} color={UI.brass} />\n              </TabIconWrap>\n            ),\n          }}\n        />\n        <Tabs.Screen\n          name=\"horses\"\n          options={{\n            title: \"Horses\",\n            tabBarIcon: ({ focused }) => (\n              <TabIconWrap focused={focused}>\n                <Icon name=\"horse\" size={20} color={UI.brass} />\n              </TabIconWrap>\n            ),\n          }}\n        />\n        <Tabs.Screen\n          name=\"chat\"\n          options={{\n            title: \"Chat\",\n            tabBarIcon: ({ focused }) => (\n              <TabIconWrap focused={focused}>\n                <Icon name=\"messageCircle\" size={24} color={UI.brass} />\n              </TabIconWrap>\n            ),\n            tabBarBadge: counts.messages > 0 ? counts.messages : undefined,\n          }}\n        />\n        <Tabs.Screen\n          name=\"profile\"\n          options={{\n            title: \"Profile\",\n            tabBarIcon: ({ focused }) => (\n              <TabIconWrap focused={focused}>\n                <Icon name=\"user\" size={24} color={UI.brass} />\n              </TabIconWrap>\n            ),\n            tabBarBadge:\n              userRole === \"OWNER\" && counts.charges > 0\n                ? counts.charges\n                : undefined,\n          }}\n        />",
+      "theirsContent": "      />\n\n      <Tabs.Screen\n        name=\"calendar\"\n        options={{\n          title: \"Calendar\",\n          tabBarIcon: ({ color, focused }) => (\n            <TabIconWrap focused={focused}>\n              <Icon name=\"calendar\" color={color} size={24} />\n            </TabIconWrap>\n          ),\n        }}\n      />\n\n      <Tabs.Screen\n        name=\"horses\"\n        options={{\n          title: \"Horses\",\n          tabBarIcon: ({ color, focused }) => (\n            <TabIconWrap focused={focused}>\n              <Icon name=\"horse\" color={color} size={24} />\n            </TabIconWrap>\n          ),\n        }}\n      />\n\n      <Tabs.Screen\n        name=\"chat\"\n        options={{\n          title: \"Chat\",\n          tabBarIcon: ({ color, focused }) => (\n            <TabIconWrap focused={focused}>\n              <Icon name=\"messageCircle\" color={color} size={24} />\n            </TabIconWrap>\n          ),\n          tabBarBadge: counts.messages > 0 ? counts.messages : undefined,\n        }}\n      />\n\n      <Tabs.Screen\n        name=\"profile\"\n        options={{\n          title: \"Profile\",\n          tabBarIcon: ({ color, focused }) => (\n            <TabIconWrap focused={focused}>\n              <Icon name=\"user\" color={color} size={24} />\n            </TabIconWrap>\n          ),\n          tabBarBadge:\n            userRole === \"OWNER\" && counts.charges > 0\n              ? counts.charges\n              : undefined,\n        }}\n      />"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/WelcomeScreen/QuickLinksSection.jsx",
+      "oursContent": "    { key: \"horses\", label: \"Horses\", iconName: \"horse\", to: \"/horses\" },\n    {\n      key: \"calendar\",\n      label: \"Calendar\",\n      iconName: \"calendar\",\n      to: \"/calendar\",\n    },\n    {\n      key: \"alerts\",\n      label: \"Alerts\",\n      iconName: \"alertTriangle\",\n      to: \"/incidents\",\n    },\n    { key: \"chat\", label: \"Chat\", iconName: \"messageCircle\", to: \"/chat\" },",
+      "theirsContent": "    { key: \"horses\", label: \"Horses\", iconName: \"horse\", to: \"/horses\" },\n    {\n      key: \"calendar\",\n      label: \"Calendar\",\n      iconName: \"calendar\",\n      to: \"/calendar\",\n    },\n    { key: \"alerts\", label: \"Alerts\", iconName: \"alerts\", to: \"/incidents\" },\n    { key: \"chat\", label: \"Chat\", iconName: \"chat\", to: \"/chat\" },"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/WelcomeScreen/QuickLinksSection.jsx",
+      "oursContent": "    items.push({\n      key: \"staff\",\n      label: \"Staff\",\n      iconName: \"users\",\n      to: \"/staff\",\n    });",
+      "theirsContent": "    items.push({\n      key: \"staff\",\n      label: \"Staff\",\n      iconName: \"staff\",\n      to: \"/staff\",\n    });"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/WelcomeScreen/QuickLinksSection.jsx",
+      "oursContent": "      iconName: \"clipboardList\",",
+      "theirsContent": "      iconName: \"tasks\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/HomeScreen/QuickLinksSection.jsx",
+      "oursContent": "    { key: \"horses\", label: \"Horses\", iconName: \"horse\", to: \"/horses\" },\n    {\n      key: \"calendar\",\n      label: \"Calendar\",\n      iconName: \"calendar\",\n      to: \"/calendar\",\n    },\n    {\n      key: \"alerts\",\n      label: \"Alerts\",\n      iconName: \"alertTriangle\",\n      to: \"/incidents\",\n    },\n    { key: \"chat\", label: \"Chat\", iconName: \"messageCircle\", to: \"/chat\" },",
+      "theirsContent": "    { key: \"horses\", label: \"Horses\", iconName: \"horse\", to: \"/horses\" },\n    {\n      key: \"calendar\",\n      label: \"Calendar\",\n      iconName: \"calendar\",\n      to: \"/calendar\",\n    },\n    { key: \"alerts\", label: \"Alerts\", iconName: \"alerts\", to: \"/incidents\" },\n    { key: \"chat\", label: \"Chat\", iconName: \"chat\", to: \"/chat\" },"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/HomeScreen/QuickLinksSection.jsx",
+      "oursContent": "    items.push({\n      key: \"staff\",\n      label: \"Staff\",\n      iconName: \"users\",\n      to: \"/staff\",\n    });",
+      "theirsContent": "    items.push({\n      key: \"staff\",\n      label: \"Staff\",\n      iconName: \"staff\",\n      to: \"/staff\",\n    });"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/HomeScreen/QuickLinksSection.jsx",
+      "oursContent": "      iconName: \"clipboardList\",",
+      "theirsContent": "      iconName: \"tasks\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/ui/icons/Icon.jsx",
+      "oursContent": "import Ionicons from \"@expo/vector-icons/Ionicons\";\nimport Svg, { Path } from \"react-native-svg\";\nimport { View } from \"react-native\";\n\nconst IONICON_NAME_MAP = {\n  arrowLeft: \"arrow-back\",\n  chevronLeft: \"chevron-back\",\n  chevronRight: \"chevron-forward\",\n  plus: \"add\",\n  calendar: \"calendar-outline\",\n  calendarCheck: \"calendar\",\n  creditCard: \"card-outline\",\n  trendingUp: \"trending-up-outline\",\n  receipt: \"receipt-outline\",\n  info: \"information-circle-outline\",\n  shield: \"shield-outline\",\n  alertTriangle: \"warning-outline\",\n  alertCircle: \"alert-circle-outline\",\n  user: \"person-outline\",\n  users: \"people-outline\",\n  settings: \"settings-outline\",\n  helpCircle: \"help-circle-outline\",\n  logOut: \"log-out-outline\",\n  mapPin: \"location-outline\",\n  warehouse: \"home-outline\",\n  edit: \"create-outline\",\n  trash2: \"trash-outline\",\n  camera: \"camera-outline\",\n  x: \"close\",\n  moon: \"moon-outline\",\n  layoutGrid: \"grid-outline\",\n  messageCircle: \"chatbubble-outline\",\n  dollarSign: \"cash-outline\",\n  clock: \"time-outline\",\n  logIn: \"log-in-outline\",\n  thermometer: \"thermometer-outline\",\n  search: \"search-outline\",\n\n  // not in the provided map, but used in a few spots (tasks shortcut)\n  clipboardList: \"clipboard-outline\",\n};\n\nexport default function Icon({ name, size = 20, color = \"#000\", style }) {\n  if (name === \"horse\") {\n    return (\n      <Svg\n        width={size}\n        height={size}\n        viewBox=\"0 0 24 24\"\n        fill=\"none\"\n        style={style}\n      >\n        <Path\n          d=\"M12 3C7.5 3 4 6.5 4 11v7c0 .5.4 1 1 1s1-.5 1-1v-7c0-3.3 2.7-6 6-6s6 2.7 6 6v7c0 .5.4 1 1 1s1-.5 1-1v-7c0-4.5-3.5-8-8-8z\"\n          stroke={color}\n          strokeWidth=\"2\"\n          strokeLinecap=\"round\"\n          strokeLinejoin=\"round\"\n        />\n        <Path\n          d=\"M5 18v1c0 .5.4 1 1 1s1-.5 1-1v-1M18 18v1c0 .5.4 1 1 1s1-.5 1-1v-1\"\n          stroke={color}\n          strokeWidth=\"2\"\n          strokeLinecap=\"round\"\n          strokeLinejoin=\"round\"\n        />\n      </Svg>\n    );\n  }\n\n  const ion = IONICON_NAME_MAP[name];\n  if (ion) {\n    return <Ionicons name={ion} size={size} color={color} style={style} />;\n  }\n\n  return <View style={[{ width: size, height: size }, style]} />;",
+      "theirsContent": "import React from \"react\";\nimport {\n  AlertTriangle,\n  TriangleAlert,\n  MessageSquare,\n  MessagesSquare,\n  Calendar,\n  Horse,\n  Users,\n  ClipboardList,\n  Search,\n  Bell,\n  Clock,\n  MapPin,\n  DollarSign,\n  CloudRain,\n  ChevronRight,\n  Thermometer,\n  ClipboardCheck,\n  CheckCircle2,\n  XCircle,\n  LogIn,\n  LogOut,\n  StickyNote,\n} from \"lucide-react-native\";\n\n/**\n * BarnOps Icon Wrapper (Option B)\n * Use <Icon name=\"alerts\" size={20} color=\"#fff\" />\n * Never import lucide-react-native directly anywhere else in the app.\n */\n\n// Safe fallbacks for version differences\nconst AlertsIcon = TriangleAlert || AlertTriangle;\nconst ChatIcon = MessagesSquare || MessageSquare;\n\n// Registry = your app’s stable icon names\nconst REGISTRY = {\n  alerts: AlertsIcon,\n  chat: ChatIcon,\n  calendar: Calendar,\n  horse: Horse,\n  staff: Users,\n  tasks: ClipboardList,\n  search: Search,\n  bell: Bell,\n  clock: Clock,\n  mapPin: MapPin,\n  dollar: DollarSign,\n  rain: CloudRain,\n  chevronRight: ChevronRight,\n  thermometer: Thermometer,\n  clipboardCheck: ClipboardCheck,\n  check: CheckCircle2,\n  x: XCircle,\n  logIn: LogIn,\n  logOut: LogOut,\n  note: StickyNote,\n};\n\nexport function Icon({ name, size = 20, color = \"#fff\" }) {\n  const C = REGISTRY[name] || AlertTriangle; // final fallback: never crash\n  return <C size={size} color={color} />;"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/(tabs)/_layout.jsx",
+    "/apps/mobile/src/components/WelcomeScreen/QuickLinksSection.jsx",
+    "/apps/mobile/src/components/HomeScreen/QuickLinksSection.jsx",
+    "/apps/mobile/src/ui/icons/Icon.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

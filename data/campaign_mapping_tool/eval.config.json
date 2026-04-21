@@ -1,0 +1,9 @@
+{
+  "name": "campaign_mapping_tool",
+  "description": "Merge conflict with 7 conflict(s) across 7 file(s)",
+  "sourceConflictId": "f5775a45-9df3-4109-8af2-5fd9a6fb744f",
+  "sourceTimestamp": "2026-02-07T20:44:49.566Z",
+  "language": "javascript",
+  "conflictedFileCount": 7,
+  "conflictBlockCount": 25
+}

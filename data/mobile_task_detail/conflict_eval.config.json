@@ -1,0 +1,139 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+      "oursContent": "import { Image } from \"expo-image\";\nimport {\n  Paperclip,\n  CornerUpLeft,\n  CornerDownRight,\n  Copy,\n} from \"lucide-react-native\";\nimport { formatDateTime, attachmentLabel } from \"@/utils/taskFormatters\";",
+      "theirsContent": "import { Paperclip, CornerDownRight } from \"lucide-react-native\";\nimport { Image } from \"expo-image\";\nimport { formatDate, attachmentLabel } from \"@/utils/taskFormatters\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+      "oursContent": "function getInitials(name) {\n  const n = String(name || \"\").trim();\n  if (!n) return \"?\";\n  const parts = n.split(/\\s+/).filter(Boolean);\n  const first = parts[0] ? parts[0][0] : \"\";\n  const last = parts.length > 1 ? parts[parts.length - 1][0] : \"\";\n  const initials = `${first}${last}`.toUpperCase();\n  return initials || \"?\";\n}\n\nfunction AvatarBubble({ url, name, COLORS }) {\n  const initials = getInitials(name);\n  const hasUrl = typeof url === \"string\" && url.trim();\n\n  if (hasUrl) {\n    return (\n      <Image\n        source={{ uri: url }}\n        style={{\n          width: 28,\n          height: 28,\n          borderRadius: 10,\n          backgroundColor: COLORS.bg.tertiary,\n        }}\n        contentFit=\"cover\"\n        transition={100}\n      />\n    );\n  }\n\n  return (\n    <View\n      style={{\n        width: 28,\n        height: 28,\n        borderRadius: 10,\n        backgroundColor: COLORS.bg.tertiary,\n        borderWidth: 1,\n        borderColor: COLORS.border.primary,\n        alignItems: \"center\",\n        justifyContent: \"center\",\n      }}\n    >\n      <Text\n        style={{\n          color: COLORS.text.secondary,\n          fontWeight: \"900\",\n          fontSize: 12,\n        }}\n      >\n        {initials}\n      </Text>\n    </View>\n  );\n}\n",
+      "theirsContent": "function initials(name) {\n  const raw = String(name || \"\").trim();\n  if (!raw) return \"?\";\n  const parts = raw.split(/\\s+/g).filter(Boolean);\n  const first = parts[0] ? parts[0][0] : \"\";\n  const last = parts.length > 1 ? parts[parts.length - 1][0] : \"\";\n  const out = `${first}${last}`.toUpperCase();\n  return out || \"?\";\n}\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+      "oursContent": "  const avatarUrl = comment?.employee_avatar_url\n    ? String(comment.employee_avatar_url)\n    : null;\n  const created = comment?.created_at\n    ? formatDateTime(comment.created_at)\n    : null;",
+      "theirsContent": "  const created = comment?.created_at ? formatDate(comment.created_at) : null;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+      "oursContent": "  const canCopy = typeof onCopyAttachment === \"function\";\n",
+      "theirsContent": "  const avatarUrl = comment?.employee_avatar_url\n    ? String(comment.employee_avatar_url)\n    : \"\";\n\n  const showAvatar = Boolean(avatarUrl && /^https?:\\/\\//i.test(avatarUrl));\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+      "oursContent": "      <View style={{ flexDirection: \"row\", gap: 10 }}>\n        <AvatarBubble url={avatarUrl} name={name} COLORS={COLORS} />\n\n        <View style={{ flex: 1, minWidth: 0 }}>\n          <View style={{ flexDirection: \"row\", alignItems: \"center\", gap: 8 }}>\n            {isReply ? (\n              <CornerDownRight size={14} color={COLORS.text.tertiary} />\n            ) : null}\n\n            <Text\n              style={{\n                color: COLORS.text.primary,\n                fontSize: 12,\n                fontWeight: \"900\",\n              }}\n              numberOfLines={1}\n            >\n              {name}\n            </Text>\n\n            {created ? (\n              <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n                {created}\n              </Text>\n            ) : null}\n\n            <TouchableOpacity\n              onPress={onReplyPress}\n              activeOpacity={0.9}\n              style={{\n                marginLeft: \"auto\",\n                paddingHorizontal: 10,\n                paddingVertical: 6,\n                borderRadius: 999,\n                backgroundColor: COLORS.bg.tertiary,\n                borderWidth: 1,\n                borderColor: COLORS.border.primary,\n                flexDirection: \"row\",\n                alignItems: \"center\",\n                gap: 6,\n              }}\n            >\n              <CornerUpLeft size={14} color={COLORS.text.secondary} />\n              <Text\n                style={{\n                  color: COLORS.text.secondary,\n                  fontWeight: \"900\",\n                  fontSize: 12,\n                }}\n              >\n                Reply\n              </Text>\n            </TouchableOpacity>\n          </View>\n\n          <View style={{ marginTop: 8 }}>{renderBody(bodyText)}</View>\n\n          {attachments.length > 0 ? (\n            <View style={{ gap: 8, marginTop: 10 }}>\n              {attachments.map((u) => {\n                const label = attachmentLabel(u);\n\n                return (\n                  <View\n                    key={u}\n                    style={{\n                      flexDirection: \"row\",\n                      alignItems: \"center\",\n                      gap: 8,\n                    }}\n                  >\n                    <TouchableOpacity\n                      onPress={() => onOpenAttachment(u)}\n                      onLongPress={\n                        canCopy ? () => onCopyAttachment(u) : undefined\n                      }\n                      activeOpacity={0.9}\n                      style={{\n                        flex: 1,\n                        minWidth: 0,\n                        paddingHorizontal: 10,\n                        paddingVertical: 8,\n                        borderRadius: 12,\n                        borderWidth: 1,\n                        borderColor: COLORS.border.primary,\n                        backgroundColor: COLORS.bg.tertiary,\n                        flexDirection: \"row\",\n                        alignItems: \"center\",\n                        gap: 8,\n                      }}\n                    >\n                      <Paperclip size={14} color={COLORS.text.secondary} />\n                      <Text\n                        style={{\n                          flex: 1,\n                          color: COLORS.text.primary,\n                          fontWeight: \"900\",\n                        }}\n                        numberOfLines={1}\n                      >\n                        {label}\n                      </Text>\n                    </TouchableOpacity>\n\n                    {canCopy ? (\n                      <TouchableOpacity\n                        onPress={() => onCopyAttachment(u)}\n                        activeOpacity={0.9}\n                        style={{\n                          width: 34,\n                          height: 34,\n                          borderRadius: 12,\n                          backgroundColor: COLORS.bg.tertiary,\n                          borderWidth: 1,\n                          borderColor: COLORS.border.primary,\n                          alignItems: \"center\",\n                          justifyContent: \"center\",\n                        }}\n                        accessibilityLabel=\"Copy link\"\n                      >\n                        <Copy size={16} color={COLORS.text.secondary} />\n                      </TouchableOpacity>\n                    ) : null}\n                  </View>\n                );\n              })}\n\n              {canCopy ? (\n                <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n                  Tip: long-press an attachment to copy the link.\n                </Text>\n              ) : null}\n            </View>\n          ) : null}\n        </View>",
+      "theirsContent": "      <View style={{ flexDirection: \"row\", gap: 10 }}>\n        <View\n          style={{\n            width: 28,\n            height: 28,\n            borderRadius: 999,\n            backgroundColor: COLORS.bg.tertiary,\n            borderWidth: 1,\n            borderColor: COLORS.border.primary,\n            alignItems: \"center\",\n            justifyContent: \"center\",\n            overflow: \"hidden\",\n          }}\n        >\n          {showAvatar ? (\n            <Image\n              source={{ uri: avatarUrl }}\n              style={{ width: 28, height: 28 }}\n              contentFit=\"cover\"\n              transition={100}\n            />\n          ) : (\n            <Text\n              style={{\n                color: COLORS.text.primary,\n                fontWeight: \"900\",\n                fontSize: 12,\n              }}\n            >\n              {initials(name)}\n            </Text>\n          )}\n        </View>\n\n        <View style={{ flex: 1, minWidth: 0 }}>\n          <View\n            style={{\n              flexDirection: \"row\",\n              alignItems: \"center\",\n              gap: 8,\n            }}\n          >\n            {isReply ? (\n              <CornerDownRight size={14} color={COLORS.text.tertiary} />\n            ) : null}\n\n            <Text\n              style={{\n                color: COLORS.text.primary,\n                fontSize: 12,\n                fontWeight: \"900\",\n              }}\n              numberOfLines={1}\n            >\n              {name}\n            </Text>\n\n            {created ? (\n              <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n                {created}\n              </Text>\n            ) : null}\n\n            <TouchableOpacity\n              onPress={onReplyPress}\n              activeOpacity={0.9}\n              style={{ marginLeft: \"auto\" }}\n            >\n              <Text\n                style={{\n                  color: COLORS.text.secondary,\n                  fontWeight: \"900\",\n                  fontSize: 12,\n                }}\n              >\n                Reply\n              </Text>\n            </TouchableOpacity>\n          </View>\n\n          <View style={{ marginTop: 6 }}>{renderBody(bodyText)}</View>\n\n          {attachments.length > 0 ? (\n            <View style={{ marginTop: 10, gap: 8 }}>\n              {attachments.map((u) => (\n                <TouchableOpacity\n                  key={u}\n                  onPress={() => onOpenAttachment(u)}\n                  activeOpacity={0.9}\n                  style={{\n                    paddingHorizontal: 10,\n                    paddingVertical: 8,\n                    borderRadius: 12,\n                    backgroundColor: COLORS.bg.tertiary,\n                    borderWidth: 1,\n                    borderColor: COLORS.border.primary,\n                    flexDirection: \"row\",\n                    alignItems: \"center\",\n                    gap: 8,\n                  }}\n                >\n                  <Paperclip size={14} color={COLORS.text.secondary} />\n                  <View style={{ flex: 1, minWidth: 0 }}>\n                    <Text\n                      style={{ color: COLORS.text.primary, fontWeight: \"900\" }}\n                      numberOfLines={1}\n                    >\n                      {attachmentLabel(u)}\n                    </Text>\n                    <Text\n                      style={{ color: COLORS.text.tertiary, fontSize: 12 }}\n                      numberOfLines={1}\n                    >\n                      {u}\n                    </Text>\n                  </View>\n                </TouchableOpacity>\n              ))}\n            </View>\n          ) : null}\n        </View>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentsSection.jsx",
+      "oursContent": "                {hasReplies ? (\n                  <View\n                    style={{\n                      paddingLeft: 14,\n                      borderLeftWidth: 1,\n                      borderLeftColor: COLORS.border.primary,\n                      gap: 8,\n                    }}\n                  >",
+      "theirsContent": "                {replies.length > 0 ? (\n                  <View\n                    style={{\n                      marginLeft: 14,\n                      paddingLeft: 18,\n                      borderLeftWidth: 1,\n                      borderLeftColor: COLORS.border.primary,\n                      gap: 8,\n                    }}\n                  >"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+      "oursContent": "import { Paperclip, Copy } from \"lucide-react-native\";",
+      "theirsContent": "import { Paperclip } from \"lucide-react-native\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+      "oursContent": "export function TaskAttachments({ attachments, COLORS, onOpenUrl, onCopyUrl }) {\n  const list = Array.isArray(attachments)\n    ? attachments.filter((u) => typeof u === \"string\" && u.trim())\n    : [];",
+      "theirsContent": "export function TaskAttachments({ attachments, COLORS, onOpenUrl }) {\n  const list = Array.isArray(attachments)\n    ? attachments.filter((u) => typeof u === \"string\" && u.trim())\n    : [];"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+      "oursContent": "  if (list.length === 0) return null;\n\n  const canCopy = typeof onCopyUrl === \"function\";\n",
+      "theirsContent": "  if (list.length === 0) return null;\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+      "oursContent": "        {list.map((u) => {\n          const label = attachmentLabel(u);\n          return (\n            <View\n              key={u}\n              style={{ flexDirection: \"row\", alignItems: \"center\", gap: 8 }}",
+      "theirsContent": "        {list.map((u) => (\n          <TouchableOpacity\n            key={u}\n            onPress={() => onOpenUrl(u)}\n            activeOpacity={0.9}\n            style={{\n              borderWidth: 1,\n              borderColor: COLORS.border.primary,\n              backgroundColor: COLORS.bg.secondary,\n              borderRadius: 12,\n              padding: 10,\n              gap: 4,\n            }}\n          >\n            <Text\n              style={{\n                color: COLORS.text.primary,\n                fontWeight: \"900\",\n              }}\n              numberOfLines={1}"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+      "oursContent": "        Tip: long-press an attachment to copy the link.\n      </Text>\n\n      <Text\n        style={{\n          marginTop: 6,\n          color: COLORS.text.tertiary,\n          fontSize: 12,\n        }}\n      >\n        To add or remove task attachments, use Edit.",
+      "theirsContent": "        To add or remove attachments, use Edit."
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "import { Paperclip, X, Trash2 } from \"lucide-react-native\";",
+      "theirsContent": "import { Paperclip, Trash2, X } from \"lucide-react-native\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "  const hasPending = pendingFiles.length > 0;\n  const canPost = Boolean(String(commentText || \"\").trim()) && !isWorking;\n  const attachLabel = uploadLoading ? \"Uploading…\" : \"Attach\";\n",
+      "theirsContent": "  const canPost = Boolean(String(commentText || \"\").trim()) && !isWorking;\n  const attachButtonLabel = uploadLoading ? \"Uploading…\" : \"Attach\";\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "    <View\n      style={{\n        marginTop: 14,\n        paddingTop: 12,\n        borderTopWidth: 1,\n        borderTopColor: COLORS.border.primary,\n        gap: 10,\n      }}\n    >\n      <View style={{ flexDirection: \"row\", justifyContent: \"flex-end\" }}>\n        <TouchableOpacity\n          onPress={onSubmitComment}\n          disabled={!canPost}\n          activeOpacity={0.9}\n          style={{\n            paddingHorizontal: 14,\n            height: 40,\n            borderRadius: 12,\n            backgroundColor: COLORS.brand,\n            alignItems: \"center\",\n            justifyContent: \"center\",\n            opacity: canPost ? 1 : 0.6,\n            flexDirection: \"row\",\n            gap: 10,\n          }}\n        >\n          {isWorking ? (\n            <ActivityIndicator color=\"#FFFFFF\" />\n          ) : (\n            <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }}>Post</Text>\n          )}\n        </TouchableOpacity>\n      </View>\n\n      <View\n        style={{ flexDirection: \"row\", justifyContent: \"flex-end\", gap: 10 }}\n      >",
+      "theirsContent": "    <View style={{ marginTop: 10, gap: 10 }}>\n      {/* Web-style: Post button top-right */}\n      <View style={{ flexDirection: \"row\", justifyContent: \"flex-end\" }}>"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "            {attachLabel}",
+      "theirsContent": "            {attachButtonLabel}"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "      <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n        Attachments will be uploaded and shared as links.\n      </Text>\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+      "oursContent": "      <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n        Tip: type @ then tap a name (we'll insert it as @(Name)). You can also\n        tap a mention in an older comment to re-mention them.\n      </Text>",
+      "theirsContent": "      <Text style={{ color: COLORS.text.tertiary, fontSize: 12 }}>\n        Tip: type @ then tap a name (we'll insert it as @(Name)). You can also\n        tap an @tag in an older comment.\n      </Text>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx",
+      "oursContent": "            const isMention = t.type === \"mention\";\n            const mentionValue = isMention ? String(t.value || \"\") : \"\";\n            const canPressMention =\n              isMention && typeof onMentionTokenPress === \"function\";\n\n            if (isMention) {\n              const mentionLabel = `@${mentionValue}`;\n",
+      "theirsContent": "\n            if (t.type === \"mention\") {\n              const label = String(t.value || \"\").trim();\n              const pressable = typeof onQuickMention === \"function\" && label;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx",
+      "oursContent": "                  onPress={\n                    canPressMention\n                      ? () => onMentionTokenPress(mentionValue)\n                      : undefined\n                  }\n                  style={{\n                    color: COLORS.brand,\n                    fontWeight: \"900\",\n                    textDecorationLine: canPressMention ? \"underline\" : \"none\",\n                  }}",
+      "theirsContent": "                  onPress={\n                    pressable\n                      ? () => {\n                          try {\n                            onQuickMention(label);\n                          } catch (e) {\n                            // ignore\n                          }\n                        }\n                      : undefined\n                  }\n                  suppressHighlighting\n                  style={{\n                    color: COLORS.brand,\n                    fontWeight: \"900\",\n                    backgroundColor: `${COLORS.brand}18`,\n                    borderWidth: 1,\n                    borderColor: `${COLORS.brand}40`,\n                    paddingHorizontal: 6,\n                    paddingVertical: 2,\n                    borderRadius: 6,\n                  }}"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx",
+      "oursContent": "                  {mentionLabel}",
+      "theirsContent": "                  {`@${label}`}"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx",
+      "oursContent": "    [COLORS.brand, COLORS.text.primary, onMentionTokenPress],",
+      "theirsContent": "    [COLORS.brand, COLORS.text.primary, onQuickMention],"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentCard.jsx",
+    "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentsSection.jsx",
+    "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskAttachments.jsx",
+    "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/CommentComposer.jsx",
+    "/apps/mobile/src/components/TradeShow/TasksTab/TaskDetailsModal/TaskDetailsContent.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

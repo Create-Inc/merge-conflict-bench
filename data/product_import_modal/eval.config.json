@@ -1,0 +1,9 @@
+{
+  "name": "product_import_modal",
+  "description": "Merge conflict with 1 conflict(s) across 1 file(s)",
+  "sourceConflictId": "a8a213cd-1b85-4f7a-bd13-297071e3e039",
+  "sourceTimestamp": "2026-01-15T07:43:00.677Z",
+  "language": "javascript",
+  "conflictedFileCount": 1,
+  "conflictBlockCount": 2
+}

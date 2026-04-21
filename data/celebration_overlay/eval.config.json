@@ -1,0 +1,9 @@
+{
+  "name": "celebration_overlay",
+  "description": "Merge conflict with 1 conflict(s) across 1 file(s)",
+  "sourceConflictId": "ad0a4985-c3a3-45b5-bd24-e89b0adce46d",
+  "sourceTimestamp": "2026-01-06T18:06:53.686Z",
+  "language": "javascript",
+  "conflictedFileCount": 1,
+  "conflictBlockCount": 24
+}

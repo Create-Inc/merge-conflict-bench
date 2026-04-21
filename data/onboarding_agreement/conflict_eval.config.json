@@ -1,0 +1,108 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/onboard/page.jsx",
+      "oursContent": "  const agreementPreviewSrc = useMemo(() => {\n    if (!token) return \"\";\n\n    const p = new URLSearchParams();\n    p.set(\"token\", token);\n    p.set(\"format\", \"html\");\n    p.set(\"dealershipName\", formData.dealershipName || \"\");\n    p.set(\"dealershipAddress\", formData.dealershipAddress || \"\");\n    p.set(\"primaryContact\", formData.fullName || \"\");\n    p.set(\"dealershipEmail\", email || \"\");\n    if (resolvedMonthlyFee !== null && resolvedMonthlyFee !== undefined) {\n      p.set(\"monthlySubscriptionFee\", String(resolvedMonthlyFee));\n    }\n    p.set(\"effectiveDate\", formData.agreementEffectiveDate || todayIso);\n    p.set(\"dealerPrintedName\", formData.agreementPrintedName || \"\");\n    p.set(\"dealerSignedDate\", formData.agreementDate || todayIso);\n\n    return `/api/onboarding/agreement-preview?${p.toString()}`;\n  }, [token, formData, email, resolvedMonthlyFee, todayIso]);\n",
+      "theirsContent": "  // NEW: build a full agreement preview right on the page, and keep it auto-filled as the user types\n  const agreementPreviewHtml = useMemo(() => {\n    if (!invitation) return \"\";\n\n    const primaryContact =\n      formData.fullName ||\n      `${invitation.first_name || \"\"} ${invitation.last_name || \"\"}`.trim();\n\n    const addressParts = [];\n    const addr = String(formData.dealershipAddress || \"\").trim();\n    if (addr) addressParts.push(addr);\n    if (!addr && invitation.state) addressParts.push(String(invitation.state));\n\n    const phone = String(formData.dealershipPhone || \"\").trim();\n    const invitePhone = String(invitation.phone || \"\").trim();\n    const phoneToShow = phone || invitePhone;\n    if (phoneToShow) addressParts.push(`Phone: ${phoneToShow}`);\n\n    const dealershipAddressForAgreement = addressParts.join(\" • \");\n\n    return buildServiceAgreementHtml({\n      dealershipName: formData.dealershipName || invitation.company_name || \"\",\n      dealershipAddress: dealershipAddressForAgreement,\n      primaryContact,\n      dealershipEmail: invitation.email || \"\",\n      monthlySubscriptionFee: resolvedMonthlyFee,\n      oneTimeSetupFee: formData.agreementSetupFee || null,\n      effectiveDate: formData.agreementEffectiveDate || todayIso,\n      dealerPrintedName: formData.agreementPrintedName || \"\",\n      dealerTitle: formData.agreementTitle || \"\",\n      dealerSignedDate: formData.agreementDate || \"\",\n      lotlyPrintedName: \"Alec Sennertt\",\n      lotlyTitle: \"Founder\",\n      lotlySignedDate: formData.agreementDate || \"\",\n    });\n  }, [formData, invitation, resolvedMonthlyFee, todayIso]);\n\n  const agreementPreviewUrlHtml = useMemo(() => {\n    if (!token) return \"\";\n    return `/api/onboarding/agreement-preview?token=${encodeURIComponent(token)}&format=html`;\n  }, [token]);\n\n  const agreementPreviewUrlPdf = useMemo(() => {\n    if (!token) return \"\";\n    return `/api/onboarding/agreement-preview?token=${encodeURIComponent(token)}&format=pdf`;\n  }, [token]);\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/onboard/page.jsx",
+      "oursContent": "            {agreementPreviewSrc ? (\n              <div className=\"rounded-lg border border-gray-200 bg-white overflow-hidden\">\n                <iframe\n                  title=\"Service Agreement Preview\"\n                  src={agreementPreviewSrc}\n                  className=\"w-full h-[360px]\"\n                />\n              </div>\n            ) : (\n              <div className=\"rounded-lg border border-gray-200 bg-gray-50 p-4\">\n                <div className=\"text-sm text-gray-700\">\n                  Loading agreement preview…\n                </div>\n              </div>\n            )}",
+      "theirsContent": "            <div className=\"flex flex-col sm:flex-row sm:items-center gap-2 mb-4\">\n              <a\n                href={agreementPreviewUrlHtml}\n                target=\"_blank\"\n                rel=\"noreferrer\"\n                className=\"inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-semibold text-gray-800\"\n              >\n                View full agreement (web)\n              </a>\n              <a\n                href={agreementPreviewUrlPdf}\n                target=\"_blank\"\n                rel=\"noreferrer\"\n                className=\"inline-flex items-center justify-center px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-semibold text-gray-800\"\n              >\n                Download PDF\n              </a>\n            </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/onboarding/agreement-preview/route.js",
+      "oursContent": "function safeNum(value) {\n  const n = Number(value);\n  return Number.isFinite(n) ? n : null;\n}\n\nfunction buildDealershipAddressFromInvitation(invitation) {\n  const parts = [];\n  if (invitation?.state) parts.push(String(invitation.state));\n  if (invitation?.phone) parts.push(`Phone: ${String(invitation.phone)}`);\n  return parts.join(\" • \");\n}\n\n// GET /api/onboarding/agreement-preview?token=...&format=html|pdf\n// Defaults to HTML so it works reliably in all browsers.",
+      "theirsContent": "// GET /api/onboarding/agreement-preview?token=...&format=pdf|html\n// Generates either an HTML preview (default) or PDF preview of the Lotly Service Agreement (unsigned) so the dealer can review it."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/onboarding/agreement-preview/route.js",
+      "oursContent": "      dealershipEmail,\n      monthlySubscriptionFee: monthlySubscriptionFee,\n      oneTimeSetupFee: ONE_TIME_SETUP_FEE,\n      effectiveDate,\n      dealerPrintedName,\n      dealerSignedDate,",
+      "theirsContent": "      dealershipEmail: invitation.email || \"\",\n      monthlySubscriptionFee: monthlyFee,\n      // Keep field in the preview but default it blank\n      oneTimeSetupFee: null,\n      effectiveDate: todayIso,\n      dealerPrintedName: \"\",\n      dealerTitle: \"\",\n      dealerSignedDate: \"\",\n      lotlyPrintedName,\n      lotlyTitle,\n      lotlySignedDate: \"\","
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/onboarding/agreement-preview/route.js",
+      "oursContent": "    if (format === \"pdf\") {\n      const pdfRes = await fetch(\"/integrations/pdf-generation/pdf\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify({\n          source: { html },\n        }),\n      });",
+      "theirsContent": "    // NEW: HTML preview (works in every browser/email client)\n    if (format === \"html\") {\n      return new Response(html, {\n        status: 200,\n        headers: {\n          \"Content-Type\": \"text/html; charset=utf-8\",\n          \"Cache-Control\": \"no-store\",\n        },\n      });\n    }\n\n    // Default: PDF preview\n    const pdfRes = await fetch(\"/integrations/pdf-generation/pdf\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({\n        source: { html },\n      }),\n    });"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/onboarding/agreement-preview/route.js",
+      "oursContent": "        \"Content-Type\": \"text/html; charset=utf-8\",",
+      "theirsContent": "        \"Content-Type\": \"application/pdf\",\n        \"Content-Disposition\": `inline; filename=\\\"${fileName}_Lotly_Service_Agreement.pdf\\\"`,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/onboarding/invitations/route.js",
+      "oursContent": "",
+      "theirsContent": "    const agreementPreviewUrlHtml = `${baseUrl}/api/onboarding/agreement-preview?token=${token}&format=html`;\n    const agreementPreviewUrlPdf = `${baseUrl}/api/onboarding/agreement-preview?token=${token}&format=pdf`;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/onboarding/invitations/route.js",
+      "oursContent": "",
+      "theirsContent": "          <div style=\"border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; background: #f9fafb; margin: 18px 0;\">\n            <div style=\"font-weight: 800; color: #111827; margin-bottom: 8px;\">Service agreement</div>\n            <div style=\"color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 12px;\">\n              Please review the Lotly Service Agreement before completing setup.\n            </div>\n            <div style=\"text-align: center; margin: 10px 0;\">\n              <a href=\"${agreementPreviewUrlHtml}\"\n                style=\"background-color: #111827; color: white; padding: 12px 16px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700;\">\n                View Service Agreement\n              </a>\n            </div>\n            <div style=\"text-align: center; margin: 8px 0 0;\">\n              <a href=\"${agreementPreviewUrlPdf}\" style=\"color: #2563eb; font-size: 12px;\">Download PDF</a>\n            </div>\n            <div style=\"color: #6b7280; font-size: 12px; line-height: 1.5; margin-top: 10px;\">\n              If the button doesn't work, copy/paste this link:<br />\n              <a href=\"${agreementPreviewUrlHtml}\" style=\"color: #2563eb;\">${agreementPreviewUrlHtml}</a>\n            </div>\n          </div>\n\n          <p style=\"color: #374151; line-height: 1.6; margin-bottom: 14px;\">\n            To finish setup, pick how you'd like billing handled going forward. You can change this later.\n          </p>\n\n          <div style=\"margin: 20px 0;\">\n            <div style=\"margin-bottom: 10px; color: #111827; font-weight: 700;\">Billing preference</div>\n            <div style=\"display: grid; grid-template-columns: 1fr; gap: 10px;\">\n              <a href=\"${onboardingUrlStripeMonthly}\"\n                 style=\"background-color: #111827; color: white; padding: 14px 18px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700; text-align: center;\">\n                Recurring monthly invoice (recommended)\n              </a>\n              <a href=\"${onboardingUrlManual}\"\n                 style=\"background-color: #2563eb; color: white; padding: 14px 18px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700; text-align: center;\">\n                Manual invoice (sent by our team each month)\n              </a>\n            </div>\n          </div>\n\n          <p style=\"color: #374151; line-height: 1.6; margin-bottom: 16px;\">\n            After you complete setup, we’ll send your first invoice within 24 hours.\n            Once your first invoice is paid, we will enable your account and email you when you can sign in.\n          </p>\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/onboarding/invitations/route.js",
+      "oursContent": "      text: `Welcome to Lotly!\\n\\nHi ${recipientName},\\n\\nStart onboarding: ${onboardingUrl}\\n\\nInside onboarding you'll review & sign the service agreement and choose billing.`,",
+      "theirsContent": "      text: `Welcome to Lotly!\\n\\nHi ${recipientName},\\n\\nReview the service agreement: ${agreementPreviewUrlHtml}\\n(Download PDF: ${agreementPreviewUrlPdf})\\n\\nChoose billing + complete setup:\\n- Recurring monthly invoice: ${onboardingUrlStripeMonthly}\\n- Manual invoice: ${onboardingUrlManual}\\n\\nStart onboarding: ${onboardingUrl}`,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "    const buildOnboardingEmailPayload = ({ invitation, inviteUrl }) => {",
+      "theirsContent": "    const buildOnboardingEmailPayload = ({\n      invitation,\n      inviteUrl,\n      agreementPreviewUrlHtml,\n      agreementPreviewUrlPdf,\n    }) => {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "            <div style=\"text-align: center; margin: 22px 0 28px;\">",
+      "theirsContent": "            <div style=\"border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; background: #f9fafb; margin: 18px 0;\">\n              <div style=\"font-weight: 800; color: #111827; margin-bottom: 8px;\">Service agreement</div>\n              <div style=\"color: #374151; font-size: 14px; line-height: 1.6; margin-bottom: 12px;\">\n                Please review the Lotly Service Agreement before completing setup.\n              </div>\n              <div style=\"text-align: center; margin: 10px 0;\">\n                <a href=\"${agreementPreviewUrlHtml}\"\n                  style=\"background-color: #111827; color: white; padding: 12px 16px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700;\">\n                  View Service Agreement\n                </a>\n              </div>\n              <div style=\"text-align: center; margin: 8px 0 0;\">\n                <a href=\"${agreementPreviewUrlPdf}\" style=\"color: #2563eb; font-size: 12px;\">Download PDF</a>\n              </div>\n              <div style=\"color: #6b7280; font-size: 12px; line-height: 1.5; margin-top: 10px;\">\n                If the button doesn't work, copy/paste this link:<br />\n                <a href=\"${agreementPreviewUrlHtml}\" style=\"color: #2563eb;\">${agreementPreviewUrlHtml}</a>\n              </div>\n            </div>\n\n            <p style=\"color: #374151; line-height: 1.6; margin-bottom: 14px;\">\n              To finish setup, pick how you'd like billing handled going forward. You can change this later.\n            </p>\n\n            <div style=\"margin: 20px 0;\">\n              <div style=\"margin-bottom: 10px; color: #111827; font-weight: 800;\">Billing preference</div>\n              <div style=\"display: grid; grid-template-columns: 1fr; gap: 10px;\">\n                <a href=\"${onboardingUrlStripeMonthly}\"\n                   style=\"background-color: #111827; color: white; padding: 14px 18px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700; text-align: center;\">\n                  Recurring monthly invoice (recommended)\n                </a>\n                <a href=\"${onboardingUrlManual}\"\n                   style=\"background-color: #2563eb; color: white; padding: 14px 18px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 700; text-align: center;\">\n                  Manual invoice (sent by our team each month)\n                </a>\n              </div>\n            </div>\n\n            <p style=\"color: #374151; line-height: 1.6; margin-bottom: 18px;\">\n              After you complete setup, we’ll send your first invoice within 24 hours.\n              Once your first invoice is paid, we will enable your account and email you when you can sign in.\n            </p>\n\n            <div style=\"text-align: center; margin: 22px 0 30px;\">"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "        text: `Welcome to Lotly!\\n\\nHi ${recipientName},\\n\\nStart onboarding here: ${inviteUrl}\\n\\nInside onboarding you'll review & sign the service agreement and choose billing.`,",
+      "theirsContent": "        text: `Welcome to Lotly!\\n\\nHi ${recipientName},\\n\\nReview the service agreement: ${agreementPreviewUrlHtml}\\n(Download PDF: ${agreementPreviewUrlPdf})\\n\\nChoose billing + complete setup:\\n- Recurring monthly invoice: ${onboardingUrlStripeMonthly}\\n- Manual invoice: ${onboardingUrlManual}\\n\\nStart onboarding: ${inviteUrl}`,"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "",
+      "theirsContent": "      const agreementPreviewUrlHtml = `${baseUrl.replace(/\\/$/, \"\")}/api/onboarding/agreement-preview?token=${existingInvitation.token}&format=html`;\n      const agreementPreviewUrlPdf = `${baseUrl.replace(/\\/$/, \"\")}/api/onboarding/agreement-preview?token=${existingInvitation.token}&format=pdf`;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "",
+      "theirsContent": "            agreementPreviewUrlHtml,\n            agreementPreviewUrlPdf,"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "",
+      "theirsContent": "    const agreementPreviewUrlHtml = `${baseUrl.replace(/\\/$/, \"\")}/api/onboarding/agreement-preview?token=${token}&format=html`;\n    const agreementPreviewUrlPdf = `${baseUrl.replace(/\\/$/, \"\")}/api/onboarding/agreement-preview?token=${token}&format=pdf`;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/platform/leads/convert/route.js",
+      "oursContent": "",
+      "theirsContent": "          agreementPreviewUrlHtml,\n          agreementPreviewUrlPdf,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/onboard/page.jsx",
+    "/apps/web/src/app/api/onboarding/agreement-preview/route.js",
+    "/apps/web/src/app/api/onboarding/invitations/route.js",
+    "/apps/web/src/app/api/platform/leads/convert/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

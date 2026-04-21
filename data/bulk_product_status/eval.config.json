@@ -1,0 +1,9 @@
+{
+  "name": "bulk_product_status",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "c24f741c-8747-4697-abaf-961b3568ef48",
+  "sourceTimestamp": "2026-01-30T01:47:01.476Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 22
+}

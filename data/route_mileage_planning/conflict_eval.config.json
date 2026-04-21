@@ -1,0 +1,137 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "        miles_status: route.miles_status || null,",
+      "theirsContent": "        mileage_status: route.mileage_status || null,\n        mileage_error: route.mileage_error || null,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "        milesFailedRoutes: 0,",
+      "theirsContent": "        milesSkippedRoutes: 0,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "    let milesTotalRoutes = 0;\n    let milesFailedRoutes = 0;",
+      "theirsContent": "    let milesTotalRoutes = 0;\n    let milesSkippedRoutes = 0;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "      const milesStatus = String(route.miles_status || \"pending\");\n      const shouldCountForMiles = stopCount > 0 && milesStatus !== \"failed\";\n      if (shouldCountForMiles) {\n        milesTotalRoutes += 1;\n      } else if (stopCount > 0 && milesStatus === \"failed\") {\n        milesFailedRoutes += 1;\n      }\n",
+      "theirsContent": "      const status = String(route.mileage_status || \"pending\").toLowerCase();\n      const isSkippable = stopCount > 0;\n\n      if (isSkippable) {\n        if (status === \"skipped\") {\n          milesSkippedRoutes += 1;\n        } else {\n          // Only count eligible routes here (pending + estimated)\n          milesTotalRoutes += 1;\n        }\n      }\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "      milesFailedRoutes,",
+      "theirsContent": "      milesSkippedRoutes,"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "          milesTotalRoutes: 0,\n          milesFailedRoutes: 0,",
+      "theirsContent": "          milesTotalRoutes: 0,\n          milesSkippedRoutes: 0,"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/hooks/useSplashDrivePlanner.js",
+      "oursContent": "      const milesStatus = String(route.miles_status || \"pending\");\n      if (stopCount > 0 && milesStatus !== \"failed\") {\n        tech.milesTotalRoutes += 1;\n      } else if (stopCount > 0 && milesStatus === \"failed\") {\n        tech.milesFailedRoutes += 1;\n      }\n",
+      "theirsContent": "      if (stopCount > 0) {\n        const status = String(route.mileage_status || \"pending\").toLowerCase();\n        if (status === \"skipped\") {\n          tech.milesSkippedRoutes += 1;\n        } else {\n          tech.milesTotalRoutes += 1;\n        }\n      }\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/SplashDrive/ProposedRoutesSection.jsx",
+      "oursContent": "  const milesFailedRoutes = proposedWeekSummary?.milesFailedRoutes || 0;",
+      "theirsContent": "  const milesSkippedRoutes = proposedWeekSummary?.milesSkippedRoutes || 0;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/SplashDrive/ProposedRoutesSection.jsx",
+      "oursContent": "  const milesLabel = hasAllMiles\n    ? \"Travel miles (est.)\"\n    : hasSomeMiles\n      ? \"Travel miles (est. so far)\"\n      : \"Travel miles (est.)\";\n\n  const milesNote = hasAllMiles",
+      "theirsContent": "  const milesNoteBase = hasAllMiles"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/SplashDrive/ProposedRoutesSection.jsx",
+      "oursContent": "                        const milesStatus = String(\n                          route.miles_status || \"pending\",\n                        );\n                        const showMilesStatus = route.miles == null;\n                        const milesStatusText =\n                          milesStatus === \"failed\"\n                            ? \"Miles unavailable\"\n                            : \"Miles pending\";\n                        const milesStatusClass =\n                          milesStatus === \"failed\"\n                            ? \"text-[11px] text-red-700\"\n                            : \"text-[11px] text-amber-700\";\n",
+      "theirsContent": "                        const mileageStatus = String(\n                          route.mileage_status || \"pending\",\n                        ).toLowerCase();\n                        const showStatusPill =\n                          route.miles == null && mileageStatus !== \"estimated\";\n\n                        const statusPillText =\n                          mileageStatus === \"skipped\"\n                            ? \"Miles skipped\"\n                            : \"Miles pending\";\n\n                        const statusPillClasses =\n                          mileageStatus === \"skipped\"\n                            ? \"bg-red-50 border-red-200 text-red-800\"\n                            : \"bg-gray-50 border-gray-200 text-[#667085]\";\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/SplashDrive/ProposedRoutesSection.jsx",
+      "oursContent": "                            <div className=\"flex items-start justify-between gap-2\">\n                              <p className=\"text-sm font-medium text-[#344054]\">\n                                {lineLeft}\n                              </p>\n                              {showMilesStatus ? (\n                                <span className={milesStatusClass}>\n                                  {milesStatusText}\n                                </span>\n                              ) : null}\n                            </div>",
+      "theirsContent": "                            <div className=\"flex items-start justify-between gap-2\">\n                              <p className=\"text-sm font-medium text-[#344054]\">\n                                {lineLeft}\n                              </p>\n                              {showStatusPill ? (\n                                <span\n                                  title={\n                                    mileageStatus === \"skipped\"\n                                      ? route.mileage_error || \"\"\n                                      : \"\"\n                                  }\n                                  className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] ${statusPillClasses}`}\n                                >\n                                  {statusPillText}\n                                </span>\n                              ) : null}\n                            </div>\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "async function ensureMilesStatusColumns() {\n  await sql`\n    ALTER TABLE splash_drive_plan_routes\n      ADD COLUMN IF NOT EXISTS miles_estimate_status TEXT\n  `;\n  await sql`\n    ALTER TABLE splash_drive_plan_routes\n      ADD COLUMN IF NOT EXISTS miles_estimate_error TEXT\n  `;\n  await sql`\n    ALTER TABLE splash_drive_plan_routes\n      ADD COLUMN IF NOT EXISTS miles_estimated_at TIMESTAMPTZ\n  `;\n}\n",
+      "theirsContent": "async function ensureMileageColumns() {\n  await sql`\n    ALTER TABLE splash_drive_plan_routes\n      ADD COLUMN IF NOT EXISTS mileage_status TEXT\n  `;\n  await sql`\n    ALTER TABLE splash_drive_plan_routes\n      ADD COLUMN IF NOT EXISTS mileage_error TEXT\n  `;\n  await sql(\n    \"UPDATE splash_drive_plan_routes SET mileage_status = 'pending' WHERE mileage_status IS NULL\",\n    [],\n  );\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "    await ensureMilesStatusColumns();",
+      "theirsContent": "    await ensureMileageColumns();"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "      .filter((r) => Number(r.missing_miles_stops) > 0)\n      .filter((r) => String(r.miles_estimate_status || \"\") !== \"failed\");",
+      "theirsContent": "      .filter((r) => normalizeMileageStatus(r.mileage_status) !== \"skipped\")\n      .filter((r) => Number(r.missing_miles_stops) > 0);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "\n        const msg = `Missing service addresses for ${badList}${invalid.length > 5 ? \"…\" : \"\"}`;\n\n        issues.push(`Mileage skipped for ${routeLabel}: ${msg}`);\n\n        await sql(\n          \"UPDATE splash_drive_plan_routes SET miles_estimate_status = 'failed', miles_estimate_error = $1, miles_estimated_at = CURRENT_TIMESTAMP WHERE id = $2 AND company_id = $3\",\n          [msg, planRouteId, companyId],",
+      "theirsContent": "\n        const message = `Missing service addresses for ${badList}${invalid.length > 5 ? \"…\" : \"\"}`;\n        issues.push(`Mileage skipped for ${routeLabel}: ${message}`);\n        await markSkipped(message);\n        continue;\n      }\n\n      if (normalizedStops.length + 1 > 50) {\n        const routeLabel = String(\n          routeAgg.route_name || `Route ${planRouteId}`,"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "",
+      "theirsContent": "        const message = `Too many stops for mileage estimation (${normalizedStops.length} stops). ORS matrix limit is 49 stops per route.`;\n        issues.push(`Mileage skipped for ${routeLabel}: ${message}`);\n        await markSkipped(message);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "        const errMsg = e?.message || String(e);\n        issues.push(`Mileage skipped for ${routeLabel}: ${errMsg}`);\n\n        await sql(\n          \"UPDATE splash_drive_plan_routes SET miles_estimate_status = 'failed', miles_estimate_error = $1, miles_estimated_at = CURRENT_TIMESTAMP WHERE id = $2 AND company_id = $3\",\n          [errMsg, planRouteId, companyId],\n        );",
+      "theirsContent": "        const message = e?.message || String(e);\n        issues.push(`Mileage skipped for ${routeLabel}: ${message}`);\n        await markSkipped(message);"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "      .filter((r) => Number(r.missing_miles_stops) > 0)\n      .filter((r) => String(r.miles_estimate_status || \"\") !== \"failed\").length;",
+      "theirsContent": "      .filter((r) => normalizeMileageStatus(r.mileage_status) !== \"skipped\")\n      .filter((r) => Number(r.missing_miles_stops) > 0).length;"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "      const statusRaw = String(r.miles_estimate_status || \"\");",
+      "theirsContent": "      const hasMiles =\n        stopsCount > 0 && status === \"estimated\" && missingStops === 0;"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "        miles_status: milesStatus,",
+      "theirsContent": "        mileage_status: status,\n        mileage_error: r.mileage_error || null,"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js",
+      "oursContent": "        failed_routes: failedRoutesCount,",
+      "theirsContent": "        skipped_routes: skippedRoutes,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/hooks/useSplashDrivePlanner.js",
+    "/apps/web/src/components/SplashDrive/ProposedRoutesSection.jsx",
+    "/apps/web/src/app/api/splash-drive/estimate-plan-miles/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

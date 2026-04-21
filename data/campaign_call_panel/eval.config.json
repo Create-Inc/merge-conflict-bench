@@ -1,0 +1,9 @@
+{
+  "name": "campaign_call_panel",
+  "description": "Merge conflict with 1 conflict(s) across 1 file(s)",
+  "sourceConflictId": "423d394f-b453-43f9-9b74-3e9915b75e15",
+  "sourceTimestamp": "2026-02-08T13:17:07.392Z",
+  "language": "javascript",
+  "conflictedFileCount": 1,
+  "conflictBlockCount": 4
+}

@@ -1,0 +1,279 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "async function buildScheduleReport({\n  viewerEmployee,\n  tradeShowIdRaw,\n  employeeIdRaw,\n  includeCancelled,\n  typeFilter,\n  statusFilter,\n}) {\n  const viewAll = canViewAllTradeShows(viewerEmployee);",
+      "theirsContent": "function formatWhenForEmail(isoString) {\n  if (!isoString) return \"\";\n  try {\n    const d = new Date(isoString);\n    if (Number.isNaN(d.getTime())) return String(isoString);\n    return new Intl.DateTimeFormat(undefined, {\n      weekday: \"short\",\n      month: \"short\",\n      day: \"2-digit\",\n      hour: \"2-digit\",\n      minute: \"2-digit\",\n    }).format(d);\n  } catch {\n    return String(isoString);\n  }\n}"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const tradeShowId = toIntOrNull(tradeShowIdRaw);\n  const employeeId = toIntOrNull(employeeIdRaw);",
+      "theirsContent": "async function fetchScheduleReportItems({\n  viewerEmployee,\n  tradeShowId,\n  employeeId,\n  includeCancelled,\n  typeFilter,\n  statusFilter,\n}) {\n  const viewAll = canViewAllTradeShows(viewerEmployee);"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (tradeShowIdRaw && tradeShowId == null) {\n    return {\n      error: { message: \"Invalid trade_show_id\", status: 400 },\n    };\n  }\n  if (employeeIdRaw && employeeId == null) {\n    return {\n      error: { message: \"Invalid employee_id\", status: 400 },\n    };\n  }",
+      "theirsContent": "  // ---- Reservations ----\n  const reservationWhere = [];\n  const reservationValues = [];"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  // --- reservations ---\n  const reservationWhere = [];\n  const reservationValues = [];",
+      "theirsContent": "  if (!viewAll) {\n    reservationValues.push(Number(viewerEmployee.id));\n    reservationWhere.push(\n      `r.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${reservationValues.length})`,\n    );\n  }"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (!viewAll) {\n    reservationValues.push(Number(viewerEmployee.id));\n    reservationWhere.push(\n      `r.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${reservationValues.length})`,\n    );\n  }",
+      "theirsContent": "  if (tradeShowId != null) {\n    reservationValues.push(tradeShowId);\n    reservationWhere.push(`r.trade_show_id = $${reservationValues.length}`);\n  }"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (tradeShowId != null) {\n    reservationValues.push(tradeShowId);\n    reservationWhere.push(`r.trade_show_id = $${reservationValues.length}`);\n  }",
+      "theirsContent": "  if (!includeCancelled) {\n    reservationWhere.push(`COALESCE(r.is_cancelled, false) = false`);\n  }"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (!includeCancelled) {\n    reservationWhere.push(`COALESCE(r.is_cancelled, false) = false`);\n  }",
+      "theirsContent": "  if (employeeId != null) {\n    reservationValues.push(employeeId);\n    const idx = reservationValues.length;\n    reservationWhere.push(\n      `(r.owner_employee_id = $${idx} OR $${idx} = ANY(COALESCE(r.attendee_employee_ids, '{}'::integer[])))`,\n    );\n  }"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (employeeId != null) {\n    reservationValues.push(employeeId);\n    const idx = reservationValues.length;\n    reservationWhere.push(\n      `(r.owner_employee_id = $${idx} OR $${idx} = ANY(COALESCE(r.attendee_employee_ids, '{}'::integer[])))`,\n    );\n  }",
+      "theirsContent": "  if (typeFilter) {\n    reservationValues.push(typeFilter);\n    reservationWhere.push(\n      `LOWER(COALESCE(r.reservation_type, '')) = LOWER($${reservationValues.length})`,\n    );\n  }"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  // If the user filtered to a non-reservation type, skip reservation entirely.\n  const wantedTypeLower = String(typeFilter || \"\").toLowerCase();\n  const shouldIncludeReservations =\n    !typeFilter ||\n    (wantedTypeLower !== \"travel\" && wantedTypeLower !== \"deadline\");",
+      "theirsContent": "  const reservationWhereSql = reservationWhere.length\n    ? `WHERE ${reservationWhere.join(\" AND \")}`\n    : \"\";"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (typeFilter && shouldIncludeReservations) {\n    reservationValues.push(typeFilter);\n    reservationWhere.push(\n      `LOWER(COALESCE(r.reservation_type, '')) = LOWER($${reservationValues.length})`,\n    );\n  }",
+      "theirsContent": "  const reservationRows = await sql(\n    `\n      SELECT\n        r.*,\n        ts.name as trade_show_name,\n        e.name as owner_employee_name,\n        e.avatar_url as owner_employee_avatar_url\n      FROM reservations r\n      LEFT JOIN trade_shows ts ON ts.id = r.trade_show_id\n      LEFT JOIN employees e ON e.id = r.owner_employee_id\n      ${reservationWhereSql}\n      ORDER BY r.starts_at ASC, r.id ASC\n    `,\n    reservationValues,\n  );"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const reservationWhereSql = reservationWhere.length\n    ? `WHERE ${reservationWhere.join(\" AND \")}`\n    : \"\";",
+      "theirsContent": "  // ---- Travel ----\n  const travelWhere = [];\n  const travelValues = [];"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const reservationRows = shouldIncludeReservations\n    ? await sql(\n        `\n        SELECT\n          r.*,\n          ts.name as trade_show_name,\n          e.name as owner_employee_name,\n          e.avatar_url as owner_employee_avatar_url\n        FROM reservations r\n        LEFT JOIN trade_shows ts ON ts.id = r.trade_show_id\n        LEFT JOIN employees e ON e.id = r.owner_employee_id\n        ${reservationWhereSql}\n        ORDER BY r.starts_at ASC, r.id ASC\n      `,\n        reservationValues,\n      )\n    : [];\n\n  // --- travel ---\n  const travelWhere = [];\n  const travelValues = [];\n\n  if (!viewAll) {\n    travelValues.push(Number(viewerEmployee.id));\n    travelWhere.push(\n      `t.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${travelValues.length})`,",
+      "theirsContent": "  if (!viewAll) {\n    travelValues.push(Number(viewerEmployee.id));\n    travelWhere.push(\n      `t.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${travelValues.length})`,\n    );\n  }\n\n  if (tradeShowId != null) {\n    travelValues.push(tradeShowId);\n    travelWhere.push(`t.trade_show_id = $${travelValues.length}`);\n  }\n\n  if (!includeCancelled) {\n    travelWhere.push(\n      `COALESCE(t.is_cancelled, false) = false AND LOWER(COALESCE(t.confirmation_status, '')) NOT IN ('cancelled','canceled')`,"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (tradeShowId != null) {\n    travelValues.push(tradeShowId);\n    travelWhere.push(`t.trade_show_id = $${travelValues.length}`);\n  }",
+      "theirsContent": "  if (employeeId != null) {\n    travelValues.push(employeeId);\n    travelWhere.push(`t.employee_id = $${travelValues.length}`);\n  }"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (!includeCancelled) {\n    travelWhere.push(\n      `COALESCE(t.is_cancelled, false) = false AND LOWER(COALESCE(t.confirmation_status, '')) NOT IN ('cancelled','canceled')`,\n    );\n  }",
+      "theirsContent": "  const shouldIncludeTravel =\n    !typeFilter || String(typeFilter).toLowerCase() === \"travel\";"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (employeeId != null) {\n    travelValues.push(employeeId);\n    travelWhere.push(`t.employee_id = $${travelValues.length}`);\n  }",
+      "theirsContent": "  const travelRows = shouldIncludeTravel\n    ? await sql(\n        `\n          SELECT\n            t.*,\n            ts.name as trade_show_name,\n            e.name as employee_name,\n            e.avatar_url as employee_avatar_url\n          FROM travel_records t\n          LEFT JOIN trade_shows ts ON ts.id = t.trade_show_id\n          LEFT JOIN employees e ON e.id = t.employee_id\n          ${travelWhere.length ? `WHERE ${travelWhere.join(\" AND \")}` : \"\"}\n          ORDER BY COALESCE(t.departure_scheduled, t.arrival_scheduled, (t.travel_date::timestamp), t.created_at) ASC, t.id ASC\n        `,\n        travelValues,\n      )\n    : [];"
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const shouldIncludeTravel = !typeFilter || wantedTypeLower === \"travel\";",
+      "theirsContent": "  // ---- Task deadlines ----\n  const taskWhere = [];\n  const taskValues = [];"
+    },
+    {
+      "blockIndex": 16,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const travelRows = shouldIncludeTravel\n    ? await sql(\n        `\n          SELECT\n            t.*,\n            ts.name as trade_show_name,\n            e.name as employee_name,\n            e.avatar_url as employee_avatar_url\n          FROM travel_records t\n          LEFT JOIN trade_shows ts ON ts.id = t.trade_show_id\n          LEFT JOIN employees e ON e.id = t.employee_id\n          ${travelWhere.length ? `WHERE ${travelWhere.join(\" AND \")}` : \"\"}\n          ORDER BY COALESCE(t.departure_scheduled, t.arrival_scheduled, (t.travel_date::timestamp), t.created_at) ASC, t.id ASC\n        `,\n        travelValues,\n      )\n    : [];",
+      "theirsContent": "  if (!viewAll) {\n    taskValues.push(Number(viewerEmployee.id));\n    taskWhere.push(\n      `task.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${taskValues.length})`,\n    );\n  }"
+    },
+    {
+      "blockIndex": 17,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  // --- tasks (deadlines) ---\n  const taskWhere = [];\n  const taskValues = [];",
+      "theirsContent": "  if (tradeShowId != null) {\n    taskValues.push(tradeShowId);\n    taskWhere.push(`task.trade_show_id = $${taskValues.length}`);\n  }"
+    },
+    {
+      "blockIndex": 18,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (!viewAll) {\n    taskValues.push(Number(viewerEmployee.id));\n    taskWhere.push(\n      `task.trade_show_id IN (SELECT trade_show_id FROM trade_show_assignments WHERE employee_id = $${taskValues.length})`,\n    );\n  }",
+      "theirsContent": "  taskWhere.push(`task.due_date IS NOT NULL`);"
+    },
+    {
+      "blockIndex": 19,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (tradeShowId != null) {\n    taskValues.push(tradeShowId);\n    taskWhere.push(`task.trade_show_id = $${taskValues.length}`);\n  }",
+      "theirsContent": "  if (employeeId != null) {\n    taskValues.push(employeeId);\n    taskWhere.push(`task.assigned_to = $${taskValues.length}`);\n  }"
+    },
+    {
+      "blockIndex": 20,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  taskWhere.push(`task.due_date IS NOT NULL`);",
+      "theirsContent": "  const shouldIncludeDeadlines =\n    !typeFilter || String(typeFilter).toLowerCase() === \"deadline\";"
+    },
+    {
+      "blockIndex": 21,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (employeeId != null) {\n    taskValues.push(employeeId);\n    taskWhere.push(`task.assigned_to = $${taskValues.length}`);\n  }",
+      "theirsContent": "  const taskRows = shouldIncludeDeadlines\n    ? await sql(\n        `\n          SELECT\n            task.id,\n            task.trade_show_id,\n            ts.name as trade_show_name,\n            task.title,\n            task.status,\n            task.priority,\n            task.due_date,\n            task.assigned_to,\n            e.name as assigned_to_name,\n            e.avatar_url as assigned_to_avatar_url\n          FROM tasks task\n          LEFT JOIN trade_shows ts ON ts.id = task.trade_show_id\n          LEFT JOIN employees e ON e.id = task.assigned_to\n          ${taskWhere.length ? `WHERE ${taskWhere.join(\" AND \")}` : \"\"}\n          ORDER BY task.due_date ASC, task.id ASC\n        `,\n        taskValues,\n      )\n    : [];"
+    },
+    {
+      "blockIndex": 22,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const shouldIncludeDeadlines = !typeFilter || wantedTypeLower === \"deadline\";",
+      "theirsContent": "  const items = [];"
+    },
+    {
+      "blockIndex": 23,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const taskRows = shouldIncludeDeadlines\n    ? await sql(\n        `\n          SELECT\n            task.id,\n            task.trade_show_id,\n            ts.name as trade_show_name,\n            task.title,\n            task.status,\n            task.priority,\n            task.due_date,\n            task.assigned_to,\n            e.name as assigned_to_name,\n            e.avatar_url as assigned_to_avatar_url\n          FROM tasks task\n          LEFT JOIN trade_shows ts ON ts.id = task.trade_show_id\n          LEFT JOIN employees e ON e.id = task.assigned_to\n          ${taskWhere.length ? `WHERE ${taskWhere.join(\" AND \")}` : \"\"}\n          ORDER BY task.due_date ASC, task.id ASC\n        `,\n        taskValues,\n      )\n    : [];",
+      "theirsContent": "  for (const r of reservationRows || []) {\n    const computedStatus = computeReservationStatus(r);\n    const when = r.starts_at;\n    const endsAt = r.ends_at || null;"
+    },
+    {
+      "blockIndex": 24,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  const items = [];",
+      "theirsContent": "    const requiresAction =\n      computedStatus === \"scheduled\" &&\n      when &&\n      new Date(when).getTime() > Date.now() &&\n      new Date(when).getTime() - Date.now() < 24 * 60 * 60 * 1000;"
+    },
+    {
+      "blockIndex": 25,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  for (const r of reservationRows || []) {\n    const computedStatus = computeReservationStatus(r);\n    const when = r.starts_at;\n    const endsAt = r.ends_at || null;",
+      "theirsContent": "    const ownerId =\n      r.owner_employee_id != null ? Number(r.owner_employee_id) : null;"
+    },
+    {
+      "blockIndex": 26,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const requiresAction =\n      computedStatus === \"scheduled\" &&\n      when &&\n      new Date(when).getTime() > Date.now() &&\n      new Date(when).getTime() - Date.now() < 24 * 60 * 60 * 1000;",
+      "theirsContent": "    const canEdit = Boolean(\n      ownerId != null && ownerId === Number(viewerEmployee.id),\n    );"
+    },
+    {
+      "blockIndex": 27,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const ownerId =\n      r.owner_employee_id != null ? Number(r.owner_employee_id) : null;",
+      "theirsContent": "    items.push({\n      id: `res-${r.id}`,\n      source_table: \"reservations\",\n      source_id: r.id,\n      trade_show_id: r.trade_show_id,\n      trade_show_name: r.trade_show_name || null,\n      item_type: String(r.reservation_type || \"meeting\"),\n      subtype: r.meeting_kind ? String(r.meeting_kind) : null,\n      title: String(r.title || \"(Untitled)\"),\n      when,\n      starts_at: when,\n      ends_at: endsAt,\n      due_at: null,\n      location: normalizeText(r.location),\n      status: computedStatus,\n      confirmed: computedStatus !== \"pending\",\n      requires_action: requiresAction,\n      is_external: String(r.source || \"internal\").toLowerCase() === \"external\",\n      owner_employee_id: ownerId,\n      owner_employee_name: r.owner_employee_name || null,\n      owner_employee_avatar_url: r.owner_employee_avatar_url || null,\n      attendee_employee_ids: Array.isArray(r.attendee_employee_ids)\n        ? r.attendee_employee_ids\n        : [],\n      external_attendees: Array.isArray(r.external_attendees)\n        ? r.external_attendees\n        : [],\n      related_lead_id: r.related_lead_id ?? null,\n      related_task_id: r.related_task_id ?? null,\n      can_edit: canEdit,\n      raw: r,\n    });\n  }"
+    },
+    {
+      "blockIndex": 28,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const canEdit = Boolean(\n      ownerId != null && ownerId === Number(viewerEmployee.id),\n    );",
+      "theirsContent": "  for (const t of travelRows || []) {\n    const when = inferTravelWhen(t);\n    const endsAt = inferTravelEndsAt(t);\n    const computedStatus = computeTravelStatus(t);\n    const requiresAction = computedStatus === \"pending\";"
+    },
+    {
+      "blockIndex": 29,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    items.push({\n      id: `res-${r.id}`,\n      source_table: \"reservations\",\n      source_id: r.id,\n      trade_show_id: r.trade_show_id,\n      trade_show_name: r.trade_show_name || null,\n      item_type: String(r.reservation_type || \"meeting\"),\n      subtype: r.meeting_kind ? String(r.meeting_kind) : null,\n      title: String(r.title || \"(Untitled)\"),\n      when,\n      starts_at: when,\n      ends_at: endsAt,\n      due_at: null,\n      location: normalizeText(r.location),\n      status: computedStatus,\n      confirmed: computedStatus !== \"pending\",\n      requires_action: requiresAction,\n      is_external: String(r.source || \"internal\").toLowerCase() === \"external\",\n      owner_employee_id: ownerId,\n      owner_employee_name: r.owner_employee_name || null,\n      owner_employee_avatar_url: r.owner_employee_avatar_url || null,\n      attendee_employee_ids: Array.isArray(r.attendee_employee_ids)\n        ? r.attendee_employee_ids\n        : [],\n      external_attendees: Array.isArray(r.external_attendees)\n        ? r.external_attendees\n        : [],\n      related_lead_id: r.related_lead_id ?? null,\n      related_task_id: r.related_task_id ?? null,\n      can_edit: canEdit,\n      raw: r,\n    });\n  }",
+      "theirsContent": "    const empId = t.employee_id != null ? Number(t.employee_id) : null;\n    const canEdit = Boolean(\n      empId != null && empId === Number(viewerEmployee.id),\n    );"
+    },
+    {
+      "blockIndex": 30,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  for (const t of travelRows || []) {\n    const when = inferTravelWhen(t);\n    const endsAt = inferTravelEndsAt(t);\n    const computedStatus = computeTravelStatus(t);",
+      "theirsContent": "    items.push({\n      id: `travel-${t.id}`,\n      source_table: \"travel_records\",\n      source_id: t.id,\n      trade_show_id: t.trade_show_id,\n      trade_show_name: t.trade_show_name || null,\n      item_type: \"travel\",\n      subtype: normalizeText(t.travel_type) || null,\n      title: computeTravelTitle(t),\n      when,\n      starts_at: when,\n      ends_at: endsAt,\n      due_at: null,\n      location:\n        normalizeText(t.departure_airport) ||\n        normalizeText(t.arrival_airport) ||\n        normalizeText(t.source_url) ||\n        null,\n      status: computedStatus,\n      confirmed: computedStatus === \"booked\" || computedStatus === \"confirmed\",\n      requires_action: requiresAction,\n      is_external: false,\n      owner_employee_id: empId,\n      owner_employee_name: t.employee_name || null,\n      owner_employee_avatar_url: t.employee_avatar_url || null,\n      attendee_employee_ids: [],\n      external_attendees: [],\n      related_lead_id: null,\n      related_task_id: null,\n      can_edit: canEdit,\n      raw: t,\n    });\n  }"
+    },
+    {
+      "blockIndex": 31,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const requiresAction = computedStatus === \"pending\";",
+      "theirsContent": "  for (const task of taskRows || []) {\n    const dueDate = task?.due_date ? String(task.due_date).slice(0, 10) : null;\n    const dueAt = dueDate ? `${dueDate}T17:00:00` : null;\n    const computedStatus = computeTaskDeadlineStatus(task);"
+    },
+    {
+      "blockIndex": 32,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const empId = t.employee_id != null ? Number(t.employee_id) : null;\n    const canEdit = Boolean(\n      empId != null && empId === Number(viewerEmployee.id),\n    );",
+      "theirsContent": "    const requiresAction =\n      computedStatus === \"open\" &&\n      dueAt &&\n      new Date(dueAt).getTime() < Date.now() + 48 * 60 * 60 * 1000;"
+    },
+    {
+      "blockIndex": 33,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    items.push({\n      id: `travel-${t.id}`,\n      source_table: \"travel_records\",\n      source_id: t.id,\n      trade_show_id: t.trade_show_id,\n      trade_show_name: t.trade_show_name || null,\n      item_type: \"travel\",\n      subtype: normalizeText(t.travel_type) || null,\n      title: computeTravelTitle(t),\n      when,\n      starts_at: when,\n      ends_at: endsAt,\n      due_at: null,\n      location:\n        normalizeText(t.departure_airport) ||\n        normalizeText(t.arrival_airport) ||\n        normalizeText(t.source_url) ||\n        null,\n      status: computedStatus,\n      confirmed: computedStatus === \"booked\" || computedStatus === \"confirmed\",\n      requires_action: requiresAction,\n      is_external: false,\n      owner_employee_id: empId,\n      owner_employee_name: t.employee_name || null,\n      owner_employee_avatar_url: t.employee_avatar_url || null,\n      attendee_employee_ids: [],\n      external_attendees: [],\n      related_lead_id: null,\n      related_task_id: null,\n      can_edit: canEdit,\n      raw: t,\n    });\n  }",
+      "theirsContent": "    const assignedTo =\n      task.assigned_to != null ? Number(task.assigned_to) : null;\n    const canEdit = Boolean(\n      assignedTo != null && assignedTo === Number(viewerEmployee.id),\n    );"
+    },
+    {
+      "blockIndex": 34,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  for (const task of taskRows || []) {\n    const dueDate = task?.due_date ? String(task.due_date).slice(0, 10) : null;\n    const dueAt = dueDate ? `${dueDate}T17:00:00` : null;\n    const computedStatus = computeTaskDeadlineStatus(task);",
+      "theirsContent": "    items.push({\n      id: `task-${task.id}`,\n      source_table: \"tasks\",\n      source_id: task.id,\n      trade_show_id: task.trade_show_id,\n      trade_show_name: task.trade_show_name || null,\n      item_type: \"deadline\",\n      subtype: \"task\",\n      title: String(task.title || \"Task\"),\n      when: dueAt,\n      starts_at: null,\n      ends_at: null,\n      due_at: dueAt,\n      location: null,\n      status: computedStatus,\n      confirmed: true,\n      requires_action: requiresAction,\n      is_external: false,\n      owner_employee_id: assignedTo,\n      owner_employee_name: task.assigned_to_name || null,\n      owner_employee_avatar_url: task.assigned_to_avatar_url || null,\n      attendee_employee_ids: [],\n      external_attendees: [],\n      related_lead_id: null,\n      related_task_id: task.id,\n      can_edit: canEdit,\n      raw: task,\n    });\n  }"
+    },
+    {
+      "blockIndex": 35,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const requiresAction =\n      computedStatus === \"open\" &&\n      dueAt &&\n      new Date(dueAt).getTime() < Date.now() + 48 * 60 * 60 * 1000;",
+      "theirsContent": "  let filtered = items;\n  if (statusFilter) {\n    const wanted = statusFilter.toLowerCase();\n    filtered = filtered.filter(\n      (it) => String(it.status || \"\").toLowerCase() === wanted,\n    );\n  }"
+    },
+    {
+      "blockIndex": 36,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    const assignedTo =\n      task.assigned_to != null ? Number(task.assigned_to) : null;\n    const canEdit = Boolean(\n      assignedTo != null && assignedTo === Number(viewerEmployee.id),\n    );",
+      "theirsContent": "  if (typeFilter) {\n    const wantedType = typeFilter.toLowerCase();\n    filtered = filtered.filter(\n      (it) => String(it.item_type || \"\").toLowerCase() === wantedType,\n    );\n  }"
+    },
+    {
+      "blockIndex": 37,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "    items.push({\n      id: `task-${task.id}`,\n      source_table: \"tasks\",\n      source_id: task.id,\n      trade_show_id: task.trade_show_id,\n      trade_show_name: task.trade_show_name || null,\n      item_type: \"deadline\",\n      subtype: \"task\",\n      title: String(task.title || \"Task\"),\n      when: dueAt,\n      starts_at: null,\n      ends_at: null,\n      due_at: dueAt,\n      location: null,\n      status: computedStatus,\n      confirmed: true,\n      requires_action: requiresAction,\n      is_external: false,\n      owner_employee_id: assignedTo,\n      owner_employee_name: task.assigned_to_name || null,\n      owner_employee_avatar_url: task.assigned_to_avatar_url || null,\n      attendee_employee_ids: [],\n      external_attendees: [],\n      related_lead_id: null,\n      related_task_id: task.id,\n      can_edit: canEdit,\n      raw: task,\n    });\n  }",
+      "theirsContent": "  filtered.sort((a, b) => {\n    const at = a.when ? new Date(a.when).getTime() : Infinity;\n    const bt = b.when ? new Date(b.when).getTime() : Infinity;\n    return at - bt;\n  });"
+    },
+    {
+      "blockIndex": 38,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  let filtered = items;",
+      "theirsContent": "  return { filtered, viewAll };\n}"
+    },
+    {
+      "blockIndex": 39,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (statusFilter) {\n    const wanted = statusFilter.toLowerCase();\n    filtered = filtered.filter(\n      (it) => String(it.status || \"\").toLowerCase() === wanted,\n    );\n  }",
+      "theirsContent": "export async function GET(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;"
+    },
+    {
+      "blockIndex": 40,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  if (typeFilter) {\n    const wantedType = typeFilter.toLowerCase();\n    filtered = filtered.filter(\n      (it) => String(it.item_type || \"\").toLowerCase() === wantedType,\n    );\n  }",
+      "theirsContent": "    const { searchParams } = new URL(request.url);"
+    },
+    {
+      "blockIndex": 41,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  filtered.sort((a, b) => {\n    const at = a.when ? new Date(a.when).getTime() : Infinity;\n    const bt = b.when ? new Date(b.when).getTime() : Infinity;\n    return at - bt;\n  });",
+      "theirsContent": "    const tradeShowIdRaw = searchParams.get(\"trade_show_id\");\n    const employeeIdRaw = searchParams.get(\"employee_id\");\n    const includeCancelled = parseBool(searchParams.get(\"include_cancelled\"));\n    const typeFilter = String(searchParams.get(\"type\") || \"\").trim();\n    const statusFilter = String(searchParams.get(\"status\") || \"\").trim();"
+    },
+    {
+      "blockIndex": 42,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  let tradeShowName = null;\n  if (tradeShowId != null) {\n    const [row] = await sql(\n      `SELECT name FROM trade_shows WHERE id = $1 LIMIT 1`,\n      [tradeShowId],\n    );\n    tradeShowName = row?.name ? String(row.name) : null;\n  }",
+      "theirsContent": "    const tradeShowId = toIntOrNull(tradeShowIdRaw);\n    const employeeId = toIntOrNull(employeeIdRaw);\n\n    if (tradeShowIdRaw && tradeShowId == null) {\n      return Response.json({ error: \"Invalid trade_show_id\" }, { status: 400 });\n    }\n    if (employeeIdRaw && employeeId == null) {\n      return Response.json({ error: \"Invalid employee_id\" }, { status: 400 });\n    }"
+    },
+    {
+      "blockIndex": 43,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "  return {\n    report: {",
+      "theirsContent": "    const { filtered } = await fetchScheduleReportItems({\n      viewerEmployee: employee,\n      tradeShowId,\n      employeeId,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    return Response.json({"
+    },
+    {
+      "blockIndex": 44,
+      "filePath": "/apps/web/src/app/api/schedule/report/route.js",
+      "oursContent": "\nexport async function POST(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;\n\n    const body = await request.json().catch(() => ({}));\n\n    const to = normalizeText(body?.email || body?.to);\n    if (!to) {\n      return Response.json({ error: \"email is required\" }, { status: 400 });\n    }\n\n    const includeCancelled = Boolean(body?.include_cancelled);\n    const typeFilter = String(body?.type || \"\").trim();\n    const statusFilter = String(body?.status || \"\").trim();\n\n    const tradeShowIdRaw = body?.trade_show_id ?? null;\n    const employeeIdRaw = body?.employee_id ?? null;\n\n    const result = await buildScheduleReport({\n      viewerEmployee: employee,\n      tradeShowIdRaw,\n      employeeIdRaw,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    if (result.error) {\n      return Response.json(\n        { error: result.error.message },\n        { status: result.error.status },\n      );\n    }\n\n    const report = result.report;\n\n    const subject =\n      normalizeText(body?.subject) ||\n      (report?.meta?.trade_show_name\n        ? `Schedule Report — ${report.meta.trade_show_name}`\n        : \"Schedule Report\");\n\n    const appUrl = process.env.APP_URL || \"\";\n    const scheduleUrl = appUrl ? `${appUrl}/schedule` : null;\n\n    const safe = (v) =>\n      String(v ?? \"\")\n        .replaceAll(\"&\", \"&amp;\")\n        .replaceAll(\"<\", \"&lt;\")\n        .replaceAll(\">\", \"&gt;\");\n\n    const fmtWhen = (iso) => {\n      if (!iso) return \"\";\n      try {\n        const d = new Date(iso);\n        if (Number.isNaN(d.getTime())) return String(iso);\n        return d.toISOString().replace(\"T\", \" \").slice(0, 16);\n      } catch {\n        return String(iso);\n      }\n    };\n\n    const rows = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      const location = it.location ? String(it.location) : \"\";\n\n      return `\n        <tr>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;white-space:nowrap;\">${safe(\n            when,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            type,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            title,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            show,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            person,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            status,\n          )}</td>\n          <td style=\"padding:8px 10px;border-top:1px solid #E5E7EB;\">${safe(\n            location,\n          )}</td>\n        </tr>\n      `;\n    });\n\n    const itemsCount = Array.isArray(report.items) ? report.items.length : 0;\n    const headLine = report?.meta?.trade_show_name\n      ? `Schedule for <b>${safe(report.meta.trade_show_name)}</b>`\n      : \"Schedule\";\n\n    const html = `\n      <div style=\"font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:#111827;\">\n        <h2 style=\"margin:0 0 8px;\">${headLine}</h2>\n        <div style=\"color:#6B7280; font-size:13px; margin-bottom:14px;\">${itemsCount} item${\n          itemsCount === 1 ? \"\" : \"s\"\n        }</div>\n        ${\n          scheduleUrl\n            ? `<div style=\"margin-bottom:14px;\"><a href=\"${safe(\n                scheduleUrl,\n              )}\" style=\"color:#4F46E5;\">Open in Tradeshow 360</a></div>`\n            : \"\"\n        }\n        <table style=\"width:100%; border-collapse:collapse; font-size:13px;\">\n          <thead>\n            <tr>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">When</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Type</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Title</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Show</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Person</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Status</th>\n              <th align=\"left\" style=\"padding:8px 10px; border-bottom:1px solid #E5E7EB;\">Location</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rows.join(\"\\n\")}\n          </tbody>\n        </table>\n        <div style=\"color:#9CA3AF; font-size:12px; margin-top:14px;\">Sent from Tradeshow 360</div>\n      </div>\n    `;\n\n    const textLines = (report.items || []).slice(0, 400).map((it) => {\n      const when = fmtWhen(it.when);\n      const type = it.item_type ? String(it.item_type) : \"\";\n      const title = it.title ? String(it.title) : \"\";\n      const show = it.trade_show_name ? String(it.trade_show_name) : \"\";\n      const person = it.owner_employee_name\n        ? String(it.owner_employee_name)\n        : \"\";\n      const status = it.status ? String(it.status) : \"\";\n      return `${when} | ${type} | ${title} | ${show} | ${person} | ${status}`;\n    });\n\n    const text = `${\n      report?.meta?.trade_show_name\n        ? `Schedule Report — ${report.meta.trade_show_name}`\n        : \"Schedule Report\"\n    }\\n\\n${textLines.join(\"\\n\")}\\n`;\n\n    await sendEmail({\n      to,\n      subject,\n      html,\n      text,\n    });\n\n    return Response.json({ ok: true });\n  } catch (error) {\n    console.error(\"POST /api/schedule/report error\", error);\n    return Response.json(\n      { error: \"Failed to email schedule report\" },\n      { status: 500 },\n    );\n  }\n}",
+      "theirsContent": "\nexport async function POST(request) {\n  try {\n    const { employee, response } = await requireViewerEmployee();\n    if (response) return response;\n\n    const body = await request.json().catch(() => ({}));\n\n    const to = String(body?.to || body?.email || \"\").trim();\n    if (!to) {\n      return Response.json(\n        { error: \"Recipient email is required\" },\n        { status: 400 },\n      );\n    }\n\n    const tradeShowId = toIntOrNull(body?.trade_show_id);\n    const employeeId = toIntOrNull(body?.employee_id);\n    const includeCancelled = Boolean(body?.include_cancelled);\n    const typeFilter = String(body?.type || \"\").trim();\n    const statusFilter = String(body?.status || \"\").trim();\n\n    const { filtered } = await fetchScheduleReportItems({\n      viewerEmployee: employee,\n      tradeShowId,\n      employeeId,\n      includeCancelled,\n      typeFilter,\n      statusFilter,\n    });\n\n    const count = filtered.length;\n    const subject =\n      String(body?.subject || \"\").trim() ||\n      `Schedule report (${count.toLocaleString()} items)`;\n\n    const rowsHtml = filtered\n      .slice(0, 250)\n      .map((it) => {\n        const whenText = formatWhenForEmail(it.when);\n        const showText = it.trade_show_name ? String(it.trade_show_name) : \"\";\n        const typeText = it.item_type ? String(it.item_type) : \"\";\n        const titleText = it.title ? String(it.title) : \"\";\n        const locText = it.location ? String(it.location) : \"\";\n        const statusText = it.status ? String(it.status) : \"\";\n\n        return `\n          <tr>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              whenText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              showText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              typeText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              titleText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;\">${escapeHtml(\n              locText,\n            )}</td>\n            <td style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;white-space:nowrap;\">${escapeHtml(\n              statusText,\n            )}</td>\n          </tr>\n        `;\n      })\n      .join(\"\");\n\n    const truncated = count > 250;\n\n    const html = `\n      <div style=\"font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;\">\n        <h2 style=\"margin:0 0 12px 0;\">Schedule report</h2>\n        <div style=\"color:#6B7280;font-size:13px;margin-bottom:14px;\">\n          Generated from Tradeshow 360.\n        </div>\n        <div style=\"margin-bottom:10px;font-size:13px;\">\n          <strong>Total:</strong> ${count.toLocaleString()} item(s)\n          ${truncated ? \"(showing first 250)\" : \"\"}\n        </div>\n        <table style=\"width:100%;border-collapse:collapse;border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;\">\n          <thead>\n            <tr style=\"background:#F9FAFB;\">\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">When</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Show</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Type</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Title</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Location</th>\n              <th align=\"left\" style=\"padding:10px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;color:#6B7280;\">Status</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rowsHtml || '<tr><td colspan=\"6\" style=\"padding:12px;color:#6B7280;\">No items found for the selected filters.</td></tr>'}\n          </tbody>\n        </table>\n      </div>\n    `;\n\n    await sendEmail({\n      to,\n      subject,\n      html,\n      text: `Schedule report (${count} item(s))`,\n    });\n\n    return Response.json({ ok: true, sent: true, count });\n  } catch (e) {\n    console.error(\"POST /api/schedule/report error\", e);\n    return Response.json(\n      { error: e instanceof Error ? e.message : \"Failed to send email\" },\n      { status: 500 },\n    );\n  }\n}\n\nfunction escapeHtml(value) {\n  const s = value == null ? \"\" : String(value);\n  return s\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\\\"/g, \"&quot;\")\n    .replace(/'/g, \"&#039;\");\n}"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/schedule/report/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

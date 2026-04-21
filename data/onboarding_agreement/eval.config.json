@@ -1,0 +1,9 @@
+{
+  "name": "onboarding_agreement",
+  "description": "Merge conflict with 4 conflict(s) across 4 file(s)",
+  "sourceConflictId": "c360bc58-c0ba-4b3a-8abc-fb0d24418d11",
+  "sourceTimestamp": "2025-12-26T20:36:28.752Z",
+  "language": "javascript",
+  "conflictedFileCount": 4,
+  "conflictBlockCount": 16
+}

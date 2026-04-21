@@ -1,0 +1,83 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "          orgIdFromUrl = orgParam ? Number(orgParam) : null;\n          selectedId = Number.isFinite(orgIdFromUrl) ? orgIdFromUrl : null;",
+      "theirsContent": "          selectedId = orgParam ? Number(orgParam) : null;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "            const parsed = stored ? Number(stored) : null;\n            if (Number.isFinite(parsed) && parsed > 0) selectedId = parsed;",
+      "theirsContent": "            const parsed = stored ? Number(stored) : null;\n            if (parsed) selectedId = parsed;"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "        const hasValidSelection =\n          !!selectedId &&\n          orgs.some((o) => Number(o?.id) === Number(selectedId));\n\n        if (hasValidSelection) {\n          setCurrentOrgId(Number(selectedId));\n\n          // IMPORTANT: if the URL dropped the organizationId param but we have a persisted selection,\n          // restore it so every page reliably stays in the same org view.\n          if (!orgIdFromUrl && typeof window !== \"undefined\") {\n            try {\n              const url = new URL(window.location.href);\n              url.searchParams.set(\"organizationId\", String(selectedId));\n              // Use replace so back button isn't polluted.\n              window.location.replace(url.toString());\n              return; // prevent flicker while the page reloads\n            } catch (_) {\n              // ignore\n            }\n          }",
+      "theirsContent": "        // Validate the selection exists in list (be tolerant of id type differences)\n        const selectedIdNum = selectedId ? Number(selectedId) : null;\n        const hasSelected = selectedIdNum\n          ? orgs.some((o) => Number(o?.id) === selectedIdNum)\n          : false;\n\n        if (hasSelected) {\n          setCurrentOrgId(selectedIdNum);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "    if (orgId) {\n      url.searchParams.set(\"organizationId\", String(orgId));",
+      "theirsContent": "    if (orgIdNum) {\n      url.searchParams.set(\"organizationId\", String(orgIdNum));"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "    ? organizations.find((o) => Number(o.id) === Number(currentOrgId))",
+      "theirsContent": "    ? organizations.find((o) => Number(o?.id) === Number(currentOrgId))"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/OrganizationSwitcher.jsx",
+      "oursContent": "              {organizations.map((org) => {\n                const orgIdNum = Number(org.id);\n                const isSelected =\n                  Number.isFinite(orgIdNum) &&\n                  Number(orgIdNum) === Number(currentOrgId);\n\n                return (\n                  <button\n                    key={org.id}\n                    onClick={() => {\n                      switchOrganization(orgIdNum);\n                      setIsOpen(false);\n                    }}\n                    className=\"w-full flex items-center justify-between px-3 py-2 rounded transition-colors\"\n                    style={{\n                      backgroundColor: isSelected",
+      "theirsContent": "              {organizations.map((org) => {\n                const orgIdNum = Number(org?.id);\n                const isSelected = currentOrgId === orgIdNum;\n\n                return (\n                  <button\n                    key={String(org?.id)}\n                    onClick={() => {\n                      switchOrganization(orgIdNum);\n                      setIsOpen(false);\n                    }}\n                    className=\"w-full flex items-center justify-between px-3 py-2 rounded transition-colors\"\n                    style={{\n                      backgroundColor: isSelected"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/settings/hooks/usePlatformAdmin.js",
+      "oursContent": "        const search = getEffectiveSearch();\n        url += search;",
+      "theirsContent": "\n        if (typeof window !== \"undefined\") {\n          // Always forward any current query params, but also fall back to the persisted org\n          // selection if navigation dropped the query string.\n          const params = new URLSearchParams(window.location.search || \"\");\n\n          if (!params.get(\"organizationId\")) {\n            try {\n              const stored = window.localStorage.getItem(\n                \"platformAdmin.selectedOrgId\",\n              );\n              if (stored && stored !== \"null\" && stored !== \"undefined\") {\n                params.set(\"organizationId\", stored);\n              }\n            } catch (_) {\n              // ignore storage errors\n            }\n          }\n\n          const qs = params.toString();\n          if (qs) {\n            url += `?${qs}`;\n          }\n        }"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/organizations/delete/route.js",
+      "oursContent": "function normalizeOrgName(name) {\n  return String(name || \"\")\n    .trim()\n    .replace(/\\s+/g, \" \")\n    .normalize(\"NFKC\");\n}\n",
+      "theirsContent": "function normalizeOrgName(name) {\n  return String(name || \"\")\n    .trim()\n    .replace(/\\s+/g, \" \")\n    .toLowerCase();\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/organizations/delete/route.js",
+      "oursContent": "    const confirmNameRaw = String(body?.confirmName || \"\");\n    const confirmPhrase = String(body?.confirmPhrase || \"\").trim();",
+      "theirsContent": "    const confirmNameRaw = String(body?.confirmName || \"\");\n    const confirmPhraseRaw = String(body?.confirmPhrase || \"\");"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/organizations/delete/route.js",
+      "oursContent": "    if (!confirmNameRaw || !confirmPhrase) {",
+      "theirsContent": "    const confirmName = normalizeOrgName(confirmNameRaw);\n    const confirmPhrase = confirmPhraseRaw.trim().toUpperCase();\n\n    if (!confirmName || !confirmPhrase) {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/organizations/delete/route.js",
+      "oursContent": "    // Require confirmation phrase and name match (whitespace-tolerant)\n    const normalizedConfirm = normalizeOrgName(confirmNameRaw);\n    const normalizedOrg = normalizeOrgName(org.name);\n\n    if (confirmPhrase.toUpperCase() !== \"DELETE\") {",
+      "theirsContent": "    // Require name confirmation (normalized) + DELETE phrase\n    const expectedName = normalizeOrgName(org.name);\n    if (confirmName !== expectedName || confirmPhrase !== \"DELETE\") {"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/admin/organizations/delete/route.js",
+      "oursContent": "        { error: \"Confirmation failed. Phrase must be DELETE.\" },",
+      "theirsContent": "        {\n          error: \"Confirmation failed. Name or phrase did not match.\",\n          // Helpful for debugging typos without leaking anything sensitive.\n          details: {\n            expectedName: org.name,\n            expectedPhrase: \"DELETE\",\n          },\n        },"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/OrganizationSwitcher.jsx",
+    "/apps/web/src/app/settings/hooks/usePlatformAdmin.js",
+    "/apps/web/src/app/api/admin/organizations/delete/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

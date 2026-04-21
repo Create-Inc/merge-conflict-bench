@@ -1,0 +1,9 @@
+{
+  "name": "legal_compliance_v2",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "be35f1f0-0faf-4e7f-86b0-78fecf2a343d",
+  "sourceTimestamp": "2026-01-13T16:23:08.331Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 12
+}

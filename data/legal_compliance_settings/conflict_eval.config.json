@@ -1,0 +1,142 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  // NEW: document URLs (optional)\n  const [sitesEulaUrlDraft, setSitesEulaUrlDraft] = useState(\"\");\n  const [smsOptInUrlDraft, setSmsOptInUrlDraft] = useState(\"\");\n  const [docEditsTouched, setDocEditsTouched] = useState(false);\n",
+      "theirsContent": "  // Optional uploaded/published doc links (company-wide)\n  const [eulaDocumentUrl, setEulaDocumentUrl] = useState(\"\");\n  const [smsDocumentUrl, setSmsDocumentUrl] = useState(\"\");\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  const sitesEulaUrl =\n    typeof data?.sites_eula_url === \"string\" ? data.sites_eula_url : \"\";\n  const smsOptInUrl =\n    typeof data?.sms_opt_in_url === \"string\" ? data.sms_opt_in_url : \"\";\n\n  useEffect(() => {\n    // Populate draft URLs from the server the first time we load (or after refresh)\n    // but don't clobber local edits while typing.\n    if (!data || docEditsTouched) {\n      return;\n    }\n\n    setSitesEulaUrlDraft(sitesEulaUrl);\n    setSmsOptInUrlDraft(smsOptInUrl);\n  }, [data, docEditsTouched, sitesEulaUrl, smsOptInUrl]);\n",
+      "theirsContent": "  const docUrlEula =\n    typeof data?.documents?.eula_document_url === \"string\"\n      ? data.documents.eula_document_url\n      : typeof data?.legal_sites_eula_url === \"string\"\n        ? data.legal_sites_eula_url\n        : \"\";\n\n  const docUrlSms =\n    typeof data?.documents?.sms_document_url === \"string\"\n      ? data.documents.sms_document_url\n      : typeof data?.legal_sms_opt_in_url === \"string\"\n        ? data.legal_sms_opt_in_url\n        : \"\";\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "    const docBlock = sitesEulaUrl ? (\n      <div className=\"rounded-lg border border-gray-200 bg-white p-3\">\n        <div className=\"text-xs font-semibold text-[#101828]\">\n          Sites EULA document\n        </div>\n        <a\n          href={sitesEulaUrl}\n          target=\"_blank\"\n          rel=\"noreferrer\"\n          className=\"mt-1 inline-block text-sm text-blue-700 underline\"\n        >\n          Open document\n        </a>\n        <div className=\"text-xs text-[#667085] mt-1 break-all\">\n          {sitesEulaUrl}\n        </div>\n      </div>\n    ) : (\n      <div className=\"rounded-lg border border-gray-200 bg-white p-3 text-xs text-[#667085]\">\n        No Sites EULA document link has been added yet.\n      </div>\n    );\n",
+      "theirsContent": "    const hasDoc =\n      typeof docUrlEula === \"string\" && docUrlEula.trim().length > 0;\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "        {docBlock}\n",
+      "theirsContent": "        {hasDoc ? (\n          <div className=\"rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900\">\n            Your official Sites EULA is available via the “Open document” link\n            above. The text below is a quick in-app summary.\n          </div>\n        ) : (\n          <div className=\"rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900\">\n            Optional: paste your official Sites EULA PDF/Doc link above so\n            admins can open it.\n          </div>\n        )}\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  }, [sitesEulaUrl]);",
+      "theirsContent": "  }, [docUrlEula]);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "    const docBlock = smsOptInUrl ? (\n      <div className=\"rounded-lg border border-gray-200 bg-white p-3\">\n        <div className=\"text-xs font-semibold text-[#101828]\">\n          SMS opt-in agreement document\n        </div>\n        <a\n          href={smsOptInUrl}\n          target=\"_blank\"\n          rel=\"noreferrer\"\n          className=\"mt-1 inline-block text-sm text-blue-700 underline\"\n        >\n          Open document\n        </a>\n        <div className=\"text-xs text-[#667085] mt-1 break-all\">\n          {smsOptInUrl}\n        </div>\n      </div>\n    ) : (\n      <div className=\"rounded-lg border border-gray-200 bg-white p-3 text-xs text-[#667085]\">\n        No SMS opt-in agreement document link has been added yet.\n      </div>\n    );\n\n    const suggestedOptInWording = `“By providing your mobile number, you agree to receive service-related text messages from ${companyName}. Message frequency varies. Message & data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of purchase.”`;\n",
+      "theirsContent": "    const hasDoc = typeof docUrlSms === \"string\" && docUrlSms.trim().length > 0;\n"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "        {docBlock}\n",
+      "theirsContent": "        {hasDoc ? (\n          <div className=\"rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-blue-900\">\n            Your official SMS agreement is available via the “Open document”\n            link above. The text below is the compliance summary + suggested\n            opt-in copy.\n          </div>\n        ) : (\n          <div className=\"rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900\">\n            Optional: paste your official SMS opt-in agreement PDF/Doc link\n            above so admins can open it.\n          </div>\n        )}\n"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  }, [companyName, smsOptInUrl]);",
+      "theirsContent": "  }, [companyName, docUrlSms]);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  const onSaveDocumentLinks = useCallback(() => {\n    if (!canManage) {\n      setError(\"Admins only: you do not have permission to edit documents.\");\n      return;\n    }\n\n    const payload = {\n      sites_eula_url: sitesEulaUrlDraft,\n      sms_opt_in_url: smsOptInUrlDraft,\n    };\n\n    saveMutation.mutate(payload);\n  }, [canManage, saveMutation, sitesEulaUrlDraft, smsOptInUrlDraft]);\n",
+      "theirsContent": "  const onSaveDocuments = useCallback(() => {\n    if (!canManage) {\n      setError(\"Admins only: you do not have permission to change documents.\");\n      return;\n    }\n\n    saveDocsMutation.mutate({\n      eula_document_url: eulaDocumentUrl,\n      sms_document_url: smsDocumentUrl,\n    });\n  }, [canManage, eulaDocumentUrl, saveDocsMutation, smsDocumentUrl]);\n"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "  const hasDocChanges =\n    sitesEulaUrlDraft !== sitesEulaUrl || smsOptInUrlDraft !== smsOptInUrl;\n\n  const docsActionDisabled =\n    saveMutation.isPending || isLoading || !hasDocChanges;\n",
+      "theirsContent": "  const docSaveDisabled = Boolean(\n    saveDocsMutation.isPending || isLoading || !canManage,\n  );\n"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/settings/legal-compliance/page.jsx",
+      "oursContent": "              {canManage ? (\n                <div className=\"bg-white border border-gray-200 rounded-lg p-6\">\n                  <div className=\"text-base font-semibold text-[#101828]\">\n                    Document links (admin)\n                  </div>\n                  <div className=\"text-sm text-[#667085] mt-1\">\n                    Paste links to the official documents you want shown here\n                    (PDF or webpage). These links are stored per-company.\n                  </div>\n\n                  <div className=\"mt-4 grid grid-cols-1 md:grid-cols-2 gap-4\">\n                    <div>\n                      <div className=\"text-sm font-medium text-[#101828]\">\n                        Sites EULA URL\n                      </div>\n                      <input\n                        type=\"url\"\n                        value={sitesEulaUrlDraft}\n                        onChange={(e) => {\n                          setDocEditsTouched(true);\n                          setSitesEulaUrlDraft(e.target.value);\n                        }}\n                        placeholder=\"https://...\"\n                        className=\"mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm\"\n                      />\n                    </div>\n\n                    <div>\n                      <div className=\"text-sm font-medium text-[#101828]\">\n                        SMS opt-in agreement URL\n                      </div>\n                      <input\n                        type=\"url\"\n                        value={smsOptInUrlDraft}\n                        onChange={(e) => {\n                          setDocEditsTouched(true);\n                          setSmsOptInUrlDraft(e.target.value);\n                        }}\n                        placeholder=\"https://...\"\n                        className=\"mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm\"\n                      />\n                    </div>\n                  </div>\n\n                  <div className=\"mt-4\">\n                    <button\n                      type=\"button\"\n                      onClick={onSaveDocumentLinks}\n                      disabled={Boolean(docsActionDisabled)}\n                      className=\"inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-black disabled:opacity-50 text-white rounded-lg font-medium transition-colors\"\n                    >\n                      {saveMutation.isPending\n                        ? \"Saving…\"\n                        : \"Save document links\"}\n                    </button>\n                    <div className=\"text-xs text-[#667085] mt-2\">\n                      Tip: leave a field blank and save to clear it.\n                    </div>\n                  </div>\n                </div>\n              ) : null}\n",
+      "theirsContent": "              <div className=\"bg-white border border-gray-200 rounded-lg p-6\">\n                <div className=\"flex items-start gap-3\">\n                  <div className=\"w-10 h-10 rounded-lg bg-gray-900 flex items-center justify-center shrink-0\">\n                    <Link2 className=\"text-white\" size={20} />\n                  </div>\n                  <div className=\"flex-1\">\n                    <div className=\"text-base font-semibold text-[#101828]\">\n                      Agreement documents (optional)\n                    </div>\n                    <div className=\"text-sm text-[#667085] mt-1\">\n                      If you uploaded PDFs to Document Vault (or host them\n                      elsewhere), paste their URLs here so admins can open the\n                      exact documents.\n                    </div>\n\n                    <div className=\"mt-4 grid grid-cols-1 md:grid-cols-2 gap-4\">\n                      <div>\n                        <div className=\"text-sm font-medium text-[#101828]\">\n                          Sites EULA document URL\n                        </div>\n                        <input\n                          value={eulaDocumentUrl}\n                          onChange={(e) => setEulaDocumentUrl(e.target.value)}\n                          placeholder=\"https://...\"\n                          className=\"mt-2 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm\"\n                          disabled={!canManage}\n                        />\n                      </div>\n                      <div>\n                        <div className=\"text-sm font-medium text-[#101828]\">\n                          SMS agreement document URL\n                        </div>\n                        <input\n                          value={smsDocumentUrl}\n                          onChange={(e) => setSmsDocumentUrl(e.target.value)}\n                          placeholder=\"https://...\"\n                          className=\"mt-2 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm\"\n                          disabled={!canManage}\n                        />\n                      </div>\n                    </div>\n\n                    <button\n                      type=\"button\"\n                      onClick={onSaveDocuments}\n                      disabled={docSaveDisabled}\n                      className=\"mt-4 inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg font-medium transition-colors\"\n                    >\n                      {saveDocsMutation.isPending\n                        ? \"Saving…\"\n                        : \"Save document links\"}\n                    </button>\n                  </div>\n                </div>\n              </div>\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "// Company-scoped settings live in public.company_settings.\nasync function ensureCompanySettingsTable() {\n  await sql`\n    CREATE TABLE IF NOT EXISTS company_settings (\n      company_id bigint NOT NULL,\n      key text NOT NULL,\n      value text NOT NULL,\n      updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,\n      PRIMARY KEY (company_id, key)\n    )\n  `;\n}\n",
+      "theirsContent": "// Company-scoped settings live in public.company_settings.\nasync function ensureCompanySettingsTable() {\n  await sql`\n    CREATE TABLE IF NOT EXISTS company_settings (\n      company_id bigint NOT NULL,\n      key text NOT NULL,\n      value text NOT NULL,\n      updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,\n      PRIMARY KEY (company_id, key)\n    )\n  `;\n}\n\nconst KEY_SITES_EULA_URL = \"legal_sites_eula_url\";\nconst KEY_SMS_OPT_IN_URL = \"legal_sms_opt_in_url\";\n\nfunction normalizeOptionalUrl(raw, keyLabel) {\n  // undefined => not provided\n  if (raw === undefined) {\n    return undefined;\n  }\n\n  const trimmed = String(raw || \"\").trim();\n\n  // empty string => clear\n  if (!trimmed) {\n    return null;\n  }\n\n  if (!/^https?:\\/\\//i.test(trimmed)) {\n    throw new Error(`${keyLabel} must start with http:// or https://`);\n  }\n\n  return trimmed;\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    const settingsRows = await sql`\n      SELECT key, value\n      FROM company_settings\n      WHERE company_id = ${companyId}\n        AND key IN ('legal_sites_eula_url', 'legal_sms_opt_in_url')\n    `;",
+      "theirsContent": "    const record = consentRows?.[0] || null;\n    const docs = await getCompanyDocSettings(companyId);"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    const settingsMap = new Map(\n      (settingsRows || []).map((r) => [String(r.key), String(r.value)]),\n    );\n\n    const record = consentRows?.[0] || null;\n",
+      "theirsContent": "    // Back-compat: expose both the flat fields AND a nested `documents` object."
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "\n      // NEW: document URLs (optional)\n      sites_eula_url: settingsMap.get(\"legal_sites_eula_url\") || \"\",\n      sms_opt_in_url: settingsMap.get(\"legal_sms_opt_in_url\") || \"\",",
+      "theirsContent": "\n      legal_sites_eula_url: docs.legal_sites_eula_url,\n      legal_sms_opt_in_url: docs.legal_sms_opt_in_url,\n\n      documents: {\n        eula_document_url: docs.legal_sites_eula_url,\n        sms_document_url: docs.legal_sms_opt_in_url,\n      },"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    const sitesEulaUrlRaw =\n      typeof body?.sites_eula_url === \"string\" ? body.sites_eula_url : null;\n    const smsOptInUrlRaw =\n      typeof body?.sms_opt_in_url === \"string\" ? body.sms_opt_in_url : null;\n\n    const staffUserId = guard?.staffUser?.id\n      ? Number(guard.staffUser.id)\n      : null;",
+      "theirsContent": "    // Accept either naming convention from the frontend.\n    const rawEulaUrl =\n      body?.legal_sites_eula_url !== undefined\n        ? body.legal_sites_eula_url\n        : body?.eula_document_url;"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    const hasConsentUpdate = eulaAccepted || smsAccepted;\n    const hasUrlUpdate = sitesEulaUrlRaw !== null || smsOptInUrlRaw !== null;\n\n    if (!hasConsentUpdate && !hasUrlUpdate) {",
+      "theirsContent": "    const rawSmsUrl =\n      body?.legal_sms_opt_in_url !== undefined\n        ? body.legal_sms_opt_in_url\n        : body?.sms_document_url;\n\n    let normalizedEulaUrl;\n    let normalizedSmsUrl;\n    try {\n      normalizedEulaUrl = normalizeOptionalUrl(rawEulaUrl, \"EULA document URL\");\n      normalizedSmsUrl = normalizeOptionalUrl(\n        rawSmsUrl,\n        \"SMS agreement document URL\",\n      );\n    } catch (e) {"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "            \"Nothing to update. Send eula_accepted, sms_consent_accepted, sites_eula_url, and/or sms_opt_in_url.\",",
+      "theirsContent": "            \"Nothing to update. Send { eula_accepted: true } and/or { sms_consent_accepted: true } and/or document URLs.\","
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    // If we're changing consents, ensure a row exists for this company (idempotent).\n    if (hasConsentUpdate) {",
+      "theirsContent": "    // Save doc settings if provided.\n    await saveCompanyDocSetting(\n      companyId,\n      KEY_SITES_EULA_URL,\n      normalizedEulaUrl,\n    );\n    await saveCompanyDocSetting(\n      companyId,\n      KEY_SMS_OPT_IN_URL,\n      normalizedSmsUrl,\n    );\n\n    const staffUserId = guard?.staffUser?.id\n      ? Number(guard.staffUser.id)\n      : null;\n\n    // Ensure a row exists for this company (idempotent).\n    await sql`\n      INSERT INTO legal_consents (company_id)\n      VALUES (${companyId})\n      ON CONFLICT (company_id) DO NOTHING\n    `;\n\n    // Only set accepted_at/by_user_id the first time.\n    if (eulaAccepted) {"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    await updateUrlKey(\"legal_sites_eula_url\", sitesEulaUrlRaw);\n    await updateUrlKey(\"legal_sms_opt_in_url\", smsOptInUrlRaw);\n\n    const consentRows = await sql`",
+      "theirsContent": "    const consentRows = await sql`"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "    const settingsRows = await sql`\n      SELECT key, value\n      FROM company_settings\n      WHERE company_id = ${companyId}\n        AND key IN ('legal_sites_eula_url', 'legal_sms_opt_in_url')\n    `;",
+      "theirsContent": "    const record = consentRows?.[0] || null;\n    const docs = await getCompanyDocSettings(companyId);"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/settings/legal-compliance/route.js",
+      "oursContent": "      documents: {\n        sites_eula_url: settingsMap.get(\"legal_sites_eula_url\") || \"\",\n        sms_opt_in_url: settingsMap.get(\"legal_sms_opt_in_url\") || \"\",\n      },",
+      "theirsContent": "      legal_sites_eula_url: docs.legal_sites_eula_url,\n      legal_sms_opt_in_url: docs.legal_sms_opt_in_url,\n      documents: {\n        eula_document_url: docs.legal_sites_eula_url,\n        sms_document_url: docs.legal_sms_opt_in_url,\n      },"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/settings/legal-compliance/page.jsx",
+    "/apps/web/src/app/api/settings/legal-compliance/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

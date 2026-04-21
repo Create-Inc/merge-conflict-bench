@@ -1,0 +1,165 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/campaigns/[id]/page.jsx",
+      "oursContent": "    <div className=\"h-screen bg-[#0F0F0F] flex flex-col\">\n      <div className=\"px-4 py-4 border-b border-white/10\">",
+      "theirsContent": "    <div className=\"min-h-screen bg-[#0F0F0F] flex flex-col\">\n      {/* Top bar */}\n      <div className=\"px-4 py-4 border-b border-white/10 bg-[#0F0F0F]\">"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/campaigns/[id]/page.jsx",
+      "oursContent": "      <div className=\"px-4 py-3 border-b border-white/10 bg-[#0F0F0F]\">\n        <Tabs active={activeTab} onChange={setActiveTab} isOwner={isOwner} />",
+      "theirsContent": "      {/* Main */}\n      <div className=\"flex-1 flex flex-col lg:flex-row min-h-0\">\n        <div className=\"lg:w-[240px] border-b lg:border-b-0 lg:border-r border-white/10 p-3\">\n          <Tabs active={activeTab} onChange={setActiveTab} />\n        </div>\n\n        <div className=\"flex-1 min-h-0 overflow-y-auto\">\n          <div className=\"p-4 lg:p-6 max-w-6xl mx-auto w-full\">{content}</div>\n        </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "  const [createBackgroundColor, setCreateBackgroundColor] = useState(\"#111827\");",
+      "theirsContent": "  const [createBackgroundColor, setCreateBackgroundColor] = useState(\"#0b0b0b\");\n  const [createSortOrder, setCreateSortOrder] = useState(0);\n  const [createSetDefault, setCreateSetDefault] = useState(true);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "    createMapMutation.mutate({\n      backgroundUrl: url,\n      backgroundColor: createBackgroundColor,\n      title: createTitle,\n      gridEnabled: createGridEnabled,\n      gridSize: createGridSize,\n      gridOpacity: createGridOpacity,\n      gridColor: createGridColor,\n    });\n  };",
+      "theirsContent": "      createMapMutation.mutate({\n        backgroundUrl: url,\n        title: createTitle,\n        gridEnabled: createGridEnabled,\n        gridSize: createGridSize,\n        gridOpacity: createGridOpacity,\n        gridColor: createGridColor,\n        backgroundColor: createBackgroundColor,\n        sortOrder: createSortOrder,\n        setDefault: createSetDefault,\n      });\n    },\n    [\n      upload,\n      createMapMutation,\n      createTitle,\n      createGridEnabled,\n      createGridSize,\n      createGridOpacity,\n      createGridColor,\n      createBackgroundColor,\n      createSortOrder,\n      createSetDefault,\n    ],\n  );"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "    const nextBackgroundColor = \"#111827\";",
+      "theirsContent": "    const nextBg = \"#0b0b0b\";"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "    setCreateBackgroundColor(nextBackgroundColor);",
+      "theirsContent": "    setCreateBackgroundColor(nextBg);"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "          createBackgroundColor={createBackgroundColor}\n          setCreateBackgroundColor={setCreateBackgroundColor}",
+      "theirsContent": "          createBackgroundColor={createBackgroundColor}\n          setCreateBackgroundColor={setCreateBackgroundColor}\n          createSortOrder={createSortOrder}\n          setCreateSortOrder={setCreateSortOrder}\n          createSetDefault={createSetDefault}\n          setCreateSetDefault={setCreateSetDefault}"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+      "oursContent": "            onUploadMapBackground={handleUploadSelectedMapBackground}\n            onClearMapBackground={handleClearSelectedMapBackground}\n            uploadLoading={uploadLoading}",
+      "theirsContent": "            uploadLoading={uploadLoading}\n            onUploadMapBackground={onUploadSelectedMapBackground}\n            onClearMapBackground={onClearSelectedMapBackground}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/CreateMapForm.jsx",
+      "oursContent": "  createBackgroundColor,\n  setCreateBackgroundColor,",
+      "theirsContent": "  createBackgroundColor,\n  setCreateBackgroundColor,\n  createSortOrder,\n  setCreateSortOrder,\n  createSetDefault,\n  setCreateSetDefault,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/CreateMapForm.jsx",
+      "oursContent": "        <div className=\"md:col-span-2 flex items-center justify-between gap-3\">\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Map background</div>\n            <input\n              type=\"color\"\n              value={createBackgroundColor}\n              onChange={(e) => setCreateBackgroundColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n              title=\"Map background color\"\n            />\n          </div>\n          <div className=\"text-gray-500 text-xs\">\n            Used when you don’t upload an image.\n          </div>\n        </div>\n\n        <div className=\"md:col-span-2 flex items-center gap-3\">\n          <div className=\"text-gray-400 text-xs\">Grid color</div>\n          <input\n            type=\"color\"\n            value={createGridColor}\n            onChange={(e) => setCreateGridColor(e.target.value)}\n            className=\"w-10 h-10 bg-transparent\"\n          />",
+      "theirsContent": "        <div className=\"md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 items-center\">\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Grid color</div>\n            <input\n              type=\"color\"\n              value={createGridColor}\n              onChange={(e) => setCreateGridColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n            />\n          </div>\n\n          <div className=\"flex items-center gap-3\">\n            <div className=\"text-gray-400 text-xs\">Background</div>\n            <input\n              type=\"color\"\n              value={createBackgroundColor}\n              onChange={(e) => setCreateBackgroundColor(e.target.value)}\n              className=\"w-10 h-10 bg-transparent\"\n              title=\"Blank map background color\"\n            />\n            <div className=\"text-gray-500 text-xs\">\n              Used when no image is set.\n            </div>\n          </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+      "oursContent": "import { useCallback, useMemo } from \"react\";\nimport { Target, ZoomIn, ZoomOut, RefreshCcw } from \"lucide-react\";",
+      "theirsContent": "import { Target, ZoomIn, ZoomOut, RotateCcw } from \"lucide-react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+      "oursContent": "  const zoomPercent = useMemo(() => Math.round(zoom * 100), [zoom]);\n\n  const zoomOut = useCallback(() => {\n    setZoom((z) => clamp(Number((z - 0.1).toFixed(2)), 0.5, 2.5));\n  }, [setZoom]);\n\n  const zoomIn = useCallback(() => {\n    setZoom((z) => clamp(Number((z + 0.1).toFixed(2)), 0.5, 2.5));\n  }, [setZoom]);\n\n  const resetZoom = useCallback(() => {\n    setZoom(1);\n  }, [setZoom]);\n",
+      "theirsContent": "  const onWheel = (e) => {\n    // ctrl/cmd+wheel is typically browser zoom; don't fight it\n    if (e.ctrlKey || e.metaKey) return;\n\n    e.preventDefault();\n    const delta = e.deltaY;\n    const nextStep = delta > 0 ? -0.08 : 0.08;\n    setZoom((z) => clamp(Number((z + nextStep).toFixed(2)), 0.5, 2.5));\n  };\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+      "oursContent": "            onClick={zoomOut}",
+      "theirsContent": "            onClick={() => setZoom(1)}\n            className=\"p-2 rounded bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10\"\n            title=\"Reset zoom\"\n          >\n            <RotateCcw size={16} />\n          </button>\n          <button\n            onClick={() =>\n              setZoom((z) => clamp(Number((z - 0.1).toFixed(2)), 0.5, 2.5))\n            }"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+      "oursContent": "        className=\"relative w-full select-none overflow-hidden\"\n        style={{ height: \"calc(100vh - 320px)\", minHeight: 520 }}",
+      "theirsContent": "        className=\"relative w-full h-[70vh] min-h-[520px] max-h-[860px] select-none overflow-hidden\""
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+      "oursContent": "        onDoubleClick={resetZoom}\n        onWheel={(e) => {\n          // Natural zoom: wheel up zooms in, wheel down zooms out.\n          // Use ctrlKey trackpad zoom too.\n          e.preventDefault();\n          const direction = e.deltaY > 0 ? -1 : 1;\n          const step = e.ctrlKey ? 0.06 : 0.1;\n          setZoom((z) =>\n            clamp(Number((z + direction * step).toFixed(2)), 0.5, 2.5),\n          );\n        }}",
+      "theirsContent": "        onWheel={onWheel}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/ToolPanel.jsx",
+      "oursContent": "  onUploadMapBackground,\n  onClearMapBackground,\n  uploadLoading,",
+      "theirsContent": "  uploadLoading,\n  onUploadMapBackground,\n  onClearMapBackground,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/ToolPanel.jsx",
+      "oursContent": "",
+      "theirsContent": "        </div>\n      )}\n\n      {isOwner && selectedMap && (\n        <div className=\"border-t border-gray-700 pt-3 space-y-3\">\n          <div className=\"text-gray-300 text-sm font-bold\">Map settings</div>\n\n          <div>\n            <label className=\"block text-gray-500 text-xs mb-1\">Title</label>\n            <input\n              defaultValue={selectedMap.title}\n              onBlur={(e) => {\n                const next = String(e.target.value || \"\").trim();\n                if (next && next !== selectedMap.title) {\n                  onUpdateToken({ mapId: selectedMap.id, title: next });\n                }\n                e.target.value = next || selectedMap.title;\n              }}\n              className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n            />\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">Order</label>\n              <input\n                type=\"number\"\n                defaultValue={String(selectedMap.sort_order ?? 0)}\n                onBlur={(e) => {\n                  const n = Number(e.target.value);\n                  if (!Number.isFinite(n) || n < 0) {\n                    e.target.value = String(selectedMap.sort_order ?? 0);\n                    return;\n                  }\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    sortOrder: Math.floor(n),\n                  });\n                }}\n                className=\"w-full bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              />\n            </div>\n\n            <div>\n              <label className=\"block text-gray-500 text-xs mb-1\">\n                Background color\n              </label>\n              <input\n                type=\"color\"\n                value={selectedMap.background_color || \"#0b0b0b\"}\n                onChange={(e) =>\n                  onUpdateToken({\n                    mapId: selectedMap.id,\n                    backgroundColor: e.target.value,\n                  })\n                }\n                className=\"w-full h-10 bg-transparent\"\n                title=\"Used when no image is set\"\n              />\n            </div>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <label className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 cursor-pointer\">\n              <Upload size={16} />\n              {uploadLoading ? \"Uploading…\" : \"Background\"}\n              <input\n                type=\"file\"\n                accept=\"image/*\"\n                className=\"hidden\"\n                onChange={(e) => onUploadMapBackground?.(e.target.files?.[0])}\n                disabled={uploadLoading || updateTokenPending}\n              />\n            </label>\n\n            <button\n              onClick={() => onClearMapBackground?.()}\n              disabled={updateTokenPending}\n              className=\"px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors font-bold inline-flex items-center justify-center gap-2 disabled:opacity-50\"\n              title=\"Remove background\"\n            >\n              <ImageOff size={16} />\n              Clear\n            </button>\n          </div>\n\n          <div className=\"grid grid-cols-2 gap-2\">\n            <button\n              onClick={() =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridEnabled: !selectedMap.grid_enabled,\n                })\n              }\n              className=\"px-3 py-2 rounded bg-white/5 border border-white/10 text-gray-200 hover:bg-white/10 transition-colors text-sm font-bold\"\n            >\n              Grid: {selectedMap.grid_enabled ? \"ON\" : \"OFF\"}\n            </button>\n            <input\n              type=\"number\"\n              value={Number(selectedMap?.grid_size || 32)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridSize: Number(e.target.value) || 32,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid size\"\n            />\n            <input\n              type=\"number\"\n              step=\"0.01\"\n              value={Number(selectedMap?.grid_opacity || 0.06)}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridOpacity: Number(e.target.value) || 0.06,\n                })\n              }\n              className=\"bg-[#1E1E1E] border border-gray-700 text-white px-3 py-2 rounded\"\n              title=\"Grid opacity\"\n            />\n            <input\n              type=\"color\"\n              value={selectedMap?.grid_color || \"#ffffff\"}\n              onChange={(e) =>\n                onUpdateToken({\n                  mapId: selectedMap.id,\n                  gridColor: e.target.value,\n                })\n              }\n              className=\"w-full h-10 bg-transparent\"\n              title=\"Grid color\"\n            />\n          </div>\n\n          <div className=\"text-gray-500 text-xs\">\n            Tip: order controls the map dropdown order. Lower comes first.\n          </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/useGridStyle.js",
+      "oursContent": "    const backgroundColor = selectedMap?.background_color || \"#111827\";\n",
+      "theirsContent": "    const bgColor = selectedMap?.background_color || \"#0b0b0b\";\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/useGridStyle.js",
+      "oursContent": "          backgroundColor,",
+      "theirsContent": "          backgroundColor: bgColor,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/useGridStyle.js",
+      "oursContent": "      : { backgroundColor };",
+      "theirsContent": "      : { backgroundColor: bgColor };"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/useGridStyle.js",
+      "oursContent": "          backgroundColor,",
+      "theirsContent": "          backgroundColor: bgColor,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/campaigns/[id]/maps/route.js",
+      "oursContent": "function parseHexColor(v, fallback) {\n  const raw = String(v || \"\").trim();\n  if (!raw) return fallback;\n  const withHash = raw.startsWith(\"#\") ? raw : `#${raw}`;\n  const hex = withHash.slice(1);\n  if (hex.length !== 6) return fallback;\n  const ok = /^[0-9a-fA-F]{6}$/.test(hex);\n  return ok ? withHash.toLowerCase() : fallback;\n}\n",
+      "theirsContent": "function parseSortOrder(v) {\n  const n = Number(v);\n  if (!Number.isFinite(n)) return 0;\n  return Math.max(0, Math.min(100000, Math.floor(n)));\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/campaigns/[id]/maps/route.js",
+      "oursContent": "    const backgroundColor = parseHexColor(body?.backgroundColor, \"#111827\");",
+      "theirsContent": "    const backgroundColor = body?.backgroundColor\n      ? String(body.backgroundColor).trim()\n      : null;\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/campaigns/[id]/maps/route.js",
+      "oursContent": "    const rows = await sql`\n      INSERT INTO campaign_maps (\n        campaign_id,\n        title,\n        background_url,\n        background_color,\n        grid_enabled,\n        is_default,\n        sort_order,\n        grid_size,\n        grid_opacity,\n        grid_color,\n        created_by\n      )\n      VALUES (\n        ${campaignId},\n        ${title},\n        ${backgroundUrl},\n        ${backgroundColor},\n        ${gridEnabled},\n        ${shouldDefault},\n        0,\n        ${gridSize},\n        ${gridOpacity},\n        ${gridColor},\n        ${session.user.id}\n      )\n      RETURNING id, campaign_id, title, background_url, background_color, grid_enabled,\n                is_default, sort_order, grid_size, grid_opacity, grid_color,\n                created_by, created_at, updated_at\n    `;",
+      "theirsContent": "    const created = await sql.transaction((txn) => {\n      const queries = [];"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/campaigns/[id]/maps/route.js",
+      "oursContent": "    if (body?.backgroundColor !== undefined) {\n      add(\"background_color\", parseHexColor(body.backgroundColor, \"#111827\"));\n    }",
+      "theirsContent": "    if (body?.backgroundColor !== undefined) {\n      add(\n        \"background_color\",\n        body.backgroundColor ? String(body.backgroundColor).trim() : null,\n      );\n    }"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/campaigns/[id]/page.jsx",
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel.jsx",
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/CreateMapForm.jsx",
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/MapCanvas.jsx",
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/ToolPanel.jsx",
+    "/apps/web/src/components/ProfilePage/CampaignsTab/CampaignMapPanel/useGridStyle.js",
+    "/apps/web/src/app/api/campaigns/[id]/maps/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

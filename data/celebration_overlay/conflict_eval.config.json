@@ -1,0 +1,211 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "function easeOutExpo(t) {\n  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);\n}\n\nfunction playApplePaySuccessChime({ volume = 0.12, onAutoplayBlocked } = {}) {\n  if (typeof window === \"undefined\") return { ok: false, reason: \"no-window\" };\n",
+      "theirsContent": "// Slight overshoot then settle (feels more \"premium\" than a plain ease).\nfunction easeOutBack(t) {\n  const c1 = 1.70158;\n  const c3 = c1 + 1;\n  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);\n}\n\nfunction playChime() {\n  if (typeof window === \"undefined\") return;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "  // Note: some browsers require a user gesture. We'll attempt anyway.",
+      "theirsContent": "  // A warmer, more \"premium\" bell-like chime.\n  // Note: some browsers require a user gesture before audio can start; this is best-effort."
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "",
+      "theirsContent": "\n  const master = ctx.createGain();\n  master.gain.value = 0.12;\n\n  const compressor = ctx.createDynamicsCompressor();\n  compressor.threshold.value = -22;\n  compressor.knee.value = 18;\n  compressor.ratio.value = 4;\n  compressor.attack.value = 0.005;\n  compressor.release.value = 0.18;\n\n  // Simple \"room\" using a delay + lowpass feedback (not true reverb, but much nicer than dry).\n  const delay = ctx.createDelay(0.35);\n  delay.delayTime.value = 0.085;\n\n  const feedback = ctx.createGain();\n  feedback.gain.value = 0.23;\n\n  const damp = ctx.createBiquadFilter();\n  damp.type = \"lowpass\";\n  damp.frequency.value = 2600;\n  damp.Q.value = 0.7;\n\n  // wet path: delay -> damp -> feedback -> delay\n  delay.connect(damp);\n  damp.connect(feedback);\n  feedback.connect(delay);\n\n  // mix: dry + wet -> compressor -> master -> destination\n  const wet = ctx.createGain();\n  wet.gain.value = 0.18;\n  delay.connect(wet);\n\n  const mix = ctx.createGain();\n  mix.gain.value = 1;\n\n  wet.connect(mix);\n  mix.connect(compressor);\n  compressor.connect(master);\n  master.connect(ctx.destination);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "  const safeClose = () => {\n    setTimeout(() => {\n      try {\n        ctx.close();\n      } catch (_e) {\n        // ignore\n      }\n    }, 1100);\n  };",
+      "theirsContent": "  const now = ctx.currentTime;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "  try {\n    // If suspended, try to resume. If this fails, consider it blocked.\n    const resumePromise =\n      typeof ctx.resume === \"function\" ? ctx.resume() : Promise.resolve();",
+      "theirsContent": "  const scheduleBell = (frequency, startTime, duration, brightness) => {\n    const oscA = ctx.createOscillator();\n    const oscB = ctx.createOscillator();\n    const gain = ctx.createGain();"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    // If resume rejects, we're definitely blocked.\n    resumePromise.catch(() => {\n      if (typeof onAutoplayBlocked === \"function\") {\n        onAutoplayBlocked();\n      }\n      safeClose();\n    });",
+      "theirsContent": "    // Two slightly detuned sines reads as \"bell\" instead of \"old computer\".\n    oscA.type = \"sine\";\n    oscB.type = \"sine\";"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    // If the context stays suspended shortly after open, treat that as blocked.\n    setTimeout(() => {\n      if (ctx.state !== \"running\") {\n        if (typeof onAutoplayBlocked === \"function\") {\n          onAutoplayBlocked();\n        }\n      }\n    }, 120);",
+      "theirsContent": "    oscA.frequency.setValueAtTime(frequency, startTime);\n    oscB.frequency.setValueAtTime(frequency * 1.006, startTime);"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    const now = ctx.currentTime;",
+      "theirsContent": "    const filter = ctx.createBiquadFilter();\n    filter.type = \"lowpass\";\n    filter.frequency.setValueAtTime(1800 + brightness * 2400, startTime);\n    filter.Q.setValueAtTime(0.8, startTime);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    const master = ctx.createGain();\n    master.gain.value = Math.max(0, Math.min(volume, 0.35));\n    master.connect(ctx.destination);",
+      "theirsContent": "    // ADSR-ish envelope\n    gain.gain.setValueAtTime(0.0001, startTime);\n    gain.gain.exponentialRampToValueAtTime(0.95, startTime + 0.018);\n    gain.gain.exponentialRampToValueAtTime(0.18, startTime + 0.09);\n    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    // Gentle compression to keep it \"premium\" (no harsh peaks)\n    const comp = ctx.createDynamicsCompressor();\n    comp.threshold.value = -24;\n    comp.knee.value = 18;\n    comp.ratio.value = 6;\n    comp.attack.value = 0.004;\n    comp.release.value = 0.14;\n    comp.connect(master);",
+      "theirsContent": "    // route\n    oscA.connect(filter);\n    oscB.connect(filter);\n    filter.connect(gain);"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    // Small \"room\" using delay + lowpass feedback.\n    const delay = ctx.createDelay(0.25);\n    delay.delayTime.value = 0.08;\n\n    const feedback = ctx.createGain();\n    feedback.gain.value = 0.18;\n\n    const damp = ctx.createBiquadFilter();\n    damp.type = \"lowpass\";\n    damp.frequency.value = 1800;\n    damp.Q.value = 0.7;\n\n    delay.connect(damp);\n    damp.connect(feedback);\n    feedback.connect(delay);\n\n    // Mix a little of the delay back into the compressor.\n    const wet = ctx.createGain();\n    wet.gain.value = 0.25;\n    delay.connect(wet);\n    wet.connect(comp);\n\n    // Dry path\n    const dry = ctx.createGain();\n    dry.gain.value = 0.92;\n    dry.connect(comp);\n\n    // A soft low \"tap\" at the start (feels like Apple Pay's subtle hit)\n    const tapOsc = ctx.createOscillator();\n    const tapGain = ctx.createGain();\n    tapOsc.type = \"sine\";\n    tapOsc.frequency.value = 110;\n    tapGain.gain.setValueAtTime(0.0001, now);\n    tapGain.gain.exponentialRampToValueAtTime(0.55, now + 0.01);\n    tapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);\n    tapOsc.connect(tapGain);\n    tapGain.connect(dry);\n    tapGain.connect(delay);\n    tapOsc.start(now);\n    tapOsc.stop(now + 0.08);\n\n    // Two-note \"Apple-ish\" chime: bright but soft. Slight detune for richness.\n    const notes = [880, 1320];\n    notes.forEach((freq, idx) => {\n      const start = now + 0.05 + idx * 0.11;\n      const end = start + 0.34;\n\n      const oscA = ctx.createOscillator();\n      const oscB = ctx.createOscillator();\n      oscA.type = \"sine\";\n      oscB.type = \"triangle\";\n      oscA.frequency.value = freq;\n      oscB.frequency.value = freq;\n      oscA.detune.value = -7;\n      oscB.detune.value = 6;\n\n      const filter = ctx.createBiquadFilter();\n      filter.type = \"lowpass\";\n      filter.frequency.setValueAtTime(3400, start);\n      filter.frequency.exponentialRampToValueAtTime(2100, end);\n      filter.Q.value = 0.8;\n\n      const gain = ctx.createGain();\n      gain.gain.setValueAtTime(0.0001, start);\n      gain.gain.exponentialRampToValueAtTime(1.0, start + 0.02);\n      gain.gain.exponentialRampToValueAtTime(0.0001, end);\n\n      oscA.connect(filter);\n      oscB.connect(filter);\n      filter.connect(gain);\n      gain.connect(dry);\n      gain.connect(delay);\n\n      oscA.start(start);\n      oscB.start(start);\n      oscA.stop(end);\n      oscB.stop(end);\n    });\n\n    safeClose();\n\n    return { ok: true };\n  } catch (e) {\n    console.error(\"Failed to play chime\", e);\n    safeClose();\n    return { ok: false, reason: \"exception\" };\n  }",
+      "theirsContent": "    // dry\n    gain.connect(mix);\n    // wet\n    gain.connect(delay);\n\n    oscA.start(startTime);\n    oscB.start(startTime);\n    oscA.stop(startTime + duration);\n    oscB.stop(startTime + duration);\n  };\n\n  // Gentle low \"thump\" (adds satisfaction, still subtle)\n  const thumpOsc = ctx.createOscillator();\n  const thumpGain = ctx.createGain();\n  thumpOsc.type = \"sine\";\n  thumpOsc.frequency.setValueAtTime(92, now);\n  thumpGain.gain.setValueAtTime(0.0001, now);\n  thumpGain.gain.exponentialRampToValueAtTime(0.7, now + 0.01);\n  thumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);\n  thumpOsc.connect(thumpGain);\n  thumpGain.connect(compressor);\n  thumpOsc.start(now);\n  thumpOsc.stop(now + 0.14);\n\n  // A modern \"success\" triad (C major), slightly staggered.\n  scheduleBell(523.25, now + 0.02, 0.55, 0.55); // C5\n  scheduleBell(659.25, now + 0.09, 0.52, 0.65); // E5\n  scheduleBell(783.99, now + 0.16, 0.58, 0.75); // G5\n\n  // Best-effort cleanup\n  setTimeout(() => {\n    try {\n      ctx.close();\n    } catch (_e) {\n      // ignore\n    }\n  }, 1100);"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    const colors = [\"#22C55E\", \"#3B82F6\", \"#F59E0B\", \"#EF4444\", \"#A855F7\"];\n    const count = 220;",
+      "theirsContent": "    // More pieces + bigger + brighter so it's clearly visible.\n    const colors = [\n      \"#22C55E\", // emerald\n      \"#3B82F6\", // blue\n      \"#F59E0B\", // amber\n      \"#EC4899\", // pink\n      \"#A855F7\", // purple\n      \"#FFFFFF\", // white sparkle\n    ];"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "      const size = 8 + Math.random() * 10;\n      const delay = Math.random() * 0.18;\n      const duration = 2.8 + Math.random() * 1.4;",
+      "theirsContent": "      const size = 8 + Math.random() * 12;\n      const delay = Math.random() * 0.25;\n      const duration = 2.2 + Math.random() * 1.6;\n      const rotate = Math.random() * 360;\n      const color = colors[idx % colors.length];\n      const drift = (Math.random() - 0.5) * 220;\n      const startY = -18 - Math.random() * 22; // start above screen\n      const isSparkle = idx % 9 === 0;"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "        rotStart,\n        rotEnd,\n        blur: isSparkle ? 0.5 : 0,\n        glow: isSparkle ? 10 : 0,",
+      "theirsContent": "        startY,\n        isSparkle,"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    const durationMs = 1550;",
+      "theirsContent": "    const durationMs = 1700;"
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "      const eased = easeOutExpo(t);",
+      "theirsContent": "      const eased = t < 0.86 ? easeOutBack(t / 0.86) : 1;"
+    },
+    {
+      "blockIndex": 16,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "    }, 3600);",
+      "theirsContent": "    }, 3800);"
+    },
+    {
+      "blockIndex": 17,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "      {prefersReducedMotion ? null : (\n        <div className=\"absolute inset-0 overflow-hidden pointer-events-none\">\n          {confettiPieces.map((p) => {\n            const style = {\n              left: `${p.left}%`,\n              width: `${p.w}px`,\n              height: `${p.h}px`,\n              borderRadius: `${p.radius}px`,\n              backgroundColor: p.color,\n              opacity: p.opacity,\n              animationDelay: `${p.delay}s`,\n              animationDuration: `${p.duration}s`,\n              \"--confetti-drift\": `${p.drift}px`,\n              \"--confetti-rot-start\": `${p.rotStart}deg`,\n              \"--confetti-rot-end\": `${p.rotEnd}deg`,\n              \"--confetti-blur\": `${p.blur}px`,\n              \"--confetti-glow\": `${p.glow}px`,\n            };",
+      "theirsContent": "      <div className=\"absolute inset-0 overflow-hidden pointer-events-none\">\n        {confettiPieces.map((p) => {\n          const heightPx = Math.max(6, p.size * 0.55);\n          const baseStyle = {\n            left: `${p.left}%`,\n            width: `${p.size}px`,\n            height: `${heightPx}px`,\n            backgroundColor: p.color,\n            animationDelay: `${p.delay}s`,\n            animationDuration: `${p.duration}s`,\n            transform: `rotate(${p.rotate}deg)`,\n            \"--confetti-drift\": `${p.drift}px`,\n            \"--confetti-start-y\": `${p.startY}vh`,\n          };"
+    },
+    {
+      "blockIndex": 18,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "            return (\n              <div key={p.key} className=\"celebrate-confetti\" style={style} />\n            );\n          })}\n        </div>\n      )}",
+      "theirsContent": "          const className = p.isSparkle\n            ? \"celebrate-confetti celebrate-confetti-sparkle\"\n            : \"celebrate-confetti\";\n\n          return <div key={p.key} className={className} style={baseStyle} />;\n        })}\n      </div>"
+    },
+    {
+      "blockIndex": 19,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "            transform: translate3d(0, -18vh, 0) rotate(var(--confetti-rot-start));",
+      "theirsContent": "            transform: translate3d(0, var(--confetti-start-y), 0) rotate(0deg);"
+    },
+    {
+      "blockIndex": 20,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "            transform: translate3d(var(--confetti-drift), 112vh, 0)\n              rotate(var(--confetti-rot-end));",
+      "theirsContent": "            transform: translate3d(\n                var(--confetti-drift),\n                112vh,\n                0\n              )\n              rotate(860deg);"
+    },
+    {
+      "blockIndex": 21,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "          animation-timing-function: cubic-bezier(0.18, 0.8, 0.2, 1);",
+      "theirsContent": "          animation-timing-function: cubic-bezier(0.14, 0.72, 0.18, 1);"
+    },
+    {
+      "blockIndex": 22,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "          filter: blur(var(--confetti-blur))\n            drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18));\n          box-shadow: 0 0 var(--confetti-glow) rgba(255, 255, 255, 0.55);\n          mix-blend-mode: screen;",
+      "theirsContent": "          filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28));"
+    },
+    {
+      "blockIndex": 23,
+      "filePath": "/apps/web/src/components/CelebrationOverlay.jsx",
+      "oursContent": "          animation: celebrateNumberPulse 520ms ease-out;\n          text-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);",
+      "theirsContent": "          animation: celebrateNumberPulse 520ms ease-out;\n          text-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/CelebrationOverlay.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": [
+    "exports a default CelebrationOverlay function component with 'use client' directive",
+    "imports React hooks (useEffect, useMemo, useRef, useState) and formatGBP utility",
+    "uses AudioContext with webkitAudioContext fallback for cross-browser audio",
+    "confettiPieces generated via useMemo with Array.from for stable confetti on mount",
+    "requestAnimationFrame-based revenue counter animation with easing",
+    "auto-close setTimeout calling onDone after delay",
+    "celebrate-confetti and celebrateNumberPulse CSS keyframe animations",
+    "isSoundEnabled state for mute/unmute toggle with Volume2/VolumeX icons",
+    "close button and backdrop with click-to-close and aria-labels",
+    "safeRevenueBefore, safeRevenueAfter, safeAddedMonthlyFee computed with Number.isFinite",
+    "yearly run-rate display (monthly * 12)",
+    "cleanup of animation frame and timeout on unmount (cancelAnimationFrame + clearTimeout)",
+    "startedRef guard to prevent double-play in React strict mode",
+    "ctx.close() called in a setTimeout for audio cleanup",
+    "chime function accepts volume parameter with clamping (Math.min/Math.max)",
+    "chime function accepts onAutoplayBlocked callback for autoplay detection",
+    "ctx.resume() called to handle browser autoplay restrictions",
+    "context suspension check (ctx.state !== 'running') to detect blocked autoplay",
+    "onAutoplayBlocked callback invoked when context stays suspended",
+    "chime returns result object with ok boolean and reason string",
+    "returns { ok: false, reason: 'no-window' } when window is undefined",
+    "returns { ok: false, reason: 'no-audio-context' } when AudioContext is missing",
+    "safeClose helper function for delayed context closing",
+    "confetti shape system producing w, h, radius (thin rectangle, square, ribbon)",
+    "confetti pieces have rotStart and rotEnd for per-piece rotation",
+    "CSS uses --confetti-rot-start and --confetti-rot-end custom properties",
+    "prefersReducedMotion check conditionally hides confetti (renders null)",
+    "CSS @media (prefers-reduced-motion: reduce) hides confetti and disables animation",
+    "confetti blur effect via custom property",
+    "confetti glow effect via box-shadow or custom property",
+    "try/catch with 'Failed to play chime' error logging in chime function",
+    "returns { ok: false, reason: 'exception' } on chime error",
+    "soundBlocked state for blocked autoplay UI with 'Play sound' retry button",
+    "confetti opacity varies for sparkle vs normal pieces",
+    "easeOutBack function with overshoot constant 1.70158",
+    "easeOutBack used in tick with 0.86 threshold for animation easing",
+    "DynamicsCompressor node created in audio chain",
+    "delay node created for room/reverb simulation",
+    "feedback gain node in delay feedback loop",
+    "lowpass biquad filter (damp) in delay feedback loop",
+    "wet and dry signal paths in audio routing",
+    "compressor connects to master gain which connects to ctx.destination",
+    "expanded color palette includes pink (#EC4899)",
+    "at least 5 distinct colors in confetti palette",
+    "confetti pieces have startY property for variable start position above screen",
+    "CSS animation uses --confetti-start-y custom property",
+    "isSparkle determined by modulo 9 on piece index",
+    "celebrate-confetti-sparkle CSS class for sparkle confetti pieces",
+    "sparkle CSS class has box-shadow for glow effect",
+    "sparkle CSS class uses mix-blend-mode: screen",
+    "auto-close timer set to 3800ms",
+    "animation duration set to 1700ms",
+    "confetti animation uses drop-shadow filter",
+    "multiple oscillators with detune for rich chime sound",
+    "low-frequency tap/thump oscillator at chime start",
+    "confetti drift using (Math.random() - 0.5) for positive and negative spread",
+    "confetti count is at least 180 pieces"
+  ]
+}

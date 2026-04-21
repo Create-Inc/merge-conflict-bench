@@ -1,0 +1,204 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "  // IMPORTANT (2026-01):\n  // Do NOT do a native (React Native fetch) token exchange here.\n  // In practice, RN fetch does not reliably share WKWebView cookies, which causes\n  // \"token exchange succeeded but no jwt\" and infinite loops.\n  // We instead rely on the WebView final-step pages (/mobile-auth/complete, /mobile-auth/callback)\n  // which exchange tokens inside the WebView cookie jar and postMessage AUTH_SUCCESS.\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "      p === \"/api/auth/token\" ||\n      p === \"/api/mobile-auth/callback\"",
+      "theirsContent": "      p === \"/mobile-auth/complete\" ||\n      p === \"/api/auth/token\" ||\n      p === \"/api/mobile-auth/callback\""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "    // Give the WebView final-step pages plenty of time; they may run retries.\n    const watchdogMs = 35000;",
+      "theirsContent": "    // The /mobile-auth/* pages embed their own retry behavior; give them time.\n    const watchdogMs = 25000;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "",
+      "theirsContent": "        // If this happened during the final step, retry the WebView navigation.\n        if (isFinalStepUrl(urlFromMsg) && Platform.OS !== \"web\") {\n          setNullPageUrl(urlFromMsg);\n          setIsExchangingToken(true);\n          const didRetryFinal = retryFinalStep(urlFromMsg);\n          if (didRetryFinal) return;\n          setIsExchangingToken(false);\n          return;\n        }\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "        setAuth({ jwt: data.jwt, user: data.user || null });",
+      "theirsContent": "        if (!data?.jwt) {\n          setIsExchangingToken(false);\n          setAuthError(\"Sign-in succeeded but no token was returned.\");\n          setNullPageUrl(lastNavUrl || \"(unknown)\");\n          return;\n        }\n\n        setAuth({ jwt: data.jwt, user: data.user });"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "",
+      "theirsContent": "    const isFinalStep = Platform.OS !== \"web\" && url && isFinalStepUrl(url);\n    if (isFinalStep) {\n      const p = String(getPathname(url) || \"\").toLowerCase();\n      const isPageHelper =\n        p === \"/mobile-auth/callback\" || p === \"/mobile-auth/complete\";\n\n      if (isPageHelper) {\n        setIsExchangingToken(true);\n        return true;\n      }\n\n      // If we land on API helpers as documents, rewrite to the stable page helper.\n      if (authOriginParam) {\n        const next = `${authOriginParam}/mobile-auth/callback?t=${Date.now()}`;\n        setURI(next);\n        setIsExchangingToken(true);\n        return false;\n      }\n\n      return true;\n    }\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "        // For embedded WebViews, always prefer the *page-based* callback route.\n        // This avoids flaky behavior when navigating directly to API routes.",
+      "theirsContent": "        // Some iOS builds render certain API routes as a literal \"null\" page.\n        // Force the page-based helper instead when embedded."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "  const postAuthMessage = (message) => {\n    if (typeof window === \"undefined\") return;\n\n    try {\n      if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {\n        window.ReactNativeWebView.postMessage(JSON.stringify(message));\n      }\n    } catch (_) {\n      // ignore\n    }\n\n    // Expo web/dev iframe support\n    try {\n      if (window.parent && window.parent.postMessage) {\n        window.parent.postMessage(message, \"*\");\n      }\n    } catch (_) {\n      // ignore\n    }\n  };\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "      // IMPORTANT:\n      // For embedded mobile WebViews, do NOT do an immediate JS fetch token exchange here.\n      // Instead, allow the normal redirect to the mobile callback page (/mobile-auth/complete)\n      // which handles the token exchange in a way WKWebView handles more reliably.",
+      "theirsContent": "      // Embedded WebView: avoid JSON token exchange here.\n      // We finish via /mobile-auth/callback which uses an iframe + HTML token helper."
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "      // Some auth adapters return an object when redirecting is disabled.\n      // We keep this here only as a sanity check for any future refactor.\n      if (isEmbedded && result?.error) {\n        throw new Error(result.error);",
+      "theirsContent": "      if (isEmbedded) {\n        if (result?.error) {\n          throw new Error(result.error);\n        }\n\n        try {\n          const next = new URL(\"/mobile-auth/callback\", window.location.origin);\n          next.searchParams.set(\"t\", String(Date.now()));\n          window.location.assign(next.pathname + next.search);\n          return;\n        } catch (_) {\n          if (result?.url) {\n            window.location.assign(result.url);\n            return;\n          }\n        }"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "  // Avoid `fetch(POST /api/auth/token)` here (can intermittently produce a null body).\n  // Use a hidden iframe pointed at GET /api/auth/token which posts AUTH_SUCCESS/AUTH_ERROR.\n",
+      "theirsContent": "  // Avoid JSON fetches during the final step (some environments have returned a literal\n  // \"null\" body for JSON responses even on 200 OK).\n  //\n  // Instead, load the HTML token helper (/api/auth/token) *inside an iframe* and forward\n  // its postMessage to the ReactNativeWebView."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "    const forward = (msg) => {\n      postToReactNative(msg);\n      postToParent(msg);",
+      "theirsContent": "    const sendError = (detail) => {\n      postWithRetries({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeFailed\",\n        details: detail,\n        final: true,\n      });"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "    const onMessage = (event) => {",
+      "theirsContent": "    const sendSuccess = (payload) => {\n      // Use retries here too; some iOS WKWebView builds drop the first message.\n      postWithRetries(payload);\n    };\n\n    const makeFrameSrc = () => {\n      const t = Date.now();\n      const u = new URL(\"/api/auth/token\", window.location.origin);\n      u.searchParams.set(\"t\", String(t));\n      u.searchParams.set(\"attempt\", String(attempt));\n      return u.pathname + u.search;\n    };\n\n    const setFrameSrc = () => {\n      attempt += 1;\n      setStatus(\"Finishing sign-in…\");\n      setDetails(`Exchanging token… (${attempt}/${maxAttempts})`);\n      const frame = document.getElementById(\"token-frame\");\n      if (frame && frame.tagName === \"IFRAME\") {\n        frame.setAttribute(\"src\", makeFrameSrc());\n      }\n    };\n\n    const onWindowMessage = (event) => {\n      if (cancelled || done) return;\n\n      // Only accept messages from our own origin (iframe is same-origin)."
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "        const data = event?.data;\n        if (!data || typeof data !== \"object\") return;",
+      "theirsContent": "        if (event?.origin && event.origin !== window.location.origin) {\n          return;\n        }\n      } catch (_) {\n        // ignore\n      }"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "        if (data.type === \"AUTH_SUCCESS\" && data.jwt) {\n          if (cancelled) return;\n          setStatus(\"Signed in\");\n          setDetails(\"Done.\");\n          setLastError(null);\n          forward(data);",
+      "theirsContent": "      const data = event?.data;\n      if (!data) return;\n\n      // We accept both stringified JSON and raw objects.\n      let msg = null;\n      if (typeof data === \"string\") {\n        try {\n          msg = JSON.parse(data);\n        } catch (_) {\n          msg = null;\n        }\n      } else if (typeof data === \"object\") {\n        msg = data;\n      }\n\n      if (!msg) return;\n\n      if (msg?.type === \"AUTH_SUCCESS\") {\n        done = true;\n        setStatus(\"Signed in\");\n        setDetails(\"Done.\");\n        setLastError(null);\n        sendSuccess(msg);\n        return;\n      }\n\n      if (msg?.type === \"AUTH_ERROR\") {\n        const detail = msg?.details || msg?.error || \"Token exchange failed.\";\n\n        setStatus(\"Could not finish sign-in\");\n        setDetails(null);\n        setLastError(String(detail));\n\n        if (msg?.final) {\n          done = true;\n          sendError(String(detail));\n          return;"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "        if (data.type === \"AUTH_ERROR\") {\n          if (cancelled) return;\n          const detail = data.details || data.error || \"Token exchange failed\";\n          setStatus(\"Could not finish sign-in\");\n          setDetails(null);\n          setLastError(String(detail));\n          forward({ ...data, final: true });",
+      "theirsContent": "        if (attempt < maxAttempts) {\n          setTimeout(setFrameSrc, 650);\n          return;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "      } catch (_) {\n        // ignore",
+      "theirsContent": "\n        done = true;\n        sendError(String(detail));"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "    window.addEventListener(\"message\", onMessage);",
+      "theirsContent": "    window.addEventListener(\"message\", onWindowMessage);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "    const t = setTimeout(() => {\n      if (cancelled) return;\n      const msg = `Token exchange did not complete in time. reason=/mobile-auth/callback`;\n      setStatus(\"Could not finish sign-in\");\n      setDetails(null);\n      setLastError(msg);\n      forward({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeTimeout\",\n        details: msg,\n        final: true,\n      });\n    }, 30000);\n",
+      "theirsContent": "    // Kick off first attempt immediately.\n    setFrameSrc();\n\n    // Safety watchdog: if we never receive a message (WebKit sometimes drops it), reload.\n    const watchdog = setInterval(() => {\n      if (cancelled || done) return;\n\n      if (attempt >= 1 && attempt < maxAttempts) {\n        setTimeout(setFrameSrc, 0);\n        return;\n      }\n\n      if (attempt >= maxAttempts) {\n        clearInterval(watchdog);\n        const msg2 = `Token exchange failed (watchdog). reason=/mobile-auth/callback attempts=${maxAttempts}`;\n        setStatus(\"Could not finish sign-in\");\n        setDetails(null);\n        setLastError(msg2);\n        done = true;\n        sendError(msg2);\n      }\n    }, 9000);\n"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "      window.removeEventListener(\"message\", onMessage);\n      clearTimeout(t);",
+      "theirsContent": "      window.removeEventListener(\"message\", onWindowMessage);\n      clearInterval(watchdog);"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "        <div className=\"mt-4 text-xs text-gray-400\">Started: {safeStarted}</div>",
+      "theirsContent": "        {lastError ? (\n          <div className=\"mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 whitespace-pre-wrap\">\n            {lastError}\n          </div>\n        ) : null}\n\n        <div className=\"mt-4 text-xs text-gray-400\">\n          Started: {new Date(startedAt).toLocaleString()}\n        </div>\n\n        {/* Hidden iframe used for the final HTML token helper step */}\n        <iframe\n          id=\"token-frame\"\n          title=\"token-frame\"\n          style={{ width: 0, height: 0, border: 0, position: \"absolute\" }}\n          sandbox=\"allow-scripts allow-same-origin\"\n        />"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "  // Stable callbackUrl target for native mobile auth WebView.",
+      "theirsContent": "  // This page is a stable callbackUrl target for the native mobile auth WebView.\n  //"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "  // Do NOT rely on `fetch(POST /api/auth/token)` here. In some iOS WKWebView builds,\n  // programmatic fetch can intermittently return a literal `null` body.\n  //\n  // Instead, we load the GET /api/auth/token page inside a hidden iframe.\n  // That endpoint returns HTML that posts AUTH_SUCCESS/AUTH_ERROR to its parent.\n  // We forward that message to the native layer.",
+      "theirsContent": "  // Avoid JSON POST exchanges here (some environments have returned a literal \"null\"\n  // body for JSON responses even on 200 OK). Instead, load /api/auth/token (HTML)\n  // in an iframe and forward its postMessage up to the ReactNativeWebView.\n  const [status, setStatus] = useState(\"Signing you in…\");\n  const [details, setDetails] = useState(null);\n  const [lastError, setLastError] = useState(null);"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "    const forward = (msg) => {\n      postToReactNative(msg);\n      postToParent(msg);",
+      "theirsContent": "    const sendError = (detail) => {\n      postWithRetries({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeFailed\",\n        details: detail,\n        final: true,\n      });"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "    const onMessage = (event) => {\n      try {\n        const data = event?.data;\n        if (!data || typeof data !== \"object\") return;",
+      "theirsContent": "    const sendSuccess = (payload) => {\n      postWithRetries(payload);\n    };"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "        if (data.type === \"AUTH_SUCCESS\" && data.jwt) {\n          if (cancelled) return;\n          setStatus(\"Signed in\");\n          setDetails(\"Done.\");\n          setLastError(null);\n          forward(data);",
+      "theirsContent": "    const makeFrameSrc = () => {\n      const t = Date.now();\n      const u = new URL(\"/api/auth/token\", window.location.origin);\n      u.searchParams.set(\"t\", String(t));\n      u.searchParams.set(\"attempt\", String(attempt));\n      return u.pathname + u.search;\n    };\n\n    const setFrameSrc = () => {\n      attempt += 1;\n      setStatus(\"Finishing sign-in…\");\n      setDetails(`Exchanging token… (${attempt}/${maxAttempts})`);\n      const frame = document.getElementById(\"token-frame\");\n      if (frame && frame.tagName === \"IFRAME\") {\n        frame.setAttribute(\"src\", makeFrameSrc());\n      }\n    };\n\n    const onWindowMessage = (event) => {\n      if (cancelled || done) return;\n\n      // Only accept messages from our own origin (iframe is same-origin).\n      try {\n        if (event?.origin && event.origin !== window.location.origin) {\n          return;\n        }\n      } catch (_) {\n        // ignore\n      }\n\n      const data = event?.data;\n      if (!data) return;\n\n      let msg = null;\n      if (typeof data === \"string\") {\n        try {\n          msg = JSON.parse(data);\n        } catch (_) {\n          msg = null;\n        }\n      } else if (typeof data === \"object\") {\n        msg = data;\n      }\n\n      if (!msg) return;\n\n      if (msg?.type === \"AUTH_SUCCESS\") {\n        done = true;\n        setStatus(\"Signed in\");\n        setDetails(\"Done.\");\n        setLastError(null);\n        sendSuccess(msg);\n        return;\n      }\n\n      if (msg?.type === \"AUTH_ERROR\") {\n        const detail = msg?.details || msg?.error || \"Token exchange failed.\";\n        setStatus(\"Could not finish sign-in\");\n        setDetails(null);\n        setLastError(String(detail));\n\n        if (msg?.final) {\n          done = true;\n          sendError(String(detail));\n          return;"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "        if (data.type === \"AUTH_ERROR\") {\n          if (cancelled) return;\n          const detail = data.details || data.error || \"Token exchange failed\";\n          setStatus(\"Could not finish sign-in\");\n          setDetails(null);\n          setLastError(String(detail));\n          forward({ ...data, final: true });",
+      "theirsContent": "        if (attempt < maxAttempts) {\n          setTimeout(setFrameSrc, 650);\n          return;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "      } catch (_) {\n        // ignore",
+      "theirsContent": "\n        done = true;\n        sendError(String(detail));"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "    window.addEventListener(\"message\", onMessage);",
+      "theirsContent": "    window.addEventListener(\"message\", onWindowMessage);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "    // Watchdog: if we don't hear back, surface a final error.\n    const t = setTimeout(() => {\n      if (cancelled) return;\n      const msg = `Token exchange did not complete in time. reason=/mobile-auth/complete`;\n      setStatus(\"Could not finish sign-in\");\n      setDetails(null);\n      setLastError(msg);\n      forward({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeTimeout\",\n        details: msg,\n        final: true,\n      });\n    }, 30000);\n",
+      "theirsContent": "    // Start immediately.\n    setFrameSrc();\n\n    // Safety watchdog: if we never receive a message (WebKit sometimes drops it), reload.\n    const watchdog = setInterval(() => {\n      if (cancelled || done) return;\n\n      if (attempt >= 1 && attempt < maxAttempts) {\n        setTimeout(setFrameSrc, 0);\n        return;\n      }\n\n      if (attempt >= maxAttempts) {\n        clearInterval(watchdog);\n        const msg2 = `Token exchange failed (watchdog). reason=/mobile-auth/complete attempts=${maxAttempts}`;\n        setStatus(\"Could not finish sign-in\");\n        setDetails(null);\n        setLastError(msg2);\n        done = true;\n        sendError(msg2);\n      }\n    }, 9000);\n"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "      window.removeEventListener(\"message\", onMessage);\n      clearTimeout(t);",
+      "theirsContent": "      window.removeEventListener(\"message\", onWindowMessage);\n      clearInterval(watchdog);"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "\n        {detailsBlock}\n        {lastErrorBlock}\n\n        <div className=\"mt-4 text-xs text-gray-400\">Started: {safeStarted}</div>",
+      "theirsContent": "\n        {details ? (\n          <div className=\"mt-4 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-700 whitespace-pre-wrap\">\n            {details}\n          </div>\n        ) : null}\n\n        {lastError ? (\n          <div className=\"mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 whitespace-pre-wrap\">\n            {lastError}\n          </div>\n        ) : null}\n\n        {/* Hidden iframe used for the final HTML token helper step */}\n        <iframe\n          id=\"token-frame\"\n          title=\"token-frame\"\n          style={{ width: 0, height: 0, border: 0, position: \"absolute\" }}\n          sandbox=\"allow-scripts allow-same-origin\"\n        />"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+    "/apps/web/src/app/account/signin/page.jsx",
+    "/apps/web/src/app/mobile-auth/callback/page.jsx",
+    "/apps/web/src/app/mobile-auth/complete/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

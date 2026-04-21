@@ -1,0 +1,122 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "    // CHANGED: allow the same email to exist on multiple contacts as long as they are DIFFERENT contact types.\n    // We still block:\n    // - staff email reuse (safety)\n    // - duplicate emails across *athlete* contacts (dedupe within type)",
+      "theirsContent": "    // CHANGED: allow athletes to share emails with parents.\n    // Still block:\n    // - staff contact emails (role ambiguity / safety)\n    // - other athlete contacts (keeps athlete identity stable for the athlete portal)"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "      // 1) Never allow a staff contact's email to be used on an athlete.\n      const staffConflictRows = await sql(",
+      "theirsContent": "      const staffConflictRows = await sql("
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "      const athleteConflict = athleteConflictRows?.[0] || null;\n      if (athleteConflict) {\n        const conflictId = String(athleteConflict.id || \"\");",
+      "theirsContent": "      const staffConflict = staffConflictRows?.[0] || null;\n      if (staffConflict) {\n        return Response.json(\n          {\n            error:\n              \"That email is already used by a staff contact. Please use a different email.\",\n            code: \"EMAIL_IN_USE_BY_STAFF\",\n            existingContact: {\n              id: String(staffConflict.id),\n              contactType: \"staff\",\n              firstName: staffConflict.first_name || \"\",\n              lastName: staffConflict.last_name || \"\",\n              email: staffConflict.email || \"\",\n            },\n          },\n          { status: 409 },\n        );\n      }\n\n      const athleteConflictRows = await sql(\n        `\n          SELECT id, first_name, last_name, email\n          FROM public.contacts\n          WHERE contact_type = 'athlete'\n            AND email IS NOT NULL\n            AND LOWER(email) = LOWER($1)\n            AND id <> $2\n          ORDER BY created_at DESC\n          LIMIT 1\n        `,\n        [email, athleteContactId],\n      );\n\n      const athleteConflict = athleteConflictRows?.[0] || null;\n      if (athleteConflict) {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "            error: `That email is already used by another athlete contact (#${conflictId}).`,\n            code: \"ATHLETE_EMAIL_ALREADY_IN_USE\",",
+      "theirsContent": "            error: \"That email is already used by another athlete.\",\n            code: \"EMAIL_IN_USE_BY_OTHER_ATHLETE\","
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "              id: conflictId,\n              contactType: \"athlete\",\n              firstName: athleteConflict.first_name || \"\",\n              lastName: athleteConflict.last_name || \"\",\n              email: athleteConflict.email || \"\",",
+      "theirsContent": "              id: String(athleteConflict.id),\n              contactType: \"athlete\",\n              firstName: athleteConflict.first_name || \"\",\n              lastName: athleteConflict.last_name || \"\",\n              email: athleteConflict.email || \"\","
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/athletes/[id]/route.js",
+      "oursContent": "    // CHANGED: contacts.email is not unique anymore.\n",
+      "theirsContent": ""
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/athletes/[id]/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": [
+    {
+      "origin": "base",
+      "description": "PATCH requires staff auth via requireStaff() and returns gate error/status on failure"
+    },
+    {
+      "origin": "base",
+      "description": "PATCH validates the id parameter and returns 400 for non-numeric, zero, or negative ids"
+    },
+    {
+      "origin": "base",
+      "description": "PATCH returns ok:true, updated:false when no recognized fields are in the body"
+    },
+    {
+      "origin": "base",
+      "description": "PATCH returns ok:true, updated:true on successful update and 404 when no rows match"
+    },
+    {
+      "origin": "base",
+      "description": "PATCH catches contacts_phone_unique constraint errors and returns 409"
+    },
+    {
+      "origin": "base",
+      "description": "PATCH dynamically builds SET clause with only provided fields"
+    },
+    {
+      "origin": "base",
+      "description": "DELETE requires super admin auth via requireStaff({ requireSuperAdmin: true })"
+    },
+    {
+      "origin": "base",
+      "description": "DELETE validates id, checks existence, deletes scoped to contact_type='athlete', returns ok:true"
+    },
+    {
+      "origin": "base",
+      "description": "OPTIONS returns 204 with Allow header listing PATCH, DELETE, OPTIONS"
+    },
+    {
+      "origin": "base",
+      "description": "safeText truncates firstName to 80 chars"
+    },
+    {
+      "origin": "ours",
+      "description": "PATCH checks staff email conflicts and returns 409 with EMAIL_IN_USE_BY_STAFF code when email matches a staff contact"
+    },
+    {
+      "origin": "ours",
+      "description": "PATCH checks athlete email conflicts (excluding current id) and returns 409 when email matches another athlete contact"
+    },
+    {
+      "origin": "ours",
+      "description": "PATCH allows parent contacts to share emails with athletes (no parent conflict check)"
+    },
+    {
+      "origin": "ours",
+      "description": "PATCH does NOT catch contacts_email_unique constraint as a known error (email is no longer globally unique)"
+    },
+    {
+      "origin": "theirs",
+      "description": "Staff email conflict check runs before athlete conflict check; if staff conflict found, athlete query is not executed"
+    },
+    {
+      "origin": "theirs",
+      "description": "Conflict responses include full existingContact shape with id (string), contactType, firstName, lastName, email"
+    },
+    {
+      "origin": "theirs",
+      "description": "Email conflict checks only fire when email is provided in body AND safeText produces a non-null value"
+    },
+    {
+      "origin": "theirs",
+      "description": "UPDATE query scopes WHERE clause to contact_type = 'athlete'"
+    },
+    {
+      "origin": "theirs",
+      "description": "Generic errors return 500 with the error message"
+    }
+  ]
+}

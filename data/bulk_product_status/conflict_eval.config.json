@@ -1,0 +1,143 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "",
+      "theirsContent": "  { value: \"pending_review\", label: \"Pending review\" },\n  { value: \"draft\", label: \"Draft\" },"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "            {showSuccess ? (\n              <div className=\"rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4\">\n                <div className=\"text-sm font-semibold text-emerald-900\">\n                  Bulk status change applied\n                </div>\n                <div className=\"mt-1 text-sm text-emerald-900\">\n                  Updated <b>{Number(success?.updated_count) || 0}</b> products.\n                </div>\n                <div className=\"mt-1 text-sm text-emerald-900\">\n                  Created <b>{Number(success?.history_count) || 0}</b> product\n                  history snapshots.\n                </div>\n                {bulkOperationId ? (\n                  <div className=\"mt-1 text-sm text-emerald-900\">\n                    Bulk operation id: <b>#{String(bulkOperationId)}</b>\n                  </div>\n                ) : null}\n                <div className=\"mt-3 text-xs text-emerald-800\">\n                  Tip: this change is transactional (all-or-nothing) and is\n                  recorded in product history.\n                </div>",
+      "theirsContent": "            {success ? (\n              <div className=\"rounded-lg border border-green-200 bg-green-50 p-4\">\n                <div className=\"text-sm font-semibold text-green-900\">\n                  Bulk status change applied\n                </div>\n                <div className=\"mt-1 text-sm text-green-900\">\n                  <div>\n                    Updated <b>{Number(success?.updated_count) || 0}</b>{\" \"}\n                    products.\n                  </div>\n                  <div>\n                    Wrote <b>{Number(success?.history_count) || 0}</b> product\n                    history snapshots.\n                  </div>\n                  {success?.bulk_operation_id ? (\n                    <div className=\"mt-1 flex items-center gap-2 flex-wrap\">\n                      <div>\n                        Bulk operation id:{\" \"}\n                        <span className=\"font-mono\">\n                          {String(success.bulk_operation_id)}\n                        </span>\n                      </div>\n                      <button\n                        type=\"button\"\n                        onClick={() => {\n                          try {\n                            const text = String(success.bulk_operation_id);\n                            if (\n                              typeof navigator !== \"undefined\" &&\n                              navigator.clipboard\n                            ) {\n                              navigator.clipboard.writeText(text);\n                            }\n                          } catch (e) {\n                            console.error(e);\n                          }\n                        }}\n                        className=\"text-xs px-2 py-1 rounded-md border border-green-200 bg-white text-green-900 hover:bg-green-100\"\n                      >\n                        Copy\n                      </button>\n                    </div>\n                  ) : null}\n                </div>"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "                <div className=\"mt-4 flex items-center justify-end gap-2\">\n                  <button\n                    type=\"button\"\n                    onClick={() => {\n                      onDone?.(success);\n                    }}\n                    className=\"px-4 py-2 rounded-lg bg-[#8FA888] text-white hover:bg-[#7a9477] text-sm font-medium\"\n                  >\n                    Done\n                  </button>\n                </div>",
+      "theirsContent": "                <div className=\"mt-3 text-xs text-green-800\">\n                  Confirmation: product history rows written in this bulk op.\n                </div>\n\n                <div className=\"mt-3 rounded-md border border-green-200 bg-white\">\n                  <div className=\"px-3 py-2 border-b border-green-200 text-xs font-semibold text-green-900\">\n                    Product history entries\n                  </div>\n\n                  <div className=\"p-3\">\n                    {confirmationQuery.isLoading ? (\n                      <div className=\"text-xs text-gray-600\">Loading…</div>\n                    ) : confirmationQuery.isError ? (\n                      <div className=\"text-xs text-amber-700\">\n                        Couldn’t load confirmation rows.\n                      </div>\n                    ) : confirmationRows.length === 0 ? (\n                      <div className=\"text-xs text-gray-600\">\n                        No rows found.\n                      </div>\n                    ) : (\n                      <div className=\"max-h-[220px] overflow-auto\">\n                        <table className=\"w-full text-xs\">\n                          <thead>\n                            <tr className=\"text-left text-gray-500\">\n                              <th className=\"py-1 pr-2\">History id</th>\n                              <th className=\"py-1 pr-2\">Product</th>\n                              <th className=\"py-1 pr-2\">Prior status</th>\n                              <th className=\"py-1 pr-2\">Changed at</th>\n                            </tr>\n                          </thead>\n                          <tbody>\n                            {confirmationRows.map((r) => {\n                              const historyId = String(r?.id || \"\");\n                              const productId = String(r?.product_id || \"\");\n                              const name = String(r?.name || \"\").trim();\n                              const label = name\n                                ? `${name} (#${productId})`\n                                : `#${productId}`;\n                              const status =\n                                String(r?.product_status || \"\").trim() ||\n                                \"(unknown)\";\n                              const changedAt = String(r?.changed_at || \"\");\n\n                              return (\n                                <tr\n                                  key={historyId}\n                                  className=\"border-t border-gray-100\"\n                                >\n                                  <td className=\"py-1 pr-2 font-mono text-gray-700\">\n                                    {historyId}\n                                  </td>\n                                  <td className=\"py-1 pr-2 text-gray-800\">\n                                    {label}\n                                  </td>\n                                  <td className=\"py-1 pr-2 text-gray-700\">\n                                    {status}\n                                  </td>\n                                  <td className=\"py-1 pr-2 text-gray-700\">\n                                    {changedAt}\n                                  </td>\n                                </tr>\n                              );\n                            })}\n                          </tbody>\n                        </table>\n                      </div>\n                    )}\n\n                    {confirmationQuery.data?.total > confirmationRows.length ? (\n                      <div className=\"mt-2 text-[11px] text-gray-500\">\n                        Showing {confirmationRows.length} of{\" \"}\n                        {confirmationQuery.data.total}.\n                      </div>\n                    ) : null}\n                  </div>\n                </div>"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "                  <div className=\"md:col-span-2\">\n                    <label className=\"block text-xs font-medium text-gray-700 mb-1\">\n                      Reason (optional)\n                    </label>\n                    <input\n                      type=\"text\"\n                      value={reason}\n                      onChange={(e) => setReason(e.target.value)}\n                      placeholder=\"Why are you changing these products?\"\n                      className=\"w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8FA888]\"\n                    />\n                  </div>\n                </div>\n\n                <div className=\"mt-3 text-xs text-gray-600\">\n                  Preview runs automatically and will block the apply step if\n                  any products fail readiness checks.\n                </div>\n\n                <div className=\"mt-4 flex items-center justify-between gap-3 flex-col sm:flex-row\">\n                  <div className=\"text-sm text-gray-700\">\n                    {hasPreview ? (",
+      "theirsContent": "                  <div className=\"md:col-span-2\">\n                    <label className=\"block text-xs font-medium text-gray-700 mb-1\">\n                      Reason (optional)\n                    </label>\n                    <input\n                      type=\"text\"\n                      value={reason}\n                      onChange={(e) => setReason(e.target.value)}\n                      placeholder=\"Why are you changing these products?\"\n                      className=\"w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8FA888]\"\n                    />\n                  </div>\n                </div>\n\n                <div className=\"mt-4 flex items-center justify-between gap-3 flex-col sm:flex-row\">\n                  <div className=\"text-sm text-gray-700\">\n                    {hasPreview ? ("
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "                  {hasPreview ? (\n                    <div className=\"grid grid-cols-1 lg:grid-cols-2 gap-4\">\n                      {/* Blocked panel */}\n                      <div className=\"rounded-lg border border-gray-200 bg-white\">\n                        <div className=\"px-4 py-3 border-b border-gray-200\">\n                          <div className=\"text-sm font-semibold text-gray-900\">\n                            Blocked ({blockedRows.length})\n                          </div>\n                          <div className=\"text-xs text-gray-600 mt-1\">\n                            Bulk apply is all-or-nothing.\n                          </div>",
+      "theirsContent": "                  {hasPreview ? (\n                    <div className=\"grid grid-cols-1 lg:grid-cols-2 gap-4\">\n                      <div className=\"rounded-lg border border-gray-200 bg-white\">\n                        <div className=\"px-4 py-3 border-b border-gray-200\">\n                          <div className=\"text-sm font-semibold text-gray-900\">\n                            Blocked ({blockedRows.length})\n                          </div>\n                          <div className=\"text-xs text-gray-600 mt-1\">\n                            Bulk apply is all-or-nothing.\n                          </div>"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "                      {/* Warnings panel */}\n                      <div className=\"rounded-lg border border-gray-200 bg-white\">\n                        <div className=\"px-4 py-3 border-b border-gray-200\">\n                          <div className=\"text-sm font-semibold text-gray-900\">\n                            Warnings\n                          </div>\n                          <div className=\"text-xs text-gray-600 mt-1\">\n                            Warnings don’t block the change.\n                          </div>\n                        </div>",
+      "theirsContent": "                      <div className=\"rounded-lg border border-gray-200 bg-white\">\n                        <div className=\"px-4 py-3 border-b border-gray-200\">\n                          <div className=\"text-sm font-semibold text-gray-900\">\n                            Warnings\n                          </div>\n                          <div className=\"text-xs text-gray-600 mt-1\">\n                            Warnings don’t block the change.\n                          </div>\n                        </div>"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+      "oursContent": "            <button\n              type=\"button\"\n              onClick={() => {\n                if (applyMutation.isPending) return;\n                if (showSuccess) {\n                  onDone?.(success);\n                  return;\n                }\n                onClose?.();\n              }}\n              className=\"px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 text-sm\"\n              disabled={applyMutation.isPending}\n            >\n              {showSuccess ? \"Close\" : \"Cancel\"}\n            </button>",
+      "theirsContent": "            {success ? (\n              <button\n                type=\"button\"\n                onClick={() => {\n                  onDone?.(success);\n                }}\n                className=\"px-4 py-2 rounded-lg bg-[#8FA888] text-white hover:bg-[#7a9477] text-sm font-medium\"\n              >\n                Done\n              </button>\n            ) : (\n              <button\n                type=\"button\"\n                onClick={() => {\n                  if (applyMutation.isPending) return;\n                  onClose?.();\n                }}\n                className=\"px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 text-sm\"\n                disabled={applyMutation.isPending}\n              >\n                Close\n              </button>\n            )}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "// Accept both new + legacy target names.\nconst ALLOWED_TARGETS = new Set([\n  \"active\",\n  \"pending_review\",\n  \"draft\",\n  \"inactive\",\n  \"quarantine\",\n  // legacy\n  \"pending\",\n]);",
+      "theirsContent": "// Support the full product_status set, plus legacy aliases.\nconst ALLOWED_TARGETS = new Set([\n  \"active\",\n  \"pending_review\",\n  \"draft\",\n  \"inactive\",\n  \"quarantine\",\n  // legacy\n  \"pending\",\n  \"hidden\",\n]);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "  const status = normalizeStatus(p?.product_status);\n  if (\n    status === \"draft\" ||\n    status === \"pending_review\" ||\n    status === \"active\" ||\n    status === \"inactive\" ||\n    status === \"quarantine\"\n  ) {\n    return status;\n  }\n\n  // Legacy fallback",
+      "theirsContent": "  const ps = String(p?.product_status || \"\").trim();\n  if (ps) return ps;"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "    // Any move away from active can have inventory warnings.\n    if (normalizedTarget !== \"active\") {",
+      "theirsContent": "    // Inventory alerts any time we move OUT of active.\n    if (target !== \"active\") {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "  const normalized = normalizeStatus(target);\n\n  if (normalized === \"active\") {\n    return { product_status: \"active\", is_active: true, pending_review: false };",
+      "theirsContent": "  if (target === \"active\") {\n    return { is_active: true, pending_review: false, product_status: \"active\" };"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "  if (normalized === \"pending_review\") {\n    return {\n      product_status: \"pending_review\",\n      is_active: false,\n      pending_review: true,\n    };",
+      "theirsContent": "  if (target === \"pending_review\") {\n    return {\n      is_active: false,\n      pending_review: true,\n      product_status: \"pending_review\",\n    };"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "  if (normalized === \"inactive\") {\n    return {\n      product_status: \"inactive\",\n      is_active: false,\n      pending_review: false,\n    };\n  }\n  if (normalized === \"quarantine\") {\n    return {\n      product_status: \"quarantine\",\n      is_active: false,\n      pending_review: false,\n    };\n  }\n  // default: draft\n  return { product_status: \"draft\", is_active: false, pending_review: false };",
+      "theirsContent": "  if (target === \"quarantine\") {\n    return {\n      is_active: false,\n      pending_review: false,\n      product_status: \"quarantine\",\n    };\n  }\n  if (target === \"inactive\") {\n    return {\n      is_active: false,\n      pending_review: false,\n      product_status: \"inactive\",\n    };\n  }\n\n  // default: draft\n  return { is_active: false, pending_review: false, product_status: \"draft\" };"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "\n    const rawTarget = String(body?.target || \"\")",
+      "theirsContent": "    const rawTarget = String(body?.target || \"\")"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "    const target = normalizeStatus(rawTarget);\n",
+      "theirsContent": "    const target = normalizeTarget(rawTarget);\n"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "    const { product_status, is_active, pending_review } =\n      mapTargetToFields(target);",
+      "theirsContent": "    const { is_active, pending_review, product_status } =\n      mapTargetToFields(target);"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+      "oursContent": "            WHEN p.product_status IS NOT NULL THEN p.product_status",
+      "theirsContent": "            WHEN COALESCE(NULLIF(BTRIM(p.product_status), ''), '') <> '' THEN p.product_status"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js",
+      "oursContent": "// Accept both new + legacy target names.\nconst ALLOWED_TARGETS = new Set([\n  \"active\",\n  \"pending_review\",\n  \"draft\",\n  \"inactive\",\n  \"quarantine\",\n  // legacy\n  \"pending\",\n]);",
+      "theirsContent": "// Support the full product_status set, plus legacy aliases.\nconst ALLOWED_TARGETS = new Set([\n  \"active\",\n  \"pending_review\",\n  \"draft\",\n  \"inactive\",\n  \"quarantine\",\n  // legacy\n  \"pending\",\n  \"hidden\",\n]);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js",
+      "oursContent": "  const status = normalizeStatus(p?.product_status);\n  if (\n    status === \"draft\" ||\n    status === \"pending_review\" ||\n    status === \"active\" ||\n    status === \"inactive\" ||\n    status === \"quarantine\"\n  ) {\n    return status;\n  }\n\n  // Legacy fallback",
+      "theirsContent": "  const ps = String(p?.product_status || \"\").trim();\n  if (ps) return ps;"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js",
+      "oursContent": "  if (p?.pending_review) return \"pending_review\";\n  // For legacy rows with no explicit product_status, treat as draft.\n  return \"draft\";",
+      "theirsContent": "  if (p?.pending_review) return \"pending_review\";\n  return \"draft\";"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js",
+      "oursContent": "    const target = normalizeStatus(body?.target);\n    if (\n      !ALLOWED_TARGETS.has(\n        String(body?.target || \"\")\n          .trim()\n          .toLowerCase(),\n      )\n    ) {",
+      "theirsContent": "    const target = normalizeTarget(body?.target);\n    if (\n      !ALLOWED_TARGETS.has(\n        String(body?.target || \"\")\n          .trim()\n          .toLowerCase(),\n      )\n    ) {"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js",
+      "oursContent": "      // Any move away from active can have inventory warnings.\n      if (normalizedTarget !== \"active\") {",
+      "theirsContent": "      // Inventory alerts any time we move OUT of active.\n      if (target !== \"active\") {"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/AdminProducts/BulkStatusModal.jsx",
+    "/apps/web/src/app/api/admin/products/bulk-status/route.js",
+    "/apps/web/src/app/api/admin/products/bulk-status/preview/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}
