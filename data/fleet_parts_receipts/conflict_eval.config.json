@@ -1,0 +1,215 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "    // If PO is provided, verify it and derive vendor if missing.\n    let resolvedVendorId = vendorId;\n    if (poId) {\n      const poRows = await sql`\n        SELECT id, branch_id, vendor_id\n        FROM fleet_parts_purchase_orders\n        WHERE id = ${Number(poId)}\n        LIMIT 1\n      `;\n      const po = poRows?.[0] || null;",
+      "theirsContent": "    // If PO is provided, validate it and derive vendor if missing.\n    let resolvedVendorId = vendorId;\n    if (poId) {\n      const [po] = await sql`\n        SELECT id, branch_id, vendor_id, status\n        FROM fleet_parts_purchase_orders\n        WHERE id = ${Number(poId)}\n        LIMIT 1\n      `;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "    // Normalize and validate lines\n    const normalizedLines = [];\n    for (const l of lines) {\n      const poLineId = toInt(l?.po_line_id);\n      const partId = toInt(l?.part_id);\n      const qty = toNum(l?.quantity_received);\n      const unitCost = toNum(l?.unit_cost);\n\n      if (!qty || qty <= 0) continue;\n\n      if (!partId) {\n        return Response.json(\n          { error: \"Each receipt line must include part_id\" },\n          { status: 400 },\n        );\n      }\n\n      normalizedLines.push({\n        po_line_id: poLineId,\n        part_id: partId,\n        quantity_received: qty,\n        unit_cost: unitCost ?? 0,\n      });\n    }\n\n    if (normalizedLines.length === 0) {\n      return Response.json(\n        { error: \"Receipt must include at least one line with quantity\" },\n        { status: 400 },\n      );\n    }\n\n    // Validate part ids are in this branch to avoid confusing FK/branch issues.\n    const partIds = Array.from(\n      new Set(normalizedLines.map((l) => Number(l.part_id)).filter(Boolean)),\n    );\n\n    if (partIds.length > 0) {\n      const rows = await sql(\n        \"SELECT id FROM fleet_parts_inventory WHERE branch_id = $1 AND id = ANY($2)\",\n        [Number(scope.branchId), partIds],\n      );\n      const found = new Set((rows || []).map((r) => Number(r.id)));\n      const missing = partIds.filter((id) => !found.has(Number(id)));\n      if (missing.length > 0) {\n        return Response.json(\n          { error: `Invalid part_id for this branch: ${missing.join(\",\")}` },\n          { status: 400 },\n        );\n      }\n    }\n\n    // IMPORTANT: Do not use sql.transaction(async () => ...).\n    // Use a single CTE statement to insert receipt + lines.\n    const insertSql = `\n      WITH inserted_receipt AS (",
+      "theirsContent": "      if (Number(po.branch_id) !== Number(scope.branchId)) {\n        return Response.json(\n          { error: \"PO is not in selected branch\" },\n          { status: 409 },\n        );\n      }\n\n      if (!resolvedVendorId && po.vendor_id) {\n        resolvedVendorId = Number(po.vendor_id);\n      }\n\n      if (String(po.status || \"\") === \"cancelled\") {\n        return Response.json(\n          { error: \"Cannot receive against a cancelled purchase order\" },\n          { status: 409 },\n        );\n      }\n    }\n\n    // NOTE: Anything's sql.transaction does NOT support an async callback.\n    // We do a single atomic INSERT statement (with CTE) for receipt + lines.\n\n    const linesPayload = rawLines\n      .map((l) => ({\n        po_line_id: toInt(l.po_line_id),\n        part_id: toInt(l.part_id),\n        quantity_received: toNum(l.quantity_received) ?? 0,\n        unit_cost: toNum(l.unit_cost) ?? 0,\n      }))\n      .filter((l) => Number(l.quantity_received || 0) > 0);\n\n    const query = `\n      WITH new_receipt AS ("
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "        VALUES ($1, $2, $3, 'draft', $4)\n        RETURNING *\n      ),\n      line_input AS (\n        SELECT *\n        FROM jsonb_to_recordset($5::jsonb) AS x(\n          po_line_id int,\n          part_id int,\n          quantity_received numeric,\n          unit_cost numeric",
+      "theirsContent": "        VALUES ($1, $2, $3, 'draft', $4)\n        RETURNING *\n      ),\n      inserted_lines AS (\n        INSERT INTO fleet_parts_receipt_lines (\n          receipt_id,\n          po_line_id,\n          part_id,\n          quantity_received,\n          unit_cost"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "      ),\n      inserted_lines AS (\n        INSERT INTO fleet_parts_receipt_lines (\n          receipt_id,\n          po_line_id,\n          part_id,\n          quantity_received,\n          unit_cost\n        )\n        SELECT\n          r.id,\n          li.po_line_id,\n          li.part_id,\n          li.quantity_received,\n          COALESCE(li.unit_cost, 0)\n        FROM inserted_receipt r\n        JOIN line_input li ON true\n        WHERE li.quantity_received > 0\n      )\n      SELECT * FROM inserted_receipt\n    `;",
+      "theirsContent": "        SELECT\n          nr.id,\n          NULLIF(x->>'po_line_id', '')::int,\n          NULLIF(x->>'part_id', '')::int,\n          COALESCE(NULLIF(x->>'quantity_received', '')::numeric, 0),\n          COALESCE(NULLIF(x->>'unit_cost', '')::numeric, 0)\n        FROM new_receipt nr\n        JOIN LATERAL jsonb_array_elements($5::jsonb) AS x ON true\n        WHERE COALESCE(NULLIF(x->>'quantity_received', '')::numeric, 0) > 0\n        RETURNING 1\n      )\n      SELECT * FROM new_receipt;\n    `;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "    const receiptRows = await sql(insertSql, [\n      Number(scope.branchId),\n      resolvedVendorId,\n      poId,\n      notes,\n      JSON.stringify(normalizedLines),\n    ]);",
+      "theirsContent": "    const rows = await sql(query, [\n      Number(scope.branchId),\n      resolvedVendorId,\n      poId,\n      notes,\n      JSON.stringify(linesPayload),\n    ]);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "    const receipt = receiptRows?.[0] || null;\n    return Response.json({ receipt });\n  } catch (e) {\n    console.error(\"Error creating receipt:\", e);",
+      "theirsContent": "    const receipt = rows?.[0] || null;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "    const code = e?.code;\n    const detailsParts = [];\n    if (code) detailsParts.push(`code=${String(code)}`);\n    if (e?.message) detailsParts.push(String(e.message));\n    const details = detailsParts.length ? detailsParts.join(\" | \") : String(e);\n",
+      "theirsContent": "    if (!receipt) {\n      return Response.json(\n        { error: \"Failed to create receipt\" },\n        { status: 500 },\n      );\n    }\n\n    return Response.json({ receipt });\n  } catch (e) {\n    console.error(\"Error creating receipt:\", e);"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+      "oursContent": "      { error: \"Failed to create receipt\", details },",
+      "theirsContent": "      {\n        error: \"Failed to create receipt\",\n        details: e?.message ? String(e.message) : String(e),\n      },"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    // IMPORTANT: Anything's sql.transaction does NOT support async callbacks.\n    // Run this workflow sequentially.\n    const receiptRows = await sql`\n      SELECT id, branch_id, status, po_id\n      FROM fleet_parts_receipts\n      WHERE id = ${receiptId}\n      LIMIT 1\n    `;",
+      "theirsContent": "    // Fetch receipt for authorization + quick validation.\n    const [existingReceipt] = await sql`\n      SELECT id, branch_id, status, po_id\n      FROM fleet_parts_receipts\n      WHERE id = ${receiptId}\n      LIMIT 1\n    `;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const receipt = receiptRows?.[0] || null;\n    if (!receipt)\n      return Response.json({ error: \"Receipt not found\" }, { status: 404 });",
+      "theirsContent": "    if (!existingReceipt) {\n      return Response.json({ error: \"Receipt not found\" }, { status: 404 });\n    }"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const scope = await resolveFleetBranchScope({\n      userId: authz.user.id,\n      role: authz.user.role,\n      branchId: receipt.branch_id,\n    });\n    if (!scope.ok) return scope.response;",
+      "theirsContent": "    const scope = await resolveFleetBranchScope({\n      userId: authz.user.id,\n      role: authz.user.role,\n      branchId: existingReceipt.branch_id,\n    });\n    if (!scope.ok) return scope.response;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    if (String(receipt.status) !== \"draft\") {\n      return Response.json(\n        { error: \"Only draft receipts can be posted.\" },\n        { status: 409 },\n      );\n    }",
+      "theirsContent": "    if (String(existingReceipt.status || \"\") !== \"draft\") {\n      return Response.json(\n        { error: \"Only draft receipts can be posted.\" },\n        { status: 409 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const lines = await sql`\n      SELECT id, po_line_id, part_id, quantity_received, unit_cost\n      FROM fleet_parts_receipt_lines\n      WHERE receipt_id = ${receiptId}\n      ORDER BY id ASC\n    `;",
+      "theirsContent": "    const linesCountRows = await sql(\n      \"SELECT COUNT(*)::int AS cnt FROM fleet_parts_receipt_lines WHERE receipt_id = $1\",\n      [receiptId],\n    );\n    const linesCount = Number(linesCountRows?.[0]?.cnt || 0);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    if (!lines.length) {\n      return Response.json(\n        { error: \"No receipt lines found.\" },\n        { status: 409 },\n      );\n    }",
+      "theirsContent": "    if (linesCount <= 0) {\n      return Response.json(\n        { error: \"No receipt lines found.\" },\n        { status: 409 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const branchId = Number(receipt.branch_id);",
+      "theirsContent": "    // NOTE: Anything's sql.transaction does NOT support an async callback.\n    // We do the entire posting flow in ONE atomic SQL statement (CTEs).\n    // If this statement errors, nothing is partially applied."
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    for (const l of lines) {\n      const partId = l.part_id ? Number(l.part_id) : null;\n      const qty = Number(l.quantity_received || 0);\n      const unitCost = Number(l.unit_cost || 0);\n      if (!partId || qty <= 0) continue;\n\n      // Increase stock\n      await sql`\n        UPDATE fleet_parts_inventory\n        SET quantity_on_hand = quantity_on_hand + ${qty}\n        WHERE id = ${partId}\n          AND branch_id = ${branchId}\n      `;\n\n      await receiptWithCost({\n        txn: sql,\n        branchId,\n        partId,\n        quantityIn: qty,\n        unitCost,\n        refType: \"receipt\",\n        refId: receiptId,\n        createdBy: Number(authz.user.id),\n        notes: \"Goods receipt\",\n        receivedAt: new Date(),\n      });\n\n      // Update PO line (if linked)\n      if (l.po_line_id) {\n        await sql`\n          UPDATE fleet_parts_purchase_order_lines\n          SET quantity_received = quantity_received + ${qty}\n          WHERE id = ${Number(l.po_line_id)}\n        `;\n      }\n    }\n\n    // Update PO status\n    if (receipt.po_id) {\n      const poId = Number(receipt.po_id);\n\n      const aggRows = await sql`\n        SELECT\n          COALESCE(SUM(quantity_ordered), 0)::numeric(12,3) AS ordered_qty,\n          COALESCE(SUM(quantity_received), 0)::numeric(12,3) AS received_qty\n        FROM fleet_parts_purchase_order_lines\n        WHERE po_id = ${poId}\n      `;\n\n      const agg = aggRows?.[0] || null;\n\n      const orderedQty = Number(agg?.ordered_qty || 0);\n      const receivedQty = Number(agg?.received_qty || 0);\n\n      let nextStatus = \"ordered\";\n      if (orderedQty > 0 && receivedQty >= orderedQty) nextStatus = \"received\";\n      else if (receivedQty > 0) nextStatus = \"partially_received\";\n\n      await sql`\n        UPDATE fleet_parts_purchase_orders\n        SET status = ${nextStatus}\n        WHERE id = ${poId}\n      `;\n    }",
+      "theirsContent": "    const postQuery = `\n      WITH locked AS (\n        UPDATE fleet_parts_receipts r\n        SET status = 'posted',\n            received_at = now(),\n            received_by = $2\n        WHERE r.id = $1\n          AND r.status = 'draft'\n        RETURNING r.id, r.branch_id, r.po_id\n      ),\n      lines AS (\n        SELECT\n          rl.id,\n          rl.po_line_id,\n          rl.part_id,\n          rl.quantity_received,\n          rl.unit_cost,\n          l.branch_id,\n          l.po_id\n        FROM fleet_parts_receipt_lines rl\n        JOIN locked l ON l.id = rl.receipt_id\n        WHERE COALESCE(rl.quantity_received, 0) > 0\n        ORDER BY rl.id ASC\n      ),\n      inv_update AS (\n        UPDATE fleet_parts_inventory i\n        SET quantity_on_hand = i.quantity_on_hand + src.qty\n        FROM (\n          SELECT part_id, SUM(quantity_received)::numeric(12,3) AS qty\n          FROM lines\n          WHERE part_id IS NOT NULL\n          GROUP BY part_id\n        ) src\n        JOIN locked l ON true\n        WHERE i.id = src.part_id\n          AND i.branch_id = l.branch_id\n        RETURNING i.id\n      ),\n      cost_layers AS (\n        INSERT INTO fleet_parts_cost_layers (\n          branch_id,\n          part_id,\n          source_type,\n          source_id,\n          received_at,\n          quantity_in,\n          quantity_remaining,\n          unit_cost\n        )\n        SELECT\n          l.branch_id,\n          ln.part_id,\n          'receipt',\n          l.id,\n          now(),\n          ln.quantity_received,\n          ln.quantity_received,\n          COALESCE(ln.unit_cost, 0)\n        FROM lines ln\n        JOIN locked l ON true\n        WHERE ln.part_id IS NOT NULL\n        RETURNING 1\n      ),\n      movements AS (\n        INSERT INTO fleet_parts_inventory_movements (\n          branch_id,\n          part_id,\n          movement_type,\n          quantity,\n          unit_cost,\n          ref_type,\n          ref_id,\n          notes,\n          created_by\n        )\n        SELECT\n          l.branch_id,\n          ln.part_id,\n          'receipt',\n          ln.quantity_received,\n          COALESCE(ln.unit_cost, 0),\n          'receipt',\n          l.id,\n          'Goods receipt',\n          $2\n        FROM lines ln\n        JOIN locked l ON true\n        WHERE ln.part_id IS NOT NULL\n        RETURNING 1\n      ),\n      avg_recompute AS (\n        UPDATE fleet_parts_inventory i\n        SET unit_cost = sub.avg_cost\n        FROM (\n          SELECT\n            cl.part_id,\n            CASE\n              WHEN SUM(cl.quantity_remaining) > 0\n                THEN (SUM(cl.quantity_remaining * cl.unit_cost) / SUM(cl.quantity_remaining))\n              ELSE NULL\n            END AS avg_cost\n          FROM fleet_parts_cost_layers cl\n          JOIN locked l ON l.branch_id = cl.branch_id\n          WHERE cl.quantity_remaining > 0\n            AND cl.part_id IN (SELECT DISTINCT part_id FROM lines WHERE part_id IS NOT NULL)\n          GROUP BY cl.part_id\n        ) sub\n        JOIN locked l ON true\n        WHERE i.id = sub.part_id\n          AND i.branch_id = l.branch_id\n          AND sub.avg_cost IS NOT NULL\n        RETURNING i.id\n      ),\n      po_line_update AS (\n        UPDATE fleet_parts_purchase_order_lines pol\n        SET quantity_received = pol.quantity_received + ln.quantity_received\n        FROM lines ln\n        WHERE ln.po_line_id IS NOT NULL\n          AND pol.id = ln.po_line_id\n        RETURNING pol.id\n      ),\n      po_status AS (\n        UPDATE fleet_parts_purchase_orders po\n        SET status = CASE\n          WHEN agg.ordered_qty > 0 AND agg.received_qty >= agg.ordered_qty THEN 'received'\n          WHEN agg.received_qty > 0 THEN 'partially_received'\n          ELSE po.status\n        END\n        FROM (\n          SELECT\n            pol.po_id,\n            COALESCE(SUM(pol.quantity_ordered), 0)::numeric(12,3) AS ordered_qty,\n            COALESCE(SUM(pol.quantity_received), 0)::numeric(12,3) AS received_qty\n          FROM fleet_parts_purchase_order_lines pol\n          JOIN locked l ON l.po_id = pol.po_id\n          GROUP BY pol.po_id\n        ) agg\n        WHERE po.id = agg.po_id\n        RETURNING po.id, po.status\n      )\n      SELECT r.*\n      FROM fleet_parts_receipts r\n      JOIN locked l ON l.id = r.id\n      LIMIT 1;\n    `;"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const postedRows = await sql`\n      UPDATE fleet_parts_receipts\n      SET status = 'posted',\n          received_at = now(),\n          received_by = ${Number(authz.user.id)}\n      WHERE id = ${receiptId}\n      RETURNING *\n    `;",
+      "theirsContent": "    const postedRows = await sql(postQuery, [receiptId, Number(authz.user.id)]);\n    const posted = postedRows?.[0] || null;"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "    const posted = postedRows?.[0] || null;",
+      "theirsContent": "    if (!posted) {\n      // Something changed between the earlier check and the atomic update.\n      return Response.json(\n        { error: \"Only draft receipts can be posted.\" },\n        { status: 409 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+      "oursContent": "\n    const code = e?.code;\n    const detailsParts = [];\n    if (code) detailsParts.push(`code=${String(code)}`);\n    if (e?.message) detailsParts.push(String(e.message));\n    const details = detailsParts.length ? detailsParts.join(\" | \") : String(e);\n\n    return Response.json(\n      { error: \"Failed to post receipt\", details },\n      { status: 500 },\n    );",
+      "theirsContent": "    return Response.json(\n      {\n        error: \"Failed to post receipt\",\n        details: e?.message ? String(e.message) : String(e),\n      },\n      { status: 500 },\n    );"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    // IMPORTANT: Anything's sql.transaction does NOT support async callbacks.\n    // Run sequentially.\n    const transferRows = await sql`\n      SELECT id, from_branch_id, to_branch_id, status\n      FROM fleet_parts_stock_transfers\n      WHERE id = ${transferId}\n      LIMIT 1\n    `;",
+      "theirsContent": "    // NOTE: Anything's sql.transaction does NOT support an async callback.\n    // This endpoint used to wrap the workflow in `sql.transaction(async (txn) => ...)`,\n    // which can cause the DB update to succeed but still throw an error.\n    // We run the workflow sequentially instead."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    const t = transferRows?.[0] || null;\n    if (!t)\n      return Response.json({ error: \"Transfer not found\" }, { status: 404 });",
+      "theirsContent": "    const [t] = await sql`\n      SELECT id, from_branch_id, to_branch_id, status\n      FROM fleet_parts_stock_transfers\n      WHERE id = ${transferId}\n      LIMIT 1\n    `;"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    const scopeTo = await resolveFleetBranchScope({\n      userId: authz.user.id,\n      role: authz.user.role,\n      branchId: t.to_branch_id,\n    });\n    if (!scopeTo.ok) return scopeTo.response;",
+      "theirsContent": "    if (!t) {\n      return Response.json({ error: \"Transfer not found\" }, { status: 404 });\n    }"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    if (String(t.status) !== \"in_transit\") {\n      return Response.json(\n        { error: \"Only in-transit transfers can be received.\" },\n        { status: 409 },\n      );\n    }",
+      "theirsContent": "    const scopeTo = await resolveFleetBranchScope({\n      userId: authz.user.id,\n      role: authz.user.role,\n      branchId: t.to_branch_id,\n    });\n    if (!scopeTo.ok) return scopeTo.response;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    const lines = await sql`\n      SELECT tl.id, tl.part_id, tl.quantity, tl.unit_cost\n      FROM fleet_parts_stock_transfer_lines tl\n      WHERE tl.transfer_id = ${transferId}\n      ORDER BY tl.id ASC\n    `;",
+      "theirsContent": "    if (String(t.status || \"\") !== \"in_transit\") {\n      return Response.json(\n        { error: \"Only in-transit transfers can be received.\" },\n        { status: 409 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    if (!lines.length) {\n      return Response.json(\n        { error: \"No transfer lines found.\" },\n        { status: 409 },\n      );\n    }",
+      "theirsContent": "    const lines = await sql`\n      SELECT tl.id, tl.part_id, tl.quantity, tl.unit_cost\n      FROM fleet_parts_stock_transfer_lines tl\n      WHERE tl.transfer_id = ${transferId}\n      ORDER BY tl.id ASC\n    `;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    for (const l of lines) {\n      const fromPartId = Number(l.part_id);\n      const qty = Number(l.quantity || 0);\n      const unitCost = Number(l.unit_cost || 0);\n      if (!fromPartId || qty <= 0) continue;",
+      "theirsContent": "    if (!lines.length) {\n      return Response.json(\n        { error: \"No transfer lines found.\" },\n        { status: 409 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      const fromPartRows = await sql`\n        SELECT *\n        FROM fleet_parts_inventory\n        WHERE id = ${fromPartId}\n        LIMIT 1\n      `;",
+      "theirsContent": "    for (const l of lines) {\n      const fromPartId = Number(l.part_id);\n      const qty = Number(l.quantity || 0);\n      const unitCost = Number(l.unit_cost || 0);\n      if (!fromPartId || qty <= 0) continue;"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      const fromPart = fromPartRows?.[0] || null;\n      if (!fromPart)\n        return Response.json(\n          { error: \"Source part not found\" },\n          { status: 404 },\n        );",
+      "theirsContent": "      const [fromPart] = await sql`\n        SELECT *\n        FROM fleet_parts_inventory\n        WHERE id = ${fromPartId}\n        LIMIT 1\n      `;"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      // Find or create a matching part record in the TO branch using part_number.\n      const toPartExistingRows = await sql`\n        SELECT id\n        FROM fleet_parts_inventory\n        WHERE branch_id = ${Number(t.to_branch_id)}\n          AND part_number = ${String(fromPart.part_number)}\n        LIMIT 1\n      `;",
+      "theirsContent": "      if (!fromPart) {\n        return Response.json(\n          { error: \"Source part not found\" },\n          { status: 404 },\n        );\n      }"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      let toPartId = toPartExistingRows?.[0]?.id\n        ? Number(toPartExistingRows[0].id)\n        : null;",
+      "theirsContent": "      // Find or create a matching part record in the TO branch using part_number.\n      const [toPartExisting] = await sql`\n        SELECT id\n        FROM fleet_parts_inventory\n        WHERE branch_id = ${Number(t.to_branch_id)}\n          AND part_number = ${String(fromPart.part_number)}\n        LIMIT 1\n      `;"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      if (!toPartId) {\n        const createdRows = await sql`\n          INSERT INTO fleet_parts_inventory (\n            part_number,\n            part_name,\n            description,\n            category,\n            unit_of_measure,\n            unit_cost,\n            quantity_on_hand,\n            reserved_quantity,\n            minimum_stock_level,\n            reorder_point,\n            storage_location,\n            preferred_vendor_id,\n            cost_method,\n            is_active,\n            is_critical,\n            branch_id\n          )\n          VALUES (\n            ${String(fromPart.part_number)},\n            ${String(fromPart.part_name)},\n            ${fromPart.description ?? null},\n            ${fromPart.category ?? null},\n            ${String(fromPart.unit_of_measure || \"pcs\")},\n            ${unitCost},\n            0,\n            0,\n            ${Number(fromPart.minimum_stock_level || 0)},\n            ${Number(fromPart.reorder_point || 0)},\n            ${fromPart.storage_location ?? null},\n            ${fromPart.preferred_vendor_id ?? null},\n            ${fromPart.cost_method ?? null},\n            ${fromPart.is_active === false ? false : true},\n            ${fromPart.is_critical === true},\n            ${Number(t.to_branch_id)}\n          )\n          RETURNING id",
+      "theirsContent": "      let toPartId = toPartExisting?.id ? Number(toPartExisting.id) : null;\n\n      if (!toPartId) {\n        const [created] = await sql`\n          INSERT INTO fleet_parts_inventory (\n            part_number,\n            part_name,\n            description,\n            category,\n            unit_of_measure,\n            unit_cost,\n            quantity_on_hand,\n            reserved_quantity,\n            minimum_stock_level,\n            reorder_point,\n            storage_location,\n            preferred_vendor_id,\n            cost_method,\n            is_active,\n            is_critical,\n            branch_id\n          )\n          VALUES (\n            ${String(fromPart.part_number)},\n            ${String(fromPart.part_name)},\n            ${fromPart.description ?? null},\n            ${fromPart.category ?? null},\n            ${String(fromPart.unit_of_measure || \"pcs\")},\n            ${unitCost},\n            0,\n            0,\n            ${Number(fromPart.minimum_stock_level || 0)},\n            ${Number(fromPart.reorder_point || 0)},\n            ${fromPart.storage_location ?? null},\n            ${fromPart.preferred_vendor_id ?? null},\n            ${fromPart.cost_method ?? null},\n            ${fromPart.is_active === false ? false : true},\n            ${fromPart.is_critical === true},\n            ${Number(t.to_branch_id)}\n          )\n          RETURNING id"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "        toPartId = createdRows?.[0]?.id ? Number(createdRows[0].id) : null;",
+      "theirsContent": "        toPartId = created?.id ? Number(created.id) : null;"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "    const receivedRows = await sql`\n      UPDATE fleet_parts_stock_transfers\n      SET status = 'received',\n          received_at = now(),\n          received_by = ${Number(authz.user.id)}\n      WHERE id = ${transferId}\n      RETURNING *\n    `;\n\n    const received = receivedRows?.[0] || null;\n\n    return Response.json({ transfer: received });",
+      "theirsContent": "    // Mark transfer as received (guard against double-receive).\n    const [received] = await sql`\n      UPDATE fleet_parts_stock_transfers\n      SET status = 'received',\n          received_at = now(),\n          received_by = ${Number(authz.user.id)}\n      WHERE id = ${transferId}\n        AND status = 'in_transit'\n      RETURNING *\n    `;\n\n    if (!received) {\n      return Response.json(\n        { error: \"Only in-transit transfers can be received.\" },\n        { status: 409 },\n      );\n    }\n\n    return Response.json({ transfer: received });"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js",
+      "oursContent": "      { error: \"Failed to receive transfer\", details },",
+      "theirsContent": "      {\n        error: \"Failed to receive transfer\",\n        details: e?.message ? String(e.message) : String(e),\n      },"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/fleet/parts/receipts/route.js",
+    "/apps/web/src/app/api/fleet/parts/receipts/[id]/post/route.js",
+    "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

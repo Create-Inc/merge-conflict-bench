@@ -1,0 +1,113 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/logout/page.jsx",
+      "oursContent": "  const handleSignOut = useCallback(() => {\n    // IMPORTANT:\n    // In production, we have seen 405 errors on various /api/* signout endpoints.\n    // This route is NOT under /api, so it's much less likely to be blocked.\n    if (typeof window === \"undefined\") {\n      return;\n    }",
+      "theirsContent": "  const handleSignOut = useCallback(async () => {\n    // IMPORTANT: Use the platform auth signOut. Custom /api/session/* routes have shown\n    // inconsistent behavior on some production deployments.\n    if (loading) return;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/logout/page.jsx",
+      "oursContent": "      const target = `/logout?final=${encodeURIComponent(finalUrl || \"/\")}&bounce=1&t=${Date.now()}`;\n      window.location.href = target;",
+      "theirsContent": "      await signOut({\n        callbackUrl: finalUrl || \"/\",\n        redirect: true,\n      });\n      // If redirect=false ever happens, fall back:\n      if (typeof window !== \"undefined\") {\n        window.location.href = `${finalUrl || \"/\"}?t=${Date.now()}`;\n      }"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/account/logout/page.jsx",
+      "oursContent": "      console.error(\"Sign out navigation failed\", e);\n      setError(\"Could not sign out. Please try again.\");",
+      "theirsContent": "      console.error(\"Sign out failed\", e);\n      setError(e?.message || \"Could not sign out. Please try again.\");"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Platform/DealershipDetailModal/IntegrationTab.jsx",
+      "oursContent": "import { useState, useCallback } from \"react\";",
+      "theirsContent": "import { useMemo, useState } from \"react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Platform/DealershipDetailModal/IntegrationTab.jsx",
+      "oursContent": "        setActionSuccess(\"Enabled. Setup opened.\");",
+      "theirsContent": "        setActionSuccess(\"Enabled. Setup opened below.\");"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Platform/DealershipDetailModal/IntegrationTab.jsx",
+      "oursContent": "          \"Enabled. If you don't see setup fields yet, close and reopen this dealership and click Configure.\",",
+      "theirsContent": "          \"Enabled. If setup didn't open, try again in a moment (the CRM is refreshing).\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "",
+      "theirsContent": "  // No external upload; we store inline.\n  const uploading = false;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "    // IMPORTANT: we only support real CSV files for manual inventory import.",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "      mime.includes(\"text/csv\") ||\n      mime.includes(\"application/csv\") ||\n      mime.includes(\"text/plain\");\n",
+      "theirsContent": "      mime.includes(\"text/csv\") ||\n      mime.includes(\"application/csv\") ||\n      mime.includes(\"application/vnd.ms-excel\") ||\n      mime.includes(\"text/plain\");\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "    // CRITICAL RELIABILITY FIX:\n    // The Anything upload service (/_create/api/upload/) is optimized for images and has been\n    // intermittently failing for CSVs in production (500: 'Failed to upload image.').\n    // Instead of relying on that service, we store the CSV text directly in the DB.",
+      "theirsContent": "    // Read and store inline."
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "      inlineText = await file.text();",
+      "theirsContent": "      inlineText = await readFileAsText(file);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "      console.error(\"Could not read CSV file locally\", e);\n      const msg = \"We couldn't read that file. Please try exporting again.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);\n    }",
+      "theirsContent": "      console.error(\"Failed reading CSV file\", e);\n      const msg = e?.message || \"Could not read that CSV file.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);\n    }"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "    const trimmed = String(inlineText || \"\").trim();\n    if (!trimmed) {\n      const msg = \"That CSV file appears to be empty.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);",
+      "theirsContent": "    if (!inlineText || !String(inlineText).trim()) {\n      const msg = \"That CSV file appears to be empty.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "    // Prevent huge payloads (keeps DB + API safe)\n    if (trimmed.length > 4_000_000) {\n      const msg =\n        \"That CSV is too large to upload this way. Please shorten it (or split into multiple files) and try again.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);",
+      "theirsContent": "    // Safety: avoid storing extremely large CSV text in a single jsonb row.\n    // Postgres row size is limited (~1.6MB). Keep some room for other fields.\n    if (inlineText.length > 900_000) {\n      const msg =\n        \"That CSV is too large to store via file upload in this app right now. Please paste a CSV URL instead (Google Sheets export link works), or split the file into smaller chunks.\";\n      setError(msg);\n      toast.error(\"CSV upload failed\", { description: msg });\n      throw new Error(msg);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "    // UI label only (we won't fetch this as a URL)\n    const label = `inline://${file.name || \"inventory.csv\"}`;\n    setCsvUrlInput(label);\n",
+      "theirsContent": "    // UI label only (we won't fetch this as a URL)\n    setCsvUrlInput(`inline://${file.name || \"inventory.csv\"}`);\n"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "      csvUrl: null,\n      csvInlineText: trimmed,",
+      "theirsContent": "      csvUrl: null,\n      csvInlineText: inlineText,"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js",
+      "oursContent": "      \"CSV was read, but we could not save it to your dealership settings.\";",
+      "theirsContent": "      \"We read your CSV file, but could not save it to your dealership settings.\";"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/account/logout/page.jsx",
+    "/apps/web/src/components/Platform/DealershipDetailModal/IntegrationTab.jsx",
+    "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

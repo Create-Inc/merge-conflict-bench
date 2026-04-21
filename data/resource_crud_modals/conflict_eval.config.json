@@ -1,0 +1,129 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Configuration/Resources/ResourcesTab.jsx",
+      "oursContent": "                  {numberLabel}",
+      "theirsContent": "                  {resourceTerm} #"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Configuration/Resources/ResourcesTab.jsx",
+      "oursContent": "                const resourceName = resource?.resource_name\n                  ? String(resource.resource_name)\n                  : \"-\";",
+      "theirsContent": "                const displayName = resource?.resource_name || \"-\";"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Configuration/Resources/ResourcesTab.jsx",
+      "oursContent": "                    <td className=\"py-3 px-4 text-sm text-gray-700 dark:text-gray-300\">\n                      {resourceName}\n                    </td>",
+      "theirsContent": "                    <td className=\"py-3 px-4 text-sm text-gray-700 dark:text-gray-300\">\n                      {displayName}\n                    </td>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Configuration/Resources/CreateResourceModal.jsx",
+      "oursContent": "      resourceName: isMoorage ? resourceName.trim() || null : null,",
+      "theirsContent": "      resourceName: resourceName.trim() || null,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Configuration/Resources/CreateResourceModal.jsx",
+      "oursContent": "              {isMoorage ? (\n                <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\n                  <div>\n                    <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                      {numberLabel} *\n                    </label>\n                    <input\n                      type=\"text\"\n                      value={name}\n                      onChange={(e) => setName(e.target.value)}\n                      className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                      placeholder=\"e.g., A20\"\n                      required\n                    />\n                  </div>",
+      "theirsContent": "              <div>\n                <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                  {resourceTerm} Number *\n                </label>\n                <input\n                  type=\"text\"\n                  value={name}\n                  onChange={(e) => setName(e.target.value)}\n                  className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                  placeholder=\"e.g., A-1, 12\"\n                  required\n                />\n              </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Resources/Modals/CreateResourceModal.jsx",
+      "oursContent": "  const [resourceName, setResourceName] = useState(\"\"); // NEW: resources.resource_name",
+      "theirsContent": "  const [resourceName, setResourceName] = useState(\"\"); // NEW"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Resources/Modals/CreateResourceModal.jsx",
+      "oursContent": "        resourceName: isMoorage ? resourceName.trim() || null : null,",
+      "theirsContent": "        resourceName: resourceName.trim() || null,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Resources/Modals/CreateResourceModal.jsx",
+      "oursContent": "              {isMoorage ? (\n                <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\n                  <div>\n                    <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                      {numberLabel} *\n                    </label>\n                    <input\n                      type=\"text\"\n                      value={name}\n                      onChange={(e) => setName(e.target.value)}\n                      className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                      placeholder=\"e.g., A20\"\n                      required\n                    />\n                  </div>",
+      "theirsContent": "              <div>\n                <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                  {resourceTerm} Number *\n                </label>\n                <input\n                  type=\"text\"\n                  value={name}\n                  onChange={(e) => setName(e.target.value)}\n                  className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                  placeholder=\"e.g., A-1, 12\"\n                  required\n                />\n              </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Resources/ListView/ResourceTable.jsx",
+      "oursContent": "  const subleaseLabel =\n    subleaseLabelOverride || category?.sublease_verbiage || \"Sublease\";\n  const spotHeaderLabel = isMoorage ? `${noun} Number` : \"Resource\";",
+      "theirsContent": "  const subleaseLabel =\n    category?.sublease_verbiage || club?.sublease_verbiage || \"Sublease\";\n  const specialAssignmentHeaderLabel = `${subleaseLabel} / Temporary`;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Resources/ListView/ResourceTable.jsx",
+      "oursContent": "                        {resourceSecondary ? (\n                          <div className=\"text-sm text-gray-600 dark:text-gray-300 mt-0.5 break-words\">\n                            {resourceSecondary}\n                          </div>\n                        ) : null}\n                        {resource.description ? (",
+      "theirsContent": "                        {displayName ? (\n                          <div className=\"text-sm text-gray-700 dark:text-gray-300 mt-0.5 break-words\">\n                            {displayName}\n                          </div>\n                        ) : null}\n                        {notes ? ("
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Resources/ListView/ResourceTable.jsx",
+      "oursContent": "                        {resourceSecondary ? (\n                          <div className=\"text-sm text-gray-600 dark:text-gray-300 mt-0.5 break-words\">\n                            {resourceSecondary}\n                          </div>\n                        ) : null}\n                        {resource.description ? (",
+      "theirsContent": "                        {displayName ? (\n                          <div className=\"text-sm text-gray-700 dark:text-gray-300 mt-0.5 break-words\">\n                            {displayName}\n                          </div>\n                        ) : null}\n                        {notes ? ("
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/Resources/ListView/ResourceTable.jsx",
+      "oursContent": "                    {subleaseLabel} / Temporary",
+      "theirsContent": "                    {specialAssignmentHeaderLabel}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Resources/Modals/EditResourceModal.jsx",
+      "oursContent": "        resourceName: isMoorage ? resourceName.trim() || null : undefined,",
+      "theirsContent": "        resourceName: resourceName.trim() || null,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Resources/Modals/EditResourceModal.jsx",
+      "oursContent": "              {isMoorage ? (\n                <div className=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\n                  <div>\n                    <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                      {numberLabel} *\n                    </label>\n                    <input\n                      type=\"text\"\n                      value={name}\n                      onChange={(e) => setName(e.target.value)}\n                      className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                      placeholder=\"e.g., A20\"\n                      required\n                    />\n                  </div>",
+      "theirsContent": "              <div>\n                <label className=\"block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2\">\n                  {resourceTerm} Number *\n                </label>\n                <input\n                  type=\"text\"\n                  value={name}\n                  onChange={(e) => setName(e.target.value)}\n                  className=\"w-full px-4 py-3 bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-[#3a3a3a] rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500\"\n                  placeholder=\"e.g., A-1, 12\"\n                  required\n                />\n              </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/resources/handlers/createResourceHandler.js",
+      "oursContent": "    resourceName, // NEW: optional \"resource_name\" (ex: boat name)",
+      "theirsContent": "    resourceName,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/resources/handlers/createResourceHandler.js",
+      "oursContent": "  const trimmedResourceNameRaw =\n    resourceName === undefined || resourceName === null\n      ? null\n      : String(resourceName).trim();\n  const trimmedResourceName = trimmedResourceNameRaw\n    ? trimmedResourceNameRaw\n    : null;",
+      "theirsContent": "  const trimmedResourceName = String(resourceName || \"\").trim();"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/resources/handlers/createResourceHandler.js",
+      "oursContent": "      ${trimmedName},\n      ${trimmedResourceName},",
+      "theirsContent": "      ${trimmedName},\n      ${trimmedResourceName || null},"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/resources/handlers/updateResourceHandler.js",
+      "oursContent": "    resourceName, // NEW: optional resources.resource_name",
+      "theirsContent": "    resourceName,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/resources/handlers/updateResourceHandler.js",
+      "oursContent": "  // NEW: save optional resource_name\n  if (resourceName !== undefined) {\n    updates.push(`resource_name = $${paramCount++}`);\n    values.push(normalizedNextResourceName);\n  }\n",
+      "theirsContent": "  // NEW: resource_name is a separate display name (ex: \"Guest Slip\")\n  if (resourceName !== undefined) {\n    const trimmed = String(resourceName || \"\").trim();\n    updates.push(`resource_name = $${paramCount++}`);\n    values.push(trimmed ? trimmed : null);\n  }\n"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/Configuration/Resources/ResourcesTab.jsx",
+    "/apps/web/src/components/Configuration/Resources/CreateResourceModal.jsx",
+    "/apps/web/src/components/Resources/Modals/CreateResourceModal.jsx",
+    "/apps/web/src/components/Resources/ListView/ResourceTable.jsx",
+    "/apps/web/src/components/Resources/Modals/EditResourceModal.jsx",
+    "/apps/web/src/app/api/resources/handlers/createResourceHandler.js",
+    "/apps/web/src/app/api/resources/handlers/updateResourceHandler.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

@@ -1,0 +1,34 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/JobDetail/GeneratedApplication.jsx",
+      "oursContent": "  const applicationStatusLabel = job.application_status\n    ? getTrackingStatusLabel(t, job.application_status)\n    : null;\n",
+      "theirsContent": "  // Translate backend status codes (e.g. \"generated\", \"sent\") when possible.\n  const applicationStatusKey = job?.application_status\n    ? `tracking.statuses.${job.application_status}`\n    : null;\n  const applicationStatusLabel = applicationStatusKey\n    ? t(applicationStatusKey, job?.application_status)\n    : null;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/JobDetail/GeneratedApplication.jsx",
+      "oursContent": "          <span className=\"px-2 py-1 bg-blue-100 text-blue-800 rounded font-medium\">\n            {applicationStatusLabel || \"\"}",
+      "theirsContent": "          <span className=\"px-2 py-1 bg-blue-100 text-blue-800 rounded font-medium capitalize\">\n            {applicationStatusLabel || job.application_status}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/JobDetail/JobStatus.jsx",
+      "oursContent": "  const applicationStatusLabel = applicationStatus\n    ? getTrackingStatusLabel(t, applicationStatus)\n    : \"\";\n",
+      "theirsContent": "  // Translate backend status codes (e.g. \"generated\", \"sent\") when possible.\n  const applicationStatusKey = applicationStatus\n    ? `tracking.statuses.${applicationStatus}`\n    : null;\n  const applicationStatusLabel = applicationStatusKey\n    ? t(applicationStatusKey, applicationStatus)\n    : null;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/JobDetail/JobStatus.jsx",
+      "oursContent": "            <span className=\"px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded\">\n              {applicationStatusLabel}",
+      "theirsContent": "            <span className=\"px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded capitalize\">\n              {applicationStatusLabel || applicationStatus}"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/JobDetail/GeneratedApplication.jsx",
+    "/apps/web/src/components/JobDetail/JobStatus.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

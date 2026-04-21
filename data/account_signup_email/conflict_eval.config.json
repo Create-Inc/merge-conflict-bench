@@ -1,0 +1,41 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/after-signup/page.jsx",
+      "oursContent": "\n    const throttled = !!sendVerification.data?.throttled;\n    const retryAfterSeconds = Number(sendVerification.data?.retryAfterSeconds);\n    const retryText =\n      throttled && Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0\n        ? `Please wait about ${retryAfterSeconds} seconds and try again.`\n        : \"Please wait a moment and try again.\";\n",
+      "theirsContent": "    const isThrottled = !!sendVerification.data?.throttled;\n    const throttledMsg = isThrottled\n      ? \"We just sent you a link a moment ago — please check your inbox before resending.\"\n      : null;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/after-signup/page.jsx",
+      "oursContent": "\n          {throttled && (\n            <div className=\"mb-3 text-sm text-gray-600\">{retryText}</div>\n          )}\n\n          {sendVerification.isError && !throttled && (",
+      "theirsContent": "\n          {throttledMsg && (\n            <div className=\"mb-3 text-xs text-gray-600\">{throttledMsg}</div>\n          )}\n\n          {sendVerification.isError && ("
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/account/route.js",
+      "oursContent": "      // record last-sent timestamp before sending\n      await sql`\n        UPDATE auth_users\n        SET verification_email_last_sent_at = NOW()\n        WHERE id = ${userId}\n      `;\n\n      // never allow empty baseUrl\n      const baseUrl =\n        process.env.APP_URL || process.env.AUTH_URL || \"https://www.mojjo.se\";\n      const root = String(baseUrl).replace(/\\/$/, \"\");\n      const verifyUrl = `${root}/api/account?endpoint=email-verify&token=${encodeURIComponent(",
+      "theirsContent": "        if (ageMs >= 0 && ageMs < RESEND_COOLDOWN_MS) {\n          return Response.json({ ok: true, throttled: true });\n        }\n      } else {\n        await sql`DELETE FROM auth_verification_token WHERE identifier = ${identifier}`;\n\n        token = crypto.randomBytes(32).toString(\"hex\");\n        expiresAt = new Date(Date.now() + VERIFICATION_TTL_MS);\n\n        await sql`\n          INSERT INTO auth_verification_token(identifier, expires, token)\n          VALUES (${identifier}, ${expiresAt.toISOString()}, ${token})\n        `;\n      }\n\n      const origin = getRequestOrigin(request);\n      const verifyUrl = `${origin}/api/account?endpoint=email-verify&token=${encodeURIComponent("
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/account/email/route.js",
+      "oursContent": "    // NEW: record last-sent timestamp\n    await sql`\n      UPDATE auth_users\n      SET verification_email_last_sent_at = NOW()\n      WHERE id = ${userId}\n    `;",
+      "theirsContent": "      if (ageMs >= 0 && ageMs < RESEND_COOLDOWN_MS) {\n        // Too soon — don’t send another email.\n        return Response.json({ ok: true, throttled: true });\n      }"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/account/email/route.js",
+      "oursContent": "    const baseUrl =\n      process.env.APP_URL || process.env.AUTH_URL || \"https://www.mojjo.se\";\n\n    // Keep the verification URL on THIS route (no extra /verify route)\n    const verifyUrl = `${String(baseUrl).replace(/\\/$/, \"\")}/api/account/email?token=${encodeURIComponent(\n      token,\n    )}`;",
+      "theirsContent": "      // Otherwise: resend the same token (still valid)\n    } else {\n      // Clean any old records for this identifier, then create a fresh token\n      await sql`DELETE FROM auth_verification_token WHERE identifier = ${identifier}`;"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/account/after-signup/page.jsx",
+    "/apps/web/src/app/api/account/route.js",
+    "/apps/web/src/app/api/account/email/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

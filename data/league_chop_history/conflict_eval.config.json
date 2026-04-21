@@ -1,0 +1,28 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/LeaguePage/ChopTab.jsx",
+      "oursContent": "import {\n  AlertTriangle,\n  Scissors,\n  RefreshCw,\n  Users,\n  Crosshair,\n} from \"lucide-react\";",
+      "theirsContent": "import { AlertTriangle, Scissors, RefreshCw, History } from \"lucide-react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/LeaguePage/ChopTab.jsx",
+      "oursContent": "  const historyQuery = useQuery({\n    queryKey: [\"chopped-history\", leagueId],\n    queryFn: async () => {\n      const response = await fetch(`/api/leagues/${leagueId}/chopped/history`);\n      if (!response.ok) {\n        const data = await response.json().catch(() => null);\n        throw new Error(\n          data?.error ||\n            `When fetching /api/leagues/${leagueId}/chopped/history, the response was [${response.status}] ${response.statusText}`,\n        );\n      }\n      return response.json();\n    },\n    enabled: Boolean(leagueId),\n  });\n",
+      "theirsContent": "  // NEW: Chop history (eliminations by week)\n  const historyQuery = useQuery({\n    queryKey: [\"chopped-history\", leagueId],\n    queryFn: async () => {\n      const response = await fetch(`/api/leagues/${leagueId}/chopped/history`);\n      if (!response.ok) {\n        const body = await response.json().catch(() => null);\n        throw new Error(\n          body?.error ||\n            `When fetching /api/leagues/${leagueId}/chopped/history, the response was [${response.status}] ${response.statusText}`,\n        );\n      }\n      return response.json();\n    },\n  });\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/leagues/[id]/chopped/history/route.js",
+      "oursContent": "import sql from \"@/app/api/utils/sql\";\nimport { auth } from \"@/auth\";\n\nexport async function GET(request, { params }) {\n  try {\n    const session = await auth();\n    if (!session?.user) {\n      return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n    }\n\n    const leagueId = Number(params?.id);\n    if (!Number.isFinite(leagueId)) {\n      return Response.json({ error: \"Invalid league id\" }, { status: 400 });\n    }\n\n    const [league] = await sql`\n      SELECT *\n      FROM leagues\n      WHERE id = ${leagueId}\n    `;\n\n    if (!league) {\n      return Response.json({ error: \"League not found\" }, { status: 404 });\n    }\n\n    if (String(league.league_type || \"standard\").toLowerCase() !== \"chopped\") {\n      return Response.json(\n        { error: \"This league is not a chopped league.\" },\n        { status: 400 },\n      );\n    }\n\n    const history = await sql`\n      SELECT\n        ce.week,\n        ce.eliminated_team_id,\n        t.team_name,\n        t.owner_name,\n        ce.eliminated_points,\n        ce.tiebreaker,\n        ce.created_at\n      FROM chopped_eliminations ce\n      JOIN teams t ON t.id = ce.eliminated_team_id\n      WHERE ce.league_id = ${leagueId}\n      ORDER BY ce.week DESC\n    `;\n\n    return Response.json({ league_id: leagueId, history });\n  } catch (error) {\n    console.error(\"Error fetching chopped history:\", error);\n    return Response.json(\n      { error: \"Failed to load chopped history\" },\n      { status: 500 },\n    );\n  }\n}",
+      "theirsContent": "import sql from \"@/app/api/utils/sql\";\nimport { auth } from \"@/auth\";\n\nexport async function GET(request, { params }) {\n  try {\n    const session = await auth();\n    if (!session?.user) {\n      return Response.json({ error: \"Unauthorized\" }, { status: 401 });\n    }\n\n    const leagueId = Number(params?.id);\n    if (!Number.isFinite(leagueId)) {\n      return Response.json({ error: \"Invalid league id\" }, { status: 400 });\n    }\n\n    const [league] = await sql`\n      SELECT id, league_type\n      FROM leagues\n      WHERE id = ${leagueId}\n    `;\n\n    if (!league) {\n      return Response.json({ error: \"League not found\" }, { status: 404 });\n    }\n\n    if (String(league.league_type || \"standard\").toLowerCase() !== \"chopped\") {\n      return Response.json(\n        { error: \"This league is not a chopped league.\" },\n        { status: 400 },\n      );\n    }\n\n    const history = await sql`\n      SELECT\n        ce.week,\n        ce.eliminated_team_id,\n        ce.eliminated_points,\n        ce.tiebreaker,\n        ce.created_at,\n        t.team_name,\n        t.owner_name\n      FROM chopped_eliminations ce\n      JOIN teams t\n        ON t.id = ce.eliminated_team_id\n      WHERE ce.league_id = ${leagueId}\n      ORDER BY ce.week DESC\n    `;\n\n    return Response.json({ history: history || [] });\n  } catch (error) {\n    console.error(\"Error loading chopped history:\", error);\n    return Response.json(\n      { error: \"Failed to load chopped history\" },\n      { status: 500 },\n    );\n  }\n}"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/LeaguePage/ChopTab.jsx",
+    "/apps/web/src/app/api/leagues/[id]/chopped/history/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

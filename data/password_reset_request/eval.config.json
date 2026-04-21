@@ -1,0 +1,9 @@
+{
+  "name": "password_reset_request",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "0ffe786e-271f-4cdd-bd45-f46eac04fccd",
+  "sourceTimestamp": "2026-01-15T04:43:46.395Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 7
+}

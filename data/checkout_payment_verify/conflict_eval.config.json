@@ -1,0 +1,125 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/checkout/page.jsx",
+      "oursContent": "      console.log(\"Opening Stripe checkout:\", data.url);\n\n      // In Anything, the site often runs inside an iframe during building.\n      // Open Stripe Checkout in a new window when possible.\n      const popup = window.open(data.url, \"_blank\", \"popup\");\n      if (!popup) {\n        // Fallback if popups are blocked\n        window.location.href = data.url;\n      }",
+      "theirsContent": "      // In Anything builder the app runs inside an iframe; open in a popup.\n      const popup = window.open(data.url, \"_blank\", \"popup\");\n      if (!popup) {\n        window.location.href = data.url;\n      }"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "// Replaces Stripe SDK usage with direct Stripe REST calls (fetch) to avoid Anything's internal stripe wrapper",
+      "theirsContent": "// Remove Stripe SDK usage (Anything wraps Stripe SDK with an internal shim that is returning HTML)\n// and call Stripe's REST API directly using fetch."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "",
+      "theirsContent": "    console.log(\"=== Checkout Session Started ===\");\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "    if (\n      !orderData ||\n      !Array.isArray(orderData.items) ||\n      orderData.items.length === 0\n    ) {",
+      "theirsContent": "    console.log(\"Order data:\", {\n      email: orderData?.customer_email,\n      items: orderData?.items?.length,\n      total: orderData?.total,\n    });\n\n    if (\n      !orderData ||\n      !Array.isArray(orderData.items) ||\n      orderData.items.length === 0\n    ) {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "    const baseURL = String(redirectURL || process.env.APP_URL || \"\").replace(\n      /^http:/,\n      \"https:\",\n    );\n    if (!baseURL) {\n      return Response.json(\n        { error: \"Invalid request\", details: \"redirectURL is required\" },\n        { status: 400 },\n      );",
+      "theirsContent": "    const baseURL = String(redirectURL || \"\").replace(/^http:/, \"https:\");\n    if (!baseURL.startsWith(\"http\")) {\n      return Response.json(\n        { error: \"Invalid request\", details: \"redirectURL is required\" },\n        { status: 400 },\n      );\n    }\n\n    // Stripe Checkout Session creation (REST API)\n    const params = new URLSearchParams();\n    params.set(\"mode\", \"payment\");\n    params.set(\n      \"success_url\",\n      `${baseURL}/thank-you?session_id={CHECKOUT_SESSION_ID}`,\n    );\n    params.set(\"cancel_url\", `${baseURL}/checkout`);\n    params.set(\"customer_email\", orderData.customer_email);\n\n    // keep shipping + billing aligned with previous behavior\n    params.set(\"billing_address_collection\", \"auto\");\n    params.set(\"shipping_address_collection[allowed_countries][]\", \"US\");\n\n    // Metadata must be strings\n    params.set(\"metadata[order_data]\", JSON.stringify(orderData));\n\n    // Line items\n    const hasDiscount =\n      Number(orderData.discount) > 0 && Number(orderData.subtotal) > 0;\n    const discountRate = hasDiscount\n      ? Math.min(\n          1,\n          Math.max(0, Number(orderData.discount) / Number(orderData.subtotal)),\n        )\n      : 0;\n\n    let discountedSubtotalCentsSum = 0;\n\n    orderData.items.forEach((item, idx) => {\n      const qty = Number(item.quantity || 1);\n      const priceCents = Math.round(Number(item.price) * 100);\n\n      // Stripe does not allow negative line items. To represent discount codes from the site,\n      // apply a per-item discount to the unit_amount.\n      const discountedUnitCents = hasDiscount\n        ? Math.floor(priceCents * (1 - discountRate))\n        : priceCents;\n\n      discountedSubtotalCentsSum += discountedUnitCents * qty;\n\n      params.set(`line_items[${idx}][quantity]`, String(qty));\n      params.set(`line_items[${idx}][price_data][currency]`, \"usd\");\n      params.set(\n        `line_items[${idx}][price_data][product_data][name]`,\n        `${item.name} - ${item.size}`,\n      );\n      if (item.image) {\n        params.set(\n          `line_items[${idx}][price_data][product_data][images][]`,\n          String(item.image),\n        );\n      }\n      params.set(\n        `line_items[${idx}][price_data][unit_amount]`,\n        String(discountedUnitCents),\n      );\n    });\n\n    // If we discounted per-line with floor(), rounding might leave a few cents unaccounted.\n    // Add a small positive adjustment line item so Stripe total matches what the customer saw.\n    let lineItemIndex = orderData.items.length;\n    if (hasDiscount) {\n      const desiredDiscountedSubtotalCents = Math.round(\n        (Number(orderData.subtotal) - Number(orderData.discount)) * 100,\n      );\n      const remainder =\n        desiredDiscountedSubtotalCents - discountedSubtotalCentsSum;\n      if (remainder > 0) {\n        params.set(`line_items[${lineItemIndex}][quantity]`, \"1\");\n        params.set(`line_items[${lineItemIndex}][price_data][currency]`, \"usd\");\n        params.set(\n          `line_items[${lineItemIndex}][price_data][product_data][name]`,\n          \"Discount adjustment\",\n        );\n        params.set(\n          `line_items[${lineItemIndex}][price_data][unit_amount]`,\n          String(remainder),\n        );\n        lineItemIndex += 1;\n      }\n    }\n\n    // Add shipping line item\n    if (Number(orderData.shipping_cost) > 0) {\n      params.set(`line_items[${lineItemIndex}][quantity]`, \"1\");\n      params.set(`line_items[${lineItemIndex}][price_data][currency]`, \"usd\");\n      params.set(\n        `line_items[${lineItemIndex}][price_data][product_data][name]`,\n        \"Shipping\",\n      );\n      params.set(\n        `line_items[${lineItemIndex}][price_data][unit_amount]`,\n        String(Math.round(Number(orderData.shipping_cost) * 100)),\n      );\n      lineItemIndex += 1;\n    }\n\n    // NOTE: We intentionally do NOT add negative line items for discounts.\n    // Stripe rejects negative unit_amount. Discounts are applied above by adjusting unit_amount.\n\n    console.log(\"Creating Stripe session (REST)...\");\n\n    const stripeRes = await fetch(\n      \"https://api.stripe.com/v1/checkout/sessions\",\n      {\n        method: \"POST\",\n        headers: {\n          Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,\n          \"Content-Type\": \"application/x-www-form-urlencoded\",\n        },\n        body: params.toString(),\n      },\n    );\n\n    const raw = await stripeRes.text();\n\n    // Stripe should always respond JSON. If we get HTML, include a short snippet.\n    let stripeJson = null;\n    try {\n      stripeJson = JSON.parse(raw);\n    } catch {\n      stripeJson = null;\n    }\n\n    if (!stripeRes.ok) {\n      const snippet = raw?.slice?.(0, 200);\n      console.error(\n        \"❌ Stripe REST error:\",\n        stripeRes.status,\n        stripeRes.statusText,\n        snippet,\n      );\n      const details =\n        stripeJson?.error?.message || snippet || \"Stripe request failed\";\n      return Response.json(\n        {\n          error: \"Checkout failed\",\n          details,\n          stripeStatus: stripeRes.status,\n        },\n        { status: 500 },\n      );"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "    const discounted = buildDiscountedUnitAmounts({\n      items: orderData.items,\n      subtotal: orderData.subtotal,\n      discount: orderData.discount,\n    });",
+      "theirsContent": "    if (!stripeJson?.url) {\n      console.error(\"❌ Stripe response missing url\", stripeJson);\n      return Response.json(\n        {\n          error: \"Checkout failed\",\n          details: \"Stripe did not return a checkout URL\",\n        },\n        { status: 500 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/create-checkout-session/route.js",
+      "oursContent": "    // Build form payload for Stripe Checkout Session\n    const form = encodeForm({\n      mode: \"payment\",\n      success_url: `${baseURL}/thank-you?session_id={CHECKOUT_SESSION_ID}`,\n      cancel_url: `${baseURL}/checkout`,\n      customer_email: orderData.customer_email,\n      billing_address_collection: \"auto\",\n    });\n\n    // shipping_address_collection[allowed_countries][] = US\n    form.append(\"shipping_address_collection[allowed_countries][]\", \"US\");\n\n    let lineIndex = 0;\n\n    for (const item of discounted) {\n      const name = `${item.name} - ${item.size}`;\n      const qty = item.quantity || 1;\n\n      form.append(`line_items[${lineIndex}][quantity]`, String(qty));\n      form.append(`line_items[${lineIndex}][price_data][currency]`, \"usd\");\n      form.append(\n        `line_items[${lineIndex}][price_data][product_data][name]`,\n        name,\n      );\n      form.append(\n        `line_items[${lineIndex}][price_data][unit_amount]`,\n        String(item.unit_amount_cents),\n      );\n\n      if (item.image) {\n        form.append(\n          `line_items[${lineIndex}][price_data][product_data][images][]`,\n          item.image,\n        );\n      }\n\n      lineIndex += 1;\n\n      // If there are remainder cents (due to floor), we add them as a tiny \"Rounding\" line item per product.\n      // This keeps Stripe total exact without negative amounts.\n      if (item.remainder_cents && item.remainder_cents > 0) {\n        form.append(`line_items[${lineIndex}][quantity]`, \"1\");\n        form.append(`line_items[${lineIndex}][price_data][currency]`, \"usd\");\n        form.append(\n          `line_items[${lineIndex}][price_data][product_data][name]`,\n          `Rounding (${item.size})`,\n        );\n        form.append(\n          `line_items[${lineIndex}][price_data][unit_amount]`,\n          String(item.remainder_cents),\n        );\n        lineIndex += 1;\n      }\n    }\n\n    if (orderData.shipping_cost && Number(orderData.shipping_cost) > 0) {\n      const shippingCents = Math.round(Number(orderData.shipping_cost) * 100);\n      form.append(`line_items[${lineIndex}][quantity]`, \"1\");\n      form.append(`line_items[${lineIndex}][price_data][currency]`, \"usd\");\n      form.append(\n        `line_items[${lineIndex}][price_data][product_data][name]`,\n        \"Shipping\",\n      );\n      form.append(\n        `line_items[${lineIndex}][price_data][unit_amount]`,\n        String(shippingCents),\n      );\n      lineIndex += 1;\n    }\n\n    // Keep metadata small (Stripe metadata values max length is limited).\n    // Store only essentials and rely on pendingOrder in sessionStorage for UI.\n    const compactMeta = {\n      email: orderData.customer_email,\n      subtotal: orderData.subtotal,\n      shipping_cost: orderData.shipping_cost,\n      discount_code: orderData.discount_code || \"\",\n      total: orderData.total,\n    };\n\n    form.append(\"metadata[order_data]\", JSON.stringify(compactMeta));\n\n    const session = await stripeRequest(\"checkout/sessions\", form);\n\n    return Response.json({ url: session.url, sessionId: session.id });",
+      "theirsContent": "    console.log(\"✅ Session created:\", stripeJson.id);\n\n    return Response.json({ url: stripeJson.url, sessionId: stripeJson.id });"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "async function stripeGet(path) {\n  const url = `https://api.stripe.com/v1/${path}`;\n  const response = await fetch(url, {\n    method: \"GET\",\n    headers: {\n      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,\n    },\n  });\n\n  const contentType = response.headers.get(\"content-type\") || \"\";\n  const raw = await response.text();\n\n  if (!contentType.includes(\"application/json\")) {\n    throw new Error(\n      `Stripe API returned non-JSON (status ${response.status}). First 200 chars: ${raw.slice(0, 200)}`,\n    );\n  }\n\n  const json = JSON.parse(raw);\n\n  if (!response.ok) {\n    const msg =\n      json?.error?.message || `Stripe API error (status ${response.status})`;\n    throw new Error(msg);\n  }\n\n  return json;\n}\n",
+      "theirsContent": "async function stripeGet(path) {\n  const res = await fetch(`https://api.stripe.com/v1/${path}`, {\n    method: \"GET\",\n    headers: {\n      Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,\n    },\n  });\n  const raw = await res.text();\n  let json = null;\n  try {\n    json = JSON.parse(raw);\n  } catch {\n    json = null;\n  }\n  if (!res.ok) {\n    const details =\n      json?.error?.message || raw?.slice?.(0, 200) || \"Stripe request failed\";\n    const err = new Error(details);\n    err.status = res.status;\n    err.stripePayload = json;\n    throw err;\n  }\n  if (!json) {\n    throw new Error(\"Stripe returned a non-JSON response\");\n  }\n  return json;\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "    if (!process.env.STRIPE_SECRET_KEY) {\n      return Response.json({ error: \"Stripe not configured\" }, { status: 500 });\n    }",
+      "theirsContent": "    if (!process.env.STRIPE_SECRET_KEY) {\n      return Response.json(\n        { error: \"Payment system not configured\" },\n        { status: 500 },\n      );\n    }\n\n    const { sessionId } = await request.json();"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "    // Prefer orderData passed from the browser (sessionStorage), because Stripe metadata has strict size limits.\n    const resolvedOrderData = orderData || null;",
+      "theirsContent": "    // Parse order data from metadata\n    let orderData;\n    try {\n      orderData = JSON.parse(session?.metadata?.order_data || \"{}\") || {};\n    } catch (e) {\n      return Response.json(\n        {\n          error: \"Invalid order data\",\n          details: \"Could not parse order metadata\",\n        },\n        { status: 400 },\n      );\n    }"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "        ${resolvedOrderData.customer_name},\n        ${resolvedOrderData.customer_email},\n        ${resolvedOrderData.customer_phone || \"\"},\n        ${resolvedOrderData.shipping_address},\n        ${resolvedOrderData.shipping_city},\n        ${resolvedOrderData.shipping_state},\n        ${resolvedOrderData.shipping_zip},\n        ${JSON.stringify(resolvedOrderData.items)},\n        ${resolvedOrderData.subtotal},\n        ${resolvedOrderData.shipping_cost},\n        ${resolvedOrderData.total},",
+      "theirsContent": "        ${orderData.customer_name || \"\"},\n        ${orderData.customer_email || session.customer_email || \"\"},\n        ${orderData.customer_phone || \"\"},\n        ${orderData.shipping_address || \"\"},\n        ${orderData.shipping_city || \"\"},\n        ${orderData.shipping_state || \"\"},\n        ${orderData.shipping_zip || \"\"},\n        ${JSON.stringify(orderData.items || [])},\n        ${Number(orderData.subtotal) || 0},\n        ${Number(orderData.shipping_cost) || 0},\n        ${Number(orderData.total) || 0},"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "      ...resolvedOrderData,",
+      "theirsContent": "      ...orderData,\n      customer_email: orderData.customer_email || session.customer_email || \"\","
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "      WHERE customer_email = ${resolvedOrderData.customer_email} ",
+      "theirsContent": "      WHERE customer_email = ${order.customer_email} "
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "        to: resolvedOrderData.customer_email,",
+      "theirsContent": "        to: order.customer_email,"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "",
+      "theirsContent": "      console.log(`✅ Confirmation email sent to ${order.customer_email}`);"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "          to: resolvedOrderData.customer_email,",
+      "theirsContent": "          to: order.customer_email,"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "      } catch (emailError) {\n        console.error(\n          \"Failed to send first-order thank you email:\",\n          emailError,",
+      "theirsContent": "        console.log(\n          `✨ First-time thank you email sent to ${order.customer_email}`,"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "    // Owner notification (avoid env vars not guaranteed to exist in Anything)",
+      "theirsContent": "    // Owner notification"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/app/api/verify-payment/route.js",
+      "oursContent": "        to: \"hello@gunnersgoodies.com\",",
+      "theirsContent": "        to: \"owner@gunnersgoodies.com\","
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/checkout/page.jsx",
+    "/apps/web/src/app/api/create-checkout-session/route.js",
+    "/apps/web/src/app/api/verify-payment/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

@@ -1,0 +1,43 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/AppHeader.jsx",
+      "oursContent": "          <View style={{ marginLeft: 10, flexShrink: 1 }}>\n            <Image\n              source={{ uri: BRAND_WORDMARK_URL }}\n              // Bigger + taller so it’s readable (keep width a bit tighter so it fits on all iPhones)\n              style={{ width: 225, height: 30 }}\n              resizeMode=\"contain\"\n            />",
+      "theirsContent": "          <View style={{ marginLeft: 10 }}>\n            {!wordmarkFailed ? (\n              <Image\n                source={{ uri: BRAND_WORDMARK_URL }}\n                style={{ width: 240, height: 24 }}\n                resizeMode=\"contain\"\n                onError={() => setWordmarkFailed(true)}\n              />\n            ) : (\n              <Text\n                style={{\n                  fontFamily: \"System\",\n                  fontWeight: \"900\",\n                  fontSize: 18,\n                  color: \"#0D9488\",\n                  lineHeight: 22,\n                }}\n              >\n                {BRAND_NAME}\n              </Text>\n            )}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/brand.js",
+      "oursContent": "  \"https://raw.createusercontent.com/d3dcc884-5dc2-4db3-969f-b819f4705205/\";",
+      "theirsContent": "  \"https://raw.createusercontent.com/73428539-e267-4140-ad6b-98162eb2a70a/\";"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/utils/brand.js",
+      "oursContent": "  \"https://raw.createusercontent.com/d3dcc884-5dc2-4db3-969f-b819f4705205/\";",
+      "theirsContent": "  \"https://raw.createusercontent.com/73428539-e267-4140-ad6b-98162eb2a70a/\";"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/ScribeScreen/ScribeHeader.jsx",
+      "oursContent": "        <View style={{ marginLeft: 10, flexShrink: 1 }}>\n          <Image\n            source={{ uri: BRAND_WORDMARK_URL }}\n            // Bigger + taller so it’s readable (keep width a bit tighter so it fits on all iPhones)\n            style={{ width: 225, height: 30 }}\n            resizeMode=\"contain\"\n          />",
+      "theirsContent": "        <View style={{ marginLeft: 10 }}>\n          {!wordmarkFailed ? (\n            <Image\n              source={{ uri: BRAND_WORDMARK_URL }}\n              style={{ width: 240, height: 24 }}\n              resizeMode=\"contain\"\n              onError={() => setWordmarkFailed(true)}\n            />\n          ) : (\n            <Text\n              style={{\n                fontFamily: \"System\",\n                fontWeight: \"900\",\n                fontSize: 18,\n                color: \"#0D9488\",\n                lineHeight: 22,\n              }}\n            >\n              {BRAND_NAME}\n            </Text>\n          )}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Layout/Header.jsx",
+      "oursContent": "            {/* Bigger wordmark for better readability on phones */}\n            <img\n              src={BRAND_WORDMARK_URL}\n              alt={BRAND_NAME}\n              className=\"h-10 md:h-12 w-auto max-w-[320px] object-contain\"\n            />\n            <p className=\"font-inter font-semibold text-sm md:text-base text-teal-700 leading-tight mt-1\">",
+      "theirsContent": "            {/* Use the brand wordmark graphic everywhere instead of plain text */}\n            {!wordmarkFailed ? (\n              <img\n                src={BRAND_WORDMARK_URL}\n                alt={BRAND_NAME}\n                className=\"h-8 w-auto object-contain\"\n                onError={() => setWordmarkFailed(true)}\n              />\n            ) : (\n              <div className=\"font-inter font-extrabold text-2xl text-teal-700 leading-tight\">\n                {brandName}\n              </div>\n            )}\n            <p className=\"font-inter font-semibold text-sm text-teal-700 leading-tight mt-1\">"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/components/AppHeader.jsx",
+    "/apps/mobile/src/utils/brand.js",
+    "/apps/web/src/utils/brand.js",
+    "/apps/mobile/src/components/ScribeScreen/ScribeHeader.jsx",
+    "/apps/web/src/components/Layout/Header.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

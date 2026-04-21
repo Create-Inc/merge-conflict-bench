@@ -1,0 +1,208 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "import React, { useMemo, useState } from \"react\";",
+      "theirsContent": "import React, { useCallback, useMemo, useState } from \"react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "  const [timeRange, setTimeRange] = useState(\"7d\");\n\n  const timeRangeOptions = useMemo(\n    () => [\n      { value: \"7d\", label: \"Last 7 days\" },\n      { value: \"30d\", label: \"Last 30 days\" },\n      { value: \"90d\", label: \"Last 90 days\" },\n      { value: \"12m\", label: \"Last 12 months\" },\n    ],\n    [],\n  );\n\n  const timeRangeLabel = useMemo(() => {\n    const found = timeRangeOptions.find((o) => o.value === timeRange);\n    return found ? found.label : \"Last 7 days\";\n  }, [timeRange, timeRangeOptions]);\n",
+      "theirsContent": "  const TIME_RANGE_OPTIONS = useMemo(\n    () => [\n      { value: \"7d\", label: \"Last 7 days\" },\n      { value: \"30d\", label: \"Last 30 days\" },\n      { value: \"90d\", label: \"Last 90 days\" },\n      { value: \"12m\", label: \"Last 12 months\" },\n    ],\n    [],\n  );\n\n  const [timeRange, setTimeRange] = useState(\"7d\");\n\n  const selectedRangeLabel = useMemo(() => {\n    const match = TIME_RANGE_OPTIONS.find((o) => o.value === timeRange);\n    return match ? match.label : \"Last 7 days\";\n  }, [TIME_RANGE_OPTIONS, timeRange]);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "      const res = await fetch(\n        `/api/stats?timeRange=${encodeURIComponent(timeRange)}`,\n      );",
+      "theirsContent": "      const qs = new URLSearchParams({ timeRange });\n      const res = await fetch(`/api/stats?${qs.toString()}`);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "  const bucketUnit = stats?.bucketUnit || \"day\";\n\n  const totalRequests = Number(summary.total_requests || 0);",
+      "theirsContent": "  const totalRequestsPeriod = Number(summary.total_requests || 0);"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "  const totalTokens = Number(summary.total_tokens || 0);",
+      "theirsContent": "  const totalTokensPeriod = Number(summary.total_tokens || 0);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "    totalRequests > 0 ? Math.round((successCount / totalRequests) * 100) : 0;",
+      "theirsContent": "    totalRequestsPeriod > 0\n      ? Math.round((successCount / totalRequestsPeriod) * 100)\n      : 0;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "  const formatXAxisDate = (val) => {\n    try {\n      const d = new Date(val);\n      if (bucketUnit === \"month\") {\n        return d.toLocaleDateString(undefined, {\n          month: \"short\",\n          year: \"2-digit\",\n        });\n      }\n      return d.toLocaleDateString(undefined, {\n        month: \"short\",\n        day: \"numeric\",\n      });\n    } catch {\n      return String(val);\n    }\n  };\n",
+      "theirsContent": "  const chatVolumeTitle = `Chat volume (${selectedRangeLabel})`;\n  const outcomesTitle = `Outcomes (${selectedRangeLabel})`;\n  const sourceMixTitle = `Source mix (${selectedRangeLabel})`;\n  const ratingsTitle = `Ratings (${selectedRangeLabel})`;\n\n  const requestsSubtitle = `Total requests in ${selectedRangeLabel.toLowerCase()}`;\n  const successSubtitle = `${successCount.toLocaleString()} success / ${totalRequestsPeriod.toLocaleString()} total`;\n  const latencySubtitle = `Average response time in ${selectedRangeLabel.toLowerCase()}`;\n  const tokensSubtitle = `Total tokens in ${selectedRangeLabel.toLowerCase()}`;\n"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "\n          <div className=\"flex flex-col sm:flex-row sm:items-center gap-3\">\n            <div className=\"flex items-center gap-2\">\n              <label\n                htmlFor=\"dashboard-time-range\"\n                className=\"text-xs font-bold uppercase tracking-widest text-[#64748B] dark:text-[#94A3B8]\"\n              >\n                Period\n              </label>\n              <select\n                id=\"dashboard-time-range\"\n                value={timeRange}\n                onChange={(e) => setTimeRange(e.target.value)}\n                className=\"px-3 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20\"\n                title=\"Select time range\"\n              >\n                {timeRangeOptions.map((opt) => (\n                  <option key={opt.value} value={opt.value}>\n                    {opt.label}\n                  </option>\n                ))}\n              </select>\n              {isFetching ? (\n                <span className=\"text-xs font-semibold text-[#94A3B8]\">\n                  Updating…\n                </span>\n              ) : null}\n            </div>\n",
+      "theirsContent": "\n          <div className=\"flex flex-col sm:flex-row sm:items-center gap-3\">\n            <div className=\"flex items-center gap-2\">\n              <span className=\"text-xs font-bold uppercase tracking-widest text-[#64748B] dark:text-[#94A3B8]\">\n                Period\n              </span>\n              <select\n                value={timeRange}\n                onChange={(e) => setTimeRange(e.target.value)}\n                className=\"px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-200 focus:outline-none\"\n                title=\"Dashboard period\"\n              >\n                {TIME_RANGE_OPTIONS.map((opt) => (\n                  <option key={opt.value} value={opt.value}>\n                    {opt.label}\n                  </option>\n                ))}\n              </select>\n            </div>\n"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "              className=\"px-5 py-2.5 bg-[#3B82F6] text-white rounded-xl text-sm font-bold hover:bg-[#2563EB] transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2\"",
+      "theirsContent": "              className=\"px-5 py-2.5 bg-[#3B82F6] text-white rounded-xl text-sm font-bold hover:bg-[#2563EB] transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2 justify-center\""
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Requests (${timeRangeLabel})`}\n            value={totalRequests.toLocaleString()}\n            subtitle=\"Chat requests captured in the Audit Log\"",
+      "theirsContent": "            title=\"Requests\"\n            value={totalRequestsPeriod.toLocaleString()}\n            subtitle={requestsSubtitle}"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Success rate (${timeRangeLabel})`}",
+      "theirsContent": "            title=\"Success rate\""
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            subtitle={`${successCount.toLocaleString()} success / ${totalRequests.toLocaleString()} total`}",
+      "theirsContent": "            subtitle={successSubtitle}"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Avg latency (${timeRangeLabel})`}",
+      "theirsContent": "            title=\"Avg latency\""
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Token volume (${timeRangeLabel})`}\n            value={totalTokens.toLocaleString()}\n            subtitle=\"Total tokens across audited chats\"",
+      "theirsContent": "            title=\"Token volume\"\n            value={totalTokensPeriod.toLocaleString()}\n            subtitle={tokensSubtitle}"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Chat volume (${timeRangeLabel})`}",
+      "theirsContent": "            title={chatVolumeTitle}"
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "                  tickFormatter={formatXAxisDate}",
+      "theirsContent": "                  tickFormatter={xTickFormatter}"
+    },
+    {
+      "blockIndex": 16,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "            title={`Outcomes (${timeRangeLabel})`}",
+      "theirsContent": "            title={outcomesTitle}"
+    },
+    {
+      "blockIndex": 17,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "          <ChartCard\n            title={`Source mix (${timeRangeLabel})`}\n            icon={Database}\n            contentHeight={280}\n          >",
+      "theirsContent": "          <ChartCard title={sourceMixTitle} icon={Database} contentHeight={280}>"
+    },
+    {
+      "blockIndex": 18,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "          <ChartCard\n            title={`Ratings (${timeRangeLabel})`}\n            icon={Star}\n            contentHeight={280}\n          >",
+      "theirsContent": "          <ChartCard title={ratingsTitle} icon={Star} contentHeight={280}>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // ---- NEW: time range support (7d / 30d / 90d / 12m) ----\n    const url = new URL(request.url);\n    const timeRange = String(url.searchParams.get(\"timeRange\") || \"7d\");\n\n    let intervalLiteral = \"7 days\";\n    let bucketUnit = \"day\";\n\n    if (timeRange === \"30d\") {\n      intervalLiteral = \"30 days\";\n      bucketUnit = \"day\";\n    } else if (timeRange === \"90d\") {\n      intervalLiteral = \"90 days\";\n      bucketUnit = \"day\";\n    } else if (timeRange === \"12m\") {\n      intervalLiteral = \"12 months\";\n      bucketUnit = \"month\";\n    } else {\n      // default + fallback\n      intervalLiteral = \"7 days\";\n      bucketUnit = \"day\";\n    }\n",
+      "theirsContent": "    const { searchParams } = new URL(request.url);\n    const timeRange = searchParams.get(\"timeRange\") || \"7d\"; // 24h | 7d | 30d | 90d | 12m\n\n    const RANGE_TO_INTERVAL = {\n      \"24h\": \"24 hours\",\n      \"7d\": \"7 days\",\n      \"30d\": \"30 days\",\n      \"90d\": \"90 days\",\n      \"12m\": \"12 months\",\n    };\n\n    const interval = RANGE_TO_INTERVAL[timeRange] || RANGE_TO_INTERVAL[\"7d\"];\n    const bucketUnit = timeRange === \"12m\" ? \"month\" : \"day\";\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 1) Requests over time (selected range)",
+      "theirsContent": "    // Shared time filter for the dashboard period\n    const timeClause = `q.\"timestamp\" > now() - interval '${interval}'`;\n\n    // 1) Requests over time"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      const where = addAnd(\n        scopeWhere,\n        `q.\"timestamp\" > now() - interval '${intervalLiteral}'`,\n      );",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 2) Latency over time (selected range)",
+      "theirsContent": "    // 2) Latency over time"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      const where = addAnd(\n        scopeWhere,\n        `q.\"timestamp\" > now() - interval '${intervalLiteral}'`,\n      );",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 3) Token usage over time (selected range)",
+      "theirsContent": "    // 3) Token usage over time"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      const where = addAnd(\n        scopeWhere,\n        `q.\"timestamp\" > now() - interval '${intervalLiteral}'`,\n      );",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 4) Summary stats (selected range)",
+      "theirsContent": "    // 4) Summary stats"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      const where = addAnd(\n        scopeWhere,\n        `q.\"timestamp\" > now() - interval '${intervalLiteral}'`,\n      );",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 5) Source usage breakdown (selected range) using the same fields shown in /query-history",
+      "theirsContent": "    // 5) Source usage breakdown (using the same fields shown in /query-history)"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      const where = addAnd(\n        scopeWhere,\n        `q.\"timestamp\" > now() - interval '${intervalLiteral}'`,\n      );",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "    // 6) Feedback distribution (ratings) (selected range)",
+      "theirsContent": "    // 6) Feedback distribution (align with /query-history: query_logs.user_feedback)"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "      let mJoin = \"LEFT JOIN conversations c ON c.id = m.conversation_id\";\n      let mWhere = `WHERE (m.created_at > now() - interval '${intervalLiteral}')`;\n      let mParams = [];",
+      "theirsContent": "      const where = addAnd(scopeWhere, timeClause);"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/app/api/stats/route.js",
+      "oursContent": "",
+      "theirsContent": "      let aWhere = `WHERE ae.created_at > now() - interval '${interval}'`;\n      let aParams = [];\n      let aParamCount = 1;\n\n      if (!actor.isPlatformAdmin) {\n        const orgRes = requireOrg(actor);\n        if (orgRes) return orgRes;\n\n        const orgIds = Array.isArray(actor.orgIds) ? actor.orgIds : [];\n        if (orgIds.length > 0) {\n          aWhere += ` AND (ae.org_id = ANY($${aParamCount}::uuid[]))`;\n          aParams.push(orgIds);\n          aParamCount += 1;\n        } else {\n          // fallback: user-scoped\n          aWhere += ` AND (ae.user_id = $${aParamCount})`;\n          aParams.push(actor.userId);\n          aParamCount += 1;\n        }\n      } else if (actor.orgId) {\n        aWhere += ` AND (ae.org_id = $${aParamCount}::uuid)`;\n        aParams.push(actor.orgId);\n        aParamCount += 1;\n      }\n\n      const q8 = `\n        SELECT\n          ae.action,\n          count(*)::int as count\n        FROM audit_events ae\n        ${aWhere}\n        GROUP BY 1\n        ORDER BY 2 DESC\n      `;\n\n      var auditActions = await sql(q8, aParams);\n    }\n\n    // 9) Requests last 24h (still useful as a quick pulse)\n    {"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/page.jsx",
+    "/apps/web/src/app/api/stats/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

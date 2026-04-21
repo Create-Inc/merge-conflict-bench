@@ -1,0 +1,9 @@
+{
+  "name": "group_chat_video",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "f165d83e-dce7-43ac-9efb-70e9ffcfc40f",
+  "sourceTimestamp": "2026-01-24T11:00:45.331Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 7
+}

@@ -1,0 +1,47 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/hooks/useReportFilters.js",
+      "oursContent": "  // Reports are filtered primarily by explicit show selection.\n  // Keep date filters optional (blank by default) to avoid accidental empty results.\n  const [dateStart, setDateStart] = useState(\"\");\n  const [dateEnd, setDateEnd] = useState(\"\");",
+      "theirsContent": "  // Default to no date filter. (The previous default of \"last 180 days\" + \"today\"\n  // caused future trade shows to be filtered out and resulted in\n  // \"No events match the selected filters\" on new accounts.)\n  const [dateStart, setDateStart] = useState(\"\");\n  const [dateEnd, setDateEnd] = useState(\"\");"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Reports/ReportControls.jsx",
+      "oursContent": "            Pick your event(s) and report type. Filters never hide explicitly\n            selected events.",
+      "theirsContent": "            Pick your event(s), time window, and report type. Leave dates blank\n            to include all events."
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js",
+      "oursContent": "  const hasExplicitShowIds = Boolean(showIds && showIds.length > 0);\n\n  if (hasExplicitShowIds) {\n    // If the caller explicitly selects shows, never let secondary filters hide them.",
+      "theirsContent": "  const hasExplicitShows = Boolean(showIds && showIds.length > 0);\n\n  // If the caller explicitly selected events, treat that as the source of truth.\n  // (Date/type filters can still exist in the UI, but should not accidentally\n  // exclude the user's selected events.)\n  if (hasExplicitShows) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js",
+      "oursContent": "    // Interpret date filter as an overlap window (event overlaps the date range).\n    if (start && end) {\n      values.push(end);\n      where.push(`ts.start_date <= $${idx}::date`);\n      idx += 1;",
+      "theirsContent": "    // Interpret date filters as event date overlap.\n    // Example: a show is in-range if it overlaps the [start, end] window.\n    if (start) {\n      values.push(start);\n      where.push(`ts.end_date >= $${idx}::date`);\n      idx += 1;\n    }\n    if (end) {\n      values.push(end);\n      where.push(`ts.start_date <= $${idx}::date`);\n      idx += 1;\n    }"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js",
+      "oursContent": "      values.push(start);\n      where.push(`ts.end_date >= $${idx}::date`);\n      idx += 1;\n    } else if (start) {\n      values.push(start);\n      where.push(`ts.end_date >= $${idx}::date`);\n      idx += 1;\n    } else if (end) {\n      values.push(end);\n      where.push(`ts.start_date <= $${idx}::date`);\n      idx += 1;\n    }",
+      "theirsContent": "    const type = cleanText(eventType);\n    if (type && type !== \"all\") {\n      values.push(type);\n      where.push(`COALESCE(ts.exhibit_type,'') = $${idx}`);\n      idx += 1;\n    }\n  }"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js",
+      "oursContent": "    const type = cleanText(eventType);\n    if (type && type !== \"all\") {\n      values.push(type);\n      where.push(`COALESCE(ts.exhibit_type,'') = $${idx}`);\n      idx += 1;\n    }\n  }\n",
+      "theirsContent": ""
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/hooks/useReportFilters.js",
+    "/apps/web/src/components/Reports/ReportControls.jsx",
+    "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

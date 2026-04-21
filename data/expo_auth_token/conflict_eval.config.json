@@ -1,0 +1,34 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "// Anything intended:\n// Expo Web dev can't read iframe cookies from the parent page.\n// So the iframe redirects here, and we postMessage the JWT back to the parent.\nconst cacheControl = \"no-store, no-cache, must-revalidate, proxy-revalidate\";\n\nfunction htmlResponse(body, status = 200) {\n  return new Response(body, {\n    status,\n    headers: {\n      \"Content-Type\": \"text/html\",\n      \"Cache-Control\": cacheControl,\n    },\n  });\n}\n\nexport async function GET() {\n  try {\n    const session = await auth();\n    const sessionUser = session?.user;\n\n    if (!sessionUser) {\n      return htmlResponse(\n        `\n        <html>\n          <body>\n            <script>\n              window.parent.postMessage({ type: 'AUTH_ERROR', error: 'Unauthorized' }, '*');\n            </script>\n          </body>\n        </html>\n        `,\n        401,\n      );\n    }\n\n    const payload = await createMobileJwtFromSessionUser(sessionUser);\n    const message = {\n      type: \"AUTH_SUCCESS\",\n      jwt: payload.jwt,\n      user: payload.user,\n    };\n\n    return htmlResponse(",
+      "theirsContent": "  if (!jwt) {\n    return new Response("
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "export async function POST() {\n  return GET();",
+      "theirsContent": "  const message = {\n    type: \"AUTH_SUCCESS\",\n    jwt: token,\n    user: {\n      id: jwt.sub,\n      email: jwt.email,\n      name: jwt.name,\n    },\n  };\n\n  return new Response(\n    `\n\t\t<html>\n\t\t\t<body>\n\t\t\t\t<script>\n\t\t\t\t\twindow.parent.postMessage(${JSON.stringify(message)}, '*');\n\t\t\t\t</script>\n\t\t\t</body>\n\t\t</html>\n\t\t`,\n    {\n      headers: {\n        \"Content-Type\": \"text/html\",\n      },\n    },\n  );"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "// Anything intended:\n// - Mobile devices exchange the web session cookie for a JWT at /api/auth/token\n// - This route must NOT be cached.\nconst noStoreHeaders = {\n  \"Cache-Control\": \"no-store, no-cache, must-revalidate, proxy-revalidate\",\n};\n\nexport async function GET() {\n  try {\n    const session = await auth();\n    const sessionUser = session?.user;\n\n    if (!sessionUser) {\n      return Response.json(\n        { error: \"Unauthorized\" },\n        { status: 401, headers: noStoreHeaders },\n      );\n    }\n\n    const payload = await createMobileJwtFromSessionUser(sessionUser);\n    return Response.json(payload, { headers: noStoreHeaders });\n  } catch (error) {\n    console.error(\"GET /api/auth/token error\", error);\n    return Response.json(\n      { error: \"Internal Server Error\" },\n      { status: 500, headers: noStoreHeaders },\n    );",
+      "theirsContent": "  if (!jwt) {\n    return new Response(JSON.stringify({ error: \"Unauthorized\" }), {\n      status: 401,\n      headers: {\n        \"Content-Type\": \"application/json\",\n      },\n    });"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "export async function POST() {\n  // Some clients use POST; keep parity.\n  return GET();",
+      "theirsContent": "  return new Response(\n    JSON.stringify({\n      jwt: token,\n      user: {\n        id: jwt.sub,\n        email: jwt.email,\n        name: jwt.name,\n      },\n    }),\n    {\n      headers: {\n        \"Content-Type\": \"application/json\",\n      },\n    },\n  );"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/auth/expo-web-success/route.js",
+    "/apps/web/src/app/api/auth/token/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

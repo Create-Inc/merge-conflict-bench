@@ -1,0 +1,46 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler.js",
+      "oursContent": "// ✅ AutoTrade button is removed from the bot UI.\n// We keep backend routes intact, but we don't allow entry from Telegram buttons/text anymore.",
+      "theirsContent": "// ⛔ AutoTrade is fully removed from the Telegram bot UI\nconst AUTOTRADE_BOT_DISABLED = true;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler.js",
+      "oursContent": "",
+      "theirsContent": "    // ✅ AutoTrade V2\n    case \"🤖 التداول الآلي\": {\n      // Old users may still have this button cached in Telegram.\n      // We keep this handler just to refresh their keyboard and remove it.\n      await sendMessage(\n        chatId,\n        \"⛔ تم حذف زر (التداول الآلي) من البوت.\\n\\n✅ رح أعمل تحديث للقائمة الآن.\",\n        {\n          no_protect: true,\n          no_watermark: true,\n          no_protection_tail: true,\n          allow_text_image_auto: false,\n          force_text_message: true,\n        },\n      );\n\n      try {\n        const { handleStartCommand } = await import(\n          \"../commands/startCommand.js\"\n        );\n        await handleStartCommand(chatId, telegramId, firstName);\n      } catch (_) {}\n\n      break;\n    }\n\n    // ✅ NEW: Admin AutoTrade Control\n    case \"تحكم التداول الالي\":\n    case \"تحكم التداول الآلي\": {\n      await sendMessage(chatId, \"⛔ تم حذف التداول الآلي من البوت.\", {\n        no_protect: true,\n        no_watermark: true,\n        no_protection_tail: true,\n        allow_text_image_auto: false,\n        force_text_message: true,\n      });\n\n      try {\n        const { handleStartCommand } = await import(\n          \"../commands/startCommand.js\"\n        );\n        await handleStartCommand(chatId, telegramId, firstName);\n      } catch (_) {}\n\n      break;\n    }\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler.js",
+      "oursContent": "",
+      "theirsContent": "    // ✅ NEW: start topup flow even if user has an old reply-keyboard button\n    case \"🔋 شحن رصيد\":\n    case \"شحن رصيد\":\n    case \"🔋 شحن الرصيد\":\n    case \"شحن الرصيد\": {\n      await sendMessage(chatId, \"⛔ تم حذف التداول الآلي من البوت.\", {\n        no_protect: true,\n        no_watermark: true,\n        no_protection_tail: true,\n        allow_text_image_auto: false,\n        force_text_message: true,\n      });\n\n      try {\n        const { handleStartCommand } = await import(\n          \"../commands/startCommand.js\"\n        );\n        await handleStartCommand(chatId, telegramId, firstName);\n      } catch (_) {}\n\n      break;\n    }\n\n    case \"🕯️ إدخال الشموع\":\n      await handleManualCandlesEntry(chatId, telegramId);\n      break;\n\n    case \"📊 اشتراكي\":\n      await handleSubscriptionEntry(chatId, telegramId);\n      break;\n\n    case \"💱 الفوركس\":\n      await handleForexEntry(chatId, telegramId, normalizedText);\n      break;\n\n    case \"📨 التوصيات\":\n      await handleRecommendationsEntry(chatId, telegramId);\n      break;\n\n    case \"حلل انت\":\n      await handleAnalyzeEntry(chatId, telegramId, normalizedText);\n      break;\n\n    case \"📈 الإشارات\":\n      await handleSignalsEntry(chatId, telegramId);\n      break;\n\n    case \"👤 حسابي\":\n      await handleAccountInfoEntry(chatId, telegramId, firstName);\n      break;\n\n    case \"❓ المساعدة\":\n      await handleHelpEntry(chatId, telegramId);\n      break;\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler/autoTradeHandlers.js",
+      "oursContent": "// ✅ AutoTrade is removed from the Telegram bot UI.\n// Keep this handler in a safe \"disabled\" state in case it is referenced by legacy code.\nconst AUTOTRADE_BOT_DISABLED = true;",
+      "theirsContent": "// ⛔ AutoTrade is fully removed from the Telegram bot UI\nconst AUTOTRADE_BOT_DISABLED = true;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler/autoTradeHandlers.js",
+      "oursContent": "      await sendMessage(\n        chatId,\n        \"⛔ تم حذف زر التداول الآلي من البوت.\\n\\n✅ لتحديث الأزرار عندك: ارسل /start.\",\n      );",
+      "theirsContent": "      await sendMessage(\n        chatId,\n        \"⛔ تم حذف زر (التداول الآلي) من البوت.\\n\\nاكتب /start لتحديث القائمة.\",\n      );"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler/autoTradeHandlers.js",
+      "oursContent": "      await sendMessage(\n        chatId,\n        \"⛔ تم حذف زر التداول الآلي من البوت.\\n\\n✅ لتحديث الأزرار عندك: ارسل /start.\",\n      );",
+      "theirsContent": "      await sendMessage(\n        chatId,\n        \"⛔ تم حذف زر (التداول الآلي) من البوت.\\n\\nاكتب /start لتحديث القائمة.\",\n      );"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler.js",
+    "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler/autoTradeHandlers.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

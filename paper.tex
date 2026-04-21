@@ -1,0 +1,472 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{natbib}
+\usepackage{authblk}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=blue!70!black,
+  urlcolor=blue!70!black
+}
+
+% --- Title ---
+\title{\textbf{MergeConflictBench: Evaluating LLM Agents on\\Semantically Correct Merge Conflict Resolution}}
+
+\author[1]{Daniel Chen}
+\affil[1]{Anything, Inc.}
+\date{}
+
+\begin{document}
+\maketitle
+
+% --- Abstract ---
+\begin{abstract}
+We introduce \textsc{MergeConflictBench}, an evaluation suite for measuring the ability of LLM agents to resolve real merge conflicts while preserving behavior from both branches. The benchmark consists of 20 cases extracted from production merge conflict tracking in a commercial codebase, spanning 63 conflicted files with 364 conflict blocks across domains including authentication, mobile UI, regulatory data processing, and animation systems. Each case is paired with a hidden holdout test suite that verifies behaviors originating from all three code lineages: the common base, the ``ours'' branch, and the ``theirs'' branch. An agent's task is to produce resolved files free of conflict markers; its output is scored by executing the hidden tests, directly measuring whether the resolution correctly integrates both branches' contributions. This design extends the principle established by \textsc{RefactorBench}---\emph{behavioral preservation is a functional property best verified by functional tests}---from single-branch refactoring to multi-branch integration, where the agent must synthesize semantically compatible code from two divergent change sets. Preliminary evaluation on five cases demonstrates that exact-match comparison is too strict: resolutions that differ textually from the reference can nonetheless pass all hidden behavioral tests, confirming that functional evaluation is the appropriate methodology.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} benchmark, merge conflict resolution, large language models, agentic evaluation, behavioral preservation
+
+% ============================================================
+\section{Introduction}
+\label{sec:introduction}
+% ============================================================
+
+Merge conflicts are an unavoidable consequence of collaborative software development. When two branches modify overlapping regions of the same file, version control systems cannot automatically reconcile the changes and instead produce \emph{conflict markers}---the familiar \texttt{<{}<{}<{}<{}<{}<{}<}, \texttt{=======}, and \texttt{>{}>{}>{}>{}>{}>{}>{}} delimiters that bracket the competing versions. A developer must then manually inspect each conflict block and produce a resolution that correctly integrates the intent of both branches.
+
+For trivial conflicts---a renamed variable on one side, an added import on the other---resolution is mechanical. But many real-world conflicts require \emph{semantic understanding}: when both branches restructure the same function, add interacting features, or change overlapping state management logic, the correct resolution is not a simple union of the two sides but a careful synthesis that preserves the behavior introduced by each branch while maintaining overall program coherence.
+
+Three common resolution strategies illustrate the difficulty spectrum:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Accept ours / accept theirs.} Discard one branch's changes entirely. Correct only when one side's changes are strictly superseded.
+\item \textbf{Accept both.} Concatenate both sides. Correct only when the changes are independent and order-insensitive.
+\item \textbf{Custom resolution.} The developer writes new code that integrates both branches' intent. This is the non-trivial case.
+\end{itemize}
+
+LLM-based agents can potentially resolve conflicts that require semantic understanding, but evaluating whether an agent's resolution is correct poses the same challenge that motivated \textsc{RefactorBench}~\citep{chen2025refactorbench}: structural comparison (exact match, diff size) is unreliable for code transformations where multiple textually distinct outputs can be functionally equivalent. A resolution that reorders function parameters, uses a different variable name, or restructures a conditional may be perfectly correct despite differing from the reference.
+
+We address this with hidden functional tests. Each benchmark case includes a test suite---invisible to the resolving agent---that exercises behaviors from all three code lineages: the common ancestor (base), the current branch (ours), and the incoming branch (theirs). A resolution passes if and only if it preserves all three categories of behavior.
+
+This paper introduces \textsc{MergeConflictBench}, a benchmark of 20 merge conflict cases from production, and makes the following contributions:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{\textsc{MergeConflictBench} itself}: a benchmark of 20 real merge conflict cases spanning 63 files and 364 conflict blocks, with hidden test suites covering behaviors from base, ours, and theirs branches.
+
+\item \textbf{Extension of behavioral evaluation to merge resolution}: we demonstrate that the hidden-test methodology from \textsc{RefactorBench} transfers naturally to the merge conflict domain, where it must verify the \emph{synthesis} of two change sets rather than the \emph{preservation} of one.
+
+\item \textbf{Preliminary evidence that exact-match is insufficient}: early evaluation shows that resolutions can differ textually from the reference yet pass all behavioral tests, confirming that functional evaluation captures correctness that structural metrics miss.
+\end{enumerate}
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+% ============================================================
+
+\paragraph{Behavioral evaluation of code transformations.} \textsc{RefactorBench}~\citep{chen2025refactorbench} introduced hidden holdout test suites for evaluating behavior-preserving code decomposition, demonstrating that functional tests detect regressions invisible to compilation, code similarity, and LLM-as-judge metrics. \textsc{MergeConflictBench} extends this methodology from single-branch transformations (refactoring) to multi-branch integration (merge conflict resolution), where the correctness criterion is not ``preserve existing behavior'' but ``synthesize the behaviors of two divergent branches.''
+
+\paragraph{Agentic coding benchmarks.} SWE-bench~\citep{jimenez2024swebench} evaluates agents on resolving real GitHub issues, using repository test suites as ground truth. SWE-agent~\citep{yang2024sweagent} demonstrated that agent tool design significantly affects performance on SWE-bench. OpenHands~\citep{wang2024openhands} provides an open platform for coding agents. Aider's code editing benchmarks~\citep{gauthier2024aider,gauthier2024polyglot} use test-based evaluation for refactoring and editing tasks across languages. These benchmarks evaluate \emph{generative} coding tasks (write new code to fix an issue); \textsc{MergeConflictBench} evaluates an \emph{integrative} task (combine two existing change sets correctly).
+
+\paragraph{Merge conflict resolution.} Traditional merge tools (kdiff3, meld, IntelliJ's merge resolver) provide three-way diff views but leave resolution to the developer. DeepMerge~\citep{dinella2022deepmerge} trains sequence-to-sequence models on merge resolution data, evaluating by exact match against reference resolutions. MergeBERT~\citep{svyatkovskiy2022mergebert} uses a token-level classification approach. MergeGen~\citep{zhang2024mergegen} applies retrieval-augmented generation. These approaches evaluate by \emph{textual similarity} to reference resolutions---a metric that, as our preliminary results show, both over-penalizes correct resolutions that differ from the reference and cannot verify semantic correctness. \textsc{MergeConflictBench} is, to our knowledge, the first merge conflict benchmark that evaluates by \emph{executing behavioral tests} against the resolution.
+
+\paragraph{Semantic merge tools.} Semantic merge approaches~\citep{apel2011semistructured} use language-aware AST merging to reduce spurious conflicts but do not handle semantic conflicts where both branches modify the same logic. Program synthesis approaches to merge~\citep{sousa2018verified} can verify correctness via formal specifications but are limited to restricted program fragments. \textsc{MergeConflictBench} targets the general case where arbitrary code changes must be integrated.
+
+% ============================================================
+\section{Benchmark Design}
+\label{sec:design}
+% ============================================================
+
+\subsection{Design Principles}
+
+\textsc{MergeConflictBench} is built on four design principles:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Functional evaluation.} The primary metric is whether hidden holdout tests pass after resolution, directly measuring whether the agent correctly integrated both branches' contributions. Structural metrics (no remaining conflict markers, compilation success) are necessary conditions recorded as secondary scores.
+
+\item \textbf{Three-lineage behavioral coverage.} The hidden test suite for each case covers behaviors from all three code lineages---base, ours, and theirs. A resolution that simply accepts one side will fail the tests for the other side's behaviors. A resolution that accepts both without proper integration may fail tests that exercise interactions between the two branches' changes.
+
+\item \textbf{Real production conflicts.} All cases are extracted from production merge conflict tracking, not synthesized or curated from open-source repositories. This ensures the conflicts represent the kinds of semantic entanglement that occur in real collaborative development.
+
+\item \textbf{Non-trivial resolution required.} Cases are selected for conflicts that were resolved via \texttt{custom\_resolution} or \texttt{accepted\_both} strategies in production---not \texttt{accepted\_ours} or \texttt{accepted\_theirs}, which are trivial.
+\end{enumerate}
+
+\subsection{Data Source}
+
+Cases are extracted from production merge conflict tracking stored in BigQuery. The source tables contain 3.3 million conflict tracking rows (\texttt{generation.fs\_conflict\_results}) and 109{,}000 resolution tracking rows (\texttt{generation.merge\_fs\_conflict\_resolution\_results}). The extraction pipeline selects resolved conflicts where the resolution strategy was \texttt{custom\_resolution} or \texttt{accepted\_both}, filters for cases with at least two conflict blocks (to exclude trivially small conflicts), and retrieves the conflicted files (with markers) and the reference resolution.
+
+\subsection{Three-Branch Structure}
+
+Each benchmark case captures the three-way merge structure:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Base}: the common ancestor before either branch diverged.
+\item \textbf{Ours}: the current branch's version (changes since base).
+\item \textbf{Theirs}: the incoming branch's version (changes since base).
+\item \textbf{Conflicted}: the merge result with conflict markers, containing both \texttt{ours} and \texttt{theirs} content delimited by \texttt{<{}<{}<{}<{}<{}<{}<}, \texttt{=======}, and \texttt{>{}>{}>{}>{}>{}>{}>{}} markers.
+\end{itemize}
+
+The agent receives only the conflicted files. The base, ours, and theirs versions are used during test authoring but are not provided to the agent at evaluation time. The reference resolution is used as a correctness guide during test authoring but is not part of the scoring---only the hidden tests determine correctness.
+
+\subsection{Case Layout}
+
+Each case directory follows a consistent structure:
+
+\begin{verbatim}
+  data/<case_name>/
+    eval.config.json              # case metadata
+    conflict_eval.config.json     # conflict blocks + test config
+    conflicted/                   # files with markers (agent input)
+    resolved/                     # reference resolution (test authoring)
+    merge.test.js                 # hidden test suite (holdout)
+\end{verbatim}
+
+The \texttt{eval.config.json} records the case name, description, source conflict ID, timestamp, language, number of conflicted files, and total conflict block count. The \texttt{conflict\_eval.config.json} enumerates every conflict block (with ours/theirs content), lists the conflicted file paths, specifies the test file, and documents the preserved behaviors as a structured contract.
+
+\subsection{Hidden Test Suite Design}
+
+Each hidden test suite is authored by a senior engineer following these principles:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Test observable behavior from all three lineages.} Each test assertion is tagged with an \texttt{origin} (base, ours, or theirs) identifying which branch introduced the behavior being verified.
+
+\item \textbf{Cover the preserved-behavior contract.} The \texttt{preservedBehaviors} field in each case's config serves as the contract: a list of human-readable behavior descriptions with their origins. The test suite is the executable form of this contract.
+
+\item \textbf{Use stable assertions.} Test by return values, API responses, rendered output, and state transitions---not by internal variable names or code structure, which may differ in a correct alternative resolution.
+
+\item \textbf{Exercise interactions.} Where the two branches' changes interact (e.g., both modify the same data structure, both add validation rules to the same endpoint), include tests that verify the combined behavior, not just each branch's changes in isolation.
+\end{itemize}
+
+\subsection{Scoring}
+
+\textsc{MergeConflictBench} produces five scores per resolution attempt:
+
+\begin{table}[ht]
+\centering
+\caption{Scoring metrics for \textsc{MergeConflictBench}.}
+\label{tab:scores}
+\small
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Score} & \textbf{Type} & \textbf{Description} \\
+\midrule
+Passes Tests & Binary & Do the hidden holdout tests pass against the resolved files? \emph{Primary metric.} \\
+Agent Reported Success & Binary & Did the agent signal success via its termination tool? \\
+No Conflict Markers & Binary & Output contains no remaining \texttt{<{}<{}<{}<{}<{}<{}<} / \texttt{=======} / \texttt{>{}>{}>{}>{}>{}>{}>{}} markers. \\
+Compiles & Binary & Resolved files pass static analysis (no syntax errors). \\
+Cost & \$ & Total LLM cost in dollars. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The \emph{Passes Tests} score is the primary metric. The other scores provide diagnostic information: a resolution that passes tests but has remaining conflict markers would indicate a test suite gap; a resolution that compiles but fails tests indicates a semantic error; a resolution that the agent reports as successful but that fails tests reveals miscalibration.
+
+% ============================================================
+\section{Corpus}
+\label{sec:corpus}
+% ============================================================
+
+The corpus consists of 20 cases totaling 63 conflicted files and 364 conflict blocks. Table~\ref{tab:corpus} presents the full inventory, organized by complexity tier.
+
+\begin{table}[H]
+\centering
+\caption{\textsc{MergeConflictBench} corpus. Files = number of conflicted files. Blocks = total conflict blocks. Domain describes the functional area of the code.}
+\label{tab:corpus}
+\small
+\begin{tabular}{llrrl}
+\toprule
+\textbf{Case} & \textbf{Tier} & \textbf{Files} & \textbf{Blocks} & \textbf{Domain} \\
+\midrule
+\texttt{state\_parser\_apply}       & Complex  & 1 & 45 & Regulatory data import API \\
+\texttt{mobile\_auth\_flow}         & Complex  & 4 & 32 & Mobile auth via WebView \\
+\texttt{account\_auth\_pages}       & Complex  & 4 & 30 & Signup/signin/reset pages \\
+\texttt{campaign\_mapping\_tool}    & Complex  & 7 & 25 & Campaign canvas \& toolbar \\
+\texttt{state\_parser\_preview}     & Complex  & 8 & 25 & Admin preview with registry \\
+\texttt{celebration\_overlay}       & Complex  & 1 & 24 & Confetti animation \& audio \\
+\texttt{bulk\_product\_status}      & Complex  & 3 & 22 & Bulk status change \& preview \\
+\texttt{legal\_compliance\_settings}& Complex  & 2 & 22 & EULA/SMS document URLs \\
+\texttt{mobile\_task\_detail}       & Complex  & 5 & 21 & Task modal with comments \\
+\texttt{route\_mileage\_planning}   & Complex  & 3 & 21 & Mileage estimation hooks \\
+\midrule
+\texttt{trade\_show\_form}          & Moderate & 1 & 19 & Mobile trade show creation \\
+\texttt{onboarding\_agreement}      & Moderate & 4 & 16 & PDF/HTML agreement flow \\
+\texttt{mobile\_tab\_navigation}    & Moderate & 4 & 14 & Bottom tab bar \& badges \\
+\texttt{org\_switcher}              & Moderate & 3 & 12 & Org switcher with RBAC \\
+\texttt{legal\_compliance\_v2}      & Moderate & 2 & 12 & Document link storage \\
+\texttt{auth\_api\_routes}          & Moderate & 4 &  8 & Login/signup/OTP routes \\
+\midrule
+\texttt{athlete\_contact\_api}      & Simple   & 1 &  6 & Contact endpoint \& email rules \\
+\texttt{mobile\_customer\_filters}  & Simple   & 4 &  4 & Customer search \& team queries \\
+\texttt{campaign\_call\_panel}      & Simple   & 1 &  4 & Call panel \& speaker tracking \\
+\texttt{product\_import\_modal}     & Simple   & 1 &  2 & Field mapping for imports \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Complexity Distribution}
+
+Cases are stratified into three complexity tiers based on the number of conflict blocks:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Complex (20+ blocks):} 10 cases. These involve extensive interleaving of changes, often requiring the agent to understand how both branches restructured the same functions, state management, or API surfaces. The most complex case (\texttt{state\_parser\_apply}) has 45 conflict blocks in a single file---a regulatory data import API where both branches restructured function signatures, parameter handling, and handler logic.
+
+\item \textbf{Moderate (8--19 blocks):} 6 cases. These involve meaningful conflicts across multiple files but with more localized changes. For example, \texttt{onboarding\_agreement} (16 blocks across 4 files) involves conflicts in invitation flow state building, parameter passing, and rendering mode (iframe vs.\ direct).
+
+\item \textbf{Simple (2--7 blocks):} 4 cases. These have few conflict blocks but still require semantic understanding beyond accept-ours/theirs. For example, \texttt{athlete\_contact\_api} (6 blocks in 1 file) involves conflicting changes to email uniqueness rules, contact type checking, and error response formatting.
+\end{itemize}
+
+\subsection{Conflict Type Taxonomy}
+
+Across the corpus, we observe recurring categories of semantic conflict:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Function refactoring conflicts.} Both branches restructure the same function: one extracts parameters into an options object, the other adds new parameters. The resolution must combine the structural change with the new functionality.
+
+\item \textbf{State management conflicts.} Both branches modify how component state is managed: one renames state variables, the other adds new state fields. The resolution must apply the renaming to both old and new fields.
+
+\item \textbf{Import/dependency conflicts.} Both branches add imports from different modules or restructure existing imports. Typically the simplest conflict type, but can interact with other conflicts if the imported symbols are used in conflicting code.
+
+\item \textbf{UI layout conflicts.} Both branches modify the same component's JSX structure: one changes the layout hierarchy, the other adds new UI elements. The resolution must place the new elements within the revised hierarchy.
+
+\item \textbf{API contract conflicts.} Both branches change the same API endpoint: one modifies the request format, the other changes the response format. The resolution must be internally consistent across request and response handling.
+\end{itemize}
+
+\subsection{Preserved Behavior Contract}
+
+Each case with a completed test suite includes a \texttt{preservedBehaviors} list documenting what the hidden tests verify. Each entry specifies an \texttt{origin} (base, ours, or theirs) and a human-readable \texttt{description}. For example, the \texttt{athlete\_contact\_api} case has 19 preserved behaviors: 10 from base (existing validation, auth checks, constraint error handling), 4 from ours (new email conflict detection logic), and 5 from theirs (contact type checking, updated error responses). This structure ensures that the test suite explicitly covers all three lineages and makes coverage gaps visible during test authoring.
+
+% ============================================================
+\section{Evaluation Methodology}
+\label{sec:methodology}
+% ============================================================
+
+\subsection{Agent Task}
+
+The agent is given the conflicted files---source files containing \texttt{<{}<{}<{}<{}<{}<{}<} / \texttt{=======} / \texttt{>{}>{}>{}>{}>{}>{}>{}} conflict markers---and asked to produce resolved files. The agent may use any strategy: reading the conflict markers to understand both sides, reasoning about the semantic intent of each branch, and writing resolved code that integrates both contributions. The agent does \emph{not} have access to the hidden test suite, the reference resolution, or the base/ours/theirs versions as separate files.
+
+\subsection{Evaluation Pipeline}
+
+After the agent produces its resolution, the evaluation pipeline (\texttt{scripts/evaluate.ts}) performs the following steps:
+
+\begin{enumerate}[leftmargin=2em]
+\item Copy the agent's resolved files into a temporary workspace.
+\item Copy the hidden test file (\texttt{merge.test.js}) into the workspace.
+\item Execute the test suite via Vitest.
+\item Record which tests pass and which fail.
+\item Check for remaining conflict markers in the resolved files.
+\item Report the five scoring dimensions (Table~\ref{tab:scores}).
+\end{enumerate}
+
+\subsection{Scoring Dimensions}
+
+The primary metric is \emph{Passes Tests}: a binary indicator of whether all hidden holdout tests pass. This directly measures functional correctness---whether the resolution preserves behaviors from all three lineages.
+
+Secondary metrics provide diagnostic context:
+
+\begin{itemize}[leftmargin=2em]
+\item \emph{No Conflict Markers} detects resolutions where the agent failed to address some conflict blocks, leaving raw markers in the output.
+\item \emph{Compiles} detects syntax errors introduced by the resolution (e.g., mismatched braces from incorrectly splicing ours and theirs content).
+\item \emph{Agent Reported Success} measures agent calibration---the divergence between the agent's self-assessment and actual functional correctness.
+\item \emph{Cost} enables comparison of resolution quality per dollar across models and configurations.
+\end{itemize}
+
+% ============================================================
+\section{Preliminary Results}
+\label{sec:results}
+% ============================================================
+
+To validate the benchmark methodology, we conducted preliminary evaluation on five cases that have completed hidden test suites: \texttt{athlete\_contact\_api}, \texttt{celebration\_overlay}, \texttt{product\_import\_modal}, and two additional cases evaluated during development. The resolving agent used Claude Sonnet~4 with file reading and writing tools.
+
+\subsection{Results}
+
+Table~\ref{tab:preliminary} summarizes the preliminary results.
+
+\begin{table}[ht]
+\centering
+\caption{Preliminary results on 5 \textsc{MergeConflictBench} cases. ``Exact Match'' indicates whether the resolution is character-identical to the reference. ``Tests Pass'' indicates whether all hidden holdout tests pass.}
+\label{tab:preliminary}
+\small
+\begin{tabularx}{\textwidth}{lccccX}
+\toprule
+\textbf{Case} & \textbf{Blocks} & \textbf{Exact} & \textbf{Tests} & \textbf{Markers} & \textbf{Notes} \\
+\midrule
+Case A (simple)    & 2  & Yes & Pass & None & Exact match with reference \\
+Case B (simple)    & 6  & No  & Pass & None & Diff from reference; all 19 behavior tests pass \\
+Case C (moderate)  & 16 & No  & Pass & None & Different formatting; functionally equivalent \\
+Case D (complex)   & 24 & No  & Fail & None & Compiled; 68/72 tests pass; 4 theirs-origin failures \\
+Case E (simple)    & 4  & No  & Pass & 1    & Path error left one marker; tests still pass on resolved files \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Key Observations}
+
+\paragraph{Exact match is too strict.} Of the five cases, only one produced a character-identical resolution. Three others differed textually from the reference---using different variable names, different formatting, or different code ordering---but passed all hidden behavioral tests. An evaluation methodology based on exact match or textual similarity would have scored these as failures, penalizing correct resolutions.
+
+\paragraph{Hidden tests correctly identify partial failures.} Case D compiled successfully and the agent reported success, but 4 of 72 hidden tests failed. All four failures were on behaviors originating from the ``theirs'' branch, indicating the agent favored the ``ours'' side when integrating conflicting changes. This is exactly the kind of subtle regression that compilation-based or exact-match evaluation cannot detect: the code is syntactically valid, structurally plausible, and even mostly correct---but it drops functionality from one branch.
+
+\paragraph{Conflict marker detection complements test evaluation.} Case E had a path error that left one conflict marker in an output file. The tests still passed because the marker was in a file that the test suite did not exercise directly. This reveals a test coverage gap and motivates marker detection as a complementary signal: if tests pass but markers remain, the test suite may be incomplete.
+
+\paragraph{Agent calibration.} In all five cases, the agent reported success. In four of five cases, this was correct (tests passed). In Case D, the agent reported success despite 4 test failures---a false confidence instance consistent with the calibration findings from \textsc{RefactorBench}. Agents tend to overestimate their correctness on merge conflicts, likely because compilation success and superficial code coherence are poor proxies for semantic correctness.
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+% ============================================================
+
+\subsection{Challenges in Test Authoring}
+
+Writing hidden test suites for merge conflict cases poses challenges distinct from refactoring test authoring:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Three-lineage coverage.} The test author must understand the behavior of three code versions (base, ours, theirs) and verify that all three lineages' behaviors are preserved in the resolution. This requires careful reading of diffs to identify what each branch introduced.
+
+\item \textbf{Interaction testing.} When both branches modify the same data structure or API, the test must verify the \emph{combined} behavior, not just each branch's changes independently. For example, if ours adds email validation and theirs adds phone validation to the same contact endpoint, a test must verify that both validations are active simultaneously.
+
+\item \textbf{Stable assertions against divergent implementations.} Because multiple textually distinct resolutions can be correct, tests must assert on externally observable behavior (API responses, rendered output, return values) rather than internal structure. This is particularly challenging for UI component conflicts where the correct resolution might have different component hierarchies.
+\end{itemize}
+
+\subsection{Test Sensitivity vs.\ Specificity}
+
+An ideal hidden test suite has both high sensitivity (detects incorrect resolutions) and high specificity (accepts correct resolutions). The preliminary results suggest the current suites have:
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Good sensitivity.} Case D's 4 test failures correctly identified dropped theirs-branch behavior---the resolution was genuinely incorrect.
+\item \textbf{Good specificity.} Cases B, C, and E had textually different resolutions that all passed, correctly recognizing them as functionally equivalent.
+\item \textbf{Potential coverage gaps.} Case E's remaining conflict marker was not detected by tests, indicating that some behaviors may be untested. The \texttt{preservedBehaviors} contract helps identify such gaps during authoring.
+\end{itemize}
+
+\subsection{Comparison with Refactoring Evaluation}
+
+\textsc{MergeConflictBench} and \textsc{RefactorBench} share the hidden-test methodology but differ in what constitutes correctness:
+
+\begin{table}[ht]
+\centering
+\caption{Comparison of behavioral evaluation in refactoring vs.\ merge conflict resolution.}
+\label{tab:comparison}
+\small
+\begin{tabularx}{\textwidth}{lXX}
+\toprule
+\textbf{Dimension} & \textbf{RefactorBench} & \textbf{MergeConflictBench} \\
+\midrule
+Task & Decompose one file into modules & Integrate two divergent change sets \\
+Correctness criterion & Preserve all existing behavior & Preserve base + ours + theirs behavior \\
+Agent input & Single source file & Conflicted files with markers \\
+Structural change & Expected (new files created) & Not expected (same files, markers removed) \\
+Failure mode & Dropped behavior from refactoring & Dropped behavior from one branch \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A key difference is that merge conflict resolution does not typically change the file structure---the output should be the same files as the input, but with markers replaced by resolved code. This makes the task more constrained than refactoring (where the agent has creative freedom over module boundaries) but also more demanding in terms of semantic understanding (where the agent must synthesize two competing implementations).
+
+\subsection{Future Work}
+
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Complete test suites for all 20 cases.} The current corpus has 20 extracted cases but only a subset have completed hidden test suites. Completing coverage across all complexity tiers will enable full benchmark evaluation.
+
+\item \textbf{Multi-model evaluation.} Systematic evaluation across models (Claude Sonnet~4, Claude Opus~4, Gemini~2.5~Pro, GPT-4.1) and tool configurations will establish baselines and reveal model-specific strengths and weaknesses, as \textsc{RefactorBench} did for refactoring.
+
+\item \textbf{Language diversity.} The current corpus is entirely JavaScript/TypeScript. Extending to Python, Go, Rust, and other languages would test generalization, as merge conflict patterns differ across languages (e.g., import conflicts in Python vs.\ TypeScript, ownership conflicts in Rust).
+
+\item \textbf{Automated test generation.} Manually authoring hidden test suites is the primary bottleneck. Exploring automated or semi-automated test generation from the three-way diff---potentially using an LLM to draft tests from the \texttt{preservedBehaviors} contract, with human review---could scale the benchmark significantly.
+
+\item \textbf{Larger corpus via open-source repositories.} Extracting merge conflicts from popular open-source repositories with existing test suites could dramatically expand the corpus. If a repository's CI tests already cover the behavior introduced by each branch, those tests could serve as the hidden holdout suite with minimal additional authoring.
+
+\item \textbf{Resolution strategy analysis.} Classifying agent resolutions by strategy (accept-ours, accept-theirs, accept-both, custom synthesis) and correlating with correctness would reveal which conflict types agents handle well and which they struggle with.
+\end{itemize}
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ============================================================
+
+We introduced \textsc{MergeConflictBench}, a benchmark for evaluating LLM agents on merge conflict resolution using hidden behavioral tests. The benchmark extends the principle established by \textsc{RefactorBench}---behavioral preservation is a functional property best verified by functional tests---from single-branch refactoring to multi-branch integration.
+
+The corpus consists of 20 real merge conflict cases from production, spanning 63 conflicted files with 364 conflict blocks across complexity tiers from 2-block import conflicts to 45-block function restructuring conflicts. Each case's hidden test suite verifies behaviors from all three code lineages (base, ours, theirs), ensuring that a correct resolution must genuinely integrate both branches' contributions rather than favoring one side.
+
+Preliminary evaluation confirms the methodology's value: exact-match comparison is too strict for merge conflict resolution, where multiple textually distinct resolutions can be functionally correct. The hidden tests correctly distinguish functionally correct resolutions from those that drop behavior from one branch---a subtle failure mode invisible to compilation-based or structural evaluation.
+
+Merge conflict resolution is a ubiquitous task in software development and a natural target for LLM automation. \textsc{MergeConflictBench} provides the evaluation infrastructure needed to develop and compare merge resolution agents with confidence that measured improvements correspond to genuine gains in semantic correctness.
+
+% ============================================================
+% References
+% ============================================================
+
+\bibliographystyle{plainnat}
+
+\begin{thebibliography}{14}
+
+\bibitem[Apel et~al.(2011)]{apel2011semistructured}
+S.~Apel, O.~Lessening, and C.~Lengauer.
+\newblock Structured merge revisited.
+\newblock In \emph{Proceedings of the ACM SIGSOFT Symposium on the Foundations of Software Engineering (FSE)}, pages 190--201, 2011.
+
+\bibitem[Chen(2025)]{chen2025refactorbench}
+D.~Chen.
+\newblock {RefactorBench}: Evaluating {LLM} agents on behavior-preserving code decomposition.
+\newblock Technical report, Anything, Inc., 2025.
+
+\bibitem[Dinella et~al.(2022)]{dinella2022deepmerge}
+E.~Dinella, T.~Mytkowicz, A.~Svyatkovskiy, C.~Bird, and S.~Lahiri.
+\newblock Deepmerge: Learning to merge programs.
+\newblock In \emph{Proceedings of the ACM SIGSOFT Symposium on the Foundations of Software Engineering (FSE)}, 2022.
+
+\bibitem[Gauthier(2024a)]{gauthier2024aider}
+P.~Gauthier.
+\newblock Aider refactoring benchmark.
+\newblock \url{https://aider.chat/docs/leaderboards/refactor.html}, 2024.
+
+\bibitem[Gauthier(2024b)]{gauthier2024polyglot}
+P.~Gauthier.
+\newblock Aider polyglot benchmark.
+\newblock \url{https://aider.chat/2024/12/21/polyglot.html}, 2024.
+
+\bibitem[Jimenez et~al.(2024)]{jimenez2024swebench}
+C.~E. Jimenez, J.~Yang, A.~Wettig, S.~Yao, K.~Pei, O.~Press, and K.~Narasimhan.
+\newblock {SWE-bench}: Can language models resolve real-world {GitHub} issues?
+\newblock In \emph{Proceedings of the International Conference on Learning Representations (ICLR)}, 2024.
+
+\bibitem[Sousa et~al.(2018)]{sousa2018verified}
+M.~Sousa, I.~Dillig, and S.~Lahiri.
+\newblock Verified three-way program merge.
+\newblock \emph{Proceedings of the ACM on Programming Languages}, 2(OOPSLA):1--29, 2018.
+
+\bibitem[Svyatkovskiy et~al.(2022)]{svyatkovskiy2022mergebert}
+A.~Svyatkovskiy, T.~Mytkowicz, E.~Dinella, C.~Bird, and S.~Lahiri.
+\newblock {MergeBERT}: Program merge conflict resolution via neural multi-task learning.
+\newblock In \emph{Proceedings of the ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE)}, 2022.
+
+\bibitem[Wang et~al.(2024)]{wang2024openhands}
+X.~Wang, B.~Li, Y.~Song, F.~F. Xu, X.~Tang, M.~Zhuge, J.~Pan, Y.~Song, B.~Li, J.~Singh, H.~H. Tran, F.~Li, R.~Ma, M.~Zhang, B.~Yu, J.~Bisk, C.~Xiong, T.~Yu, G.~Neubig, and Y.~Li.
+\newblock Open{H}ands: An open platform for {AI} software developers as generalist agents.
+\newblock \emph{arXiv preprint arXiv:2407.16741}, 2024.
+
+\bibitem[Yang et~al.(2024)]{yang2024sweagent}
+J.~Yang, C.~E. Jimenez, A.~Wettig, K.~Lieret, S.~Yao, K.~Narasimhan, and O.~Press.
+\newblock {SWE}-agent: Agent-computer interfaces enable automated software engineering.
+\newblock \emph{arXiv preprint arXiv:2405.15793}, 2024.
+
+\bibitem[Zhang et~al.(2024)]{zhang2024mergegen}
+Y.~Zhang, H.~Yu, Z.~Sun, and J.~Dong.
+\newblock {MergeGen}: A retrieval-augmented approach for automatic merge conflict resolution.
+\newblock \emph{arXiv preprint arXiv:2403.07766}, 2024.
+
+\end{thebibliography}
+
+\end{document}

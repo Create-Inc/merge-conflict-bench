@@ -1,0 +1,226 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "import {\n  ChevronDown,\n  ChevronLeft,\n  ExternalLink,\n  Printer,\n} from \"lucide-react-native\";",
+      "theirsContent": "import {\n  ChevronLeft,\n  ExternalLink,\n  Printer,\n  ChevronDown,\n} from \"lucide-react-native\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "function StatementsHeader({ title, subtitle, periodLabel, onBack, onPeriod }) {",
+      "theirsContent": "function StatementsHeader({ title, subtitle, onBack, onOpenPeriod }) {"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "    <LinearGradient\n      colors={[\"#0B4AA2\", \"#083A7A\"]}\n      start={{ x: 0, y: 0 }}\n      end={{ x: 1, y: 1 }}",
+      "theirsContent": "    <LinearGradient\n      colors={[\"#0B4AA2\", \"#0A3E86\"]}\n      start={{ x: 0, y: 0 }}\n      end={{ x: 1, y: 1 }}"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "        paddingTop: 10,\n        paddingBottom: 12,",
+      "theirsContent": "        paddingTop: 14,\n        paddingBottom: 14,"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "        borderBottomColor: \"rgba(255,255,255,0.18)\",\n        flexDirection: \"row\",\n        alignItems: \"center\",\n        gap: 10,",
+      "theirsContent": "        borderBottomColor: \"rgba(255,255,255,0.18)\","
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "      <Pressable\n        onPress={onBack}\n        style={{\n          width: 40,\n          height: 40,\n          borderRadius: 12,\n          backgroundColor: \"rgba(255,255,255,0.18)\",\n          alignItems: \"center\",\n          justifyContent: \"center\",\n        }}\n        accessibilityRole=\"button\"\n        accessibilityLabel=\"Go back\"\n      >\n        <ChevronLeft size={20} color=\"#FFFFFF\" />\n      </Pressable>",
+      "theirsContent": "      <View style={{ flexDirection: \"row\", alignItems: \"center\", gap: 10 }}>\n        <Pressable\n          onPress={onBack}\n          style={{\n            width: 40,\n            height: 40,\n            borderRadius: 12,\n            backgroundColor: \"rgba(255,255,255,0.16)\",\n            borderWidth: 1,\n            borderColor: \"rgba(255,255,255,0.25)\",\n            alignItems: \"center\",\n            justifyContent: \"center\",\n          }}\n          accessibilityRole=\"button\"\n          accessibilityLabel=\"Go back\"\n        >\n          <ChevronLeft size={20} color=\"#FFFFFF\" />\n        </Pressable>"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "      <View style={{ flex: 1 }}>\n        <Text style={{ fontSize: 20, fontWeight: \"900\", color: \"#FFFFFF\" }}>\n          {title}\n        </Text>\n        {subtitle ? (\n          <Text\n            style={{ marginTop: 2, color: \"rgba(255,255,255,0.85)\" }}\n            numberOfLines={1}\n          >\n            {subtitle}",
+      "theirsContent": "        <View style={{ flex: 1 }}>\n          <Text style={{ fontSize: 18, fontWeight: \"900\", color: \"#FFFFFF\" }}>\n            {title}"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "\n      <Pressable\n        onPress={onPeriod}\n        style={{\n          paddingHorizontal: 12,\n          paddingVertical: 10,\n          borderRadius: 999,\n          backgroundColor: \"rgba(255,255,255,0.18)\",\n          flexDirection: \"row\",\n          alignItems: \"center\",\n          gap: 6,\n          maxWidth: 160,\n        }}\n        accessibilityRole=\"button\"\n        accessibilityLabel=\"Change statement period\"\n      >\n        <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }} numberOfLines={1}>\n          {periodLabel || \"Period\"}\n        </Text>\n        <ChevronDown size={16} color=\"#FFFFFF\" />\n      </Pressable>\n    </LinearGradient>",
+      "theirsContent": "    </LinearGradient>"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "        onPeriod={() => setPeriodPickerOpen(true)}",
+      "theirsContent": "        onOpenPeriod={() => setPeriodPickerOpen(true)}"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "          {/* Actions */}",
+      "theirsContent": "          {/* Actions / period (Chase-like) */}"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "            <Text style={{ fontSize: 16, fontWeight: \"900\", color: \"#111827\" }}>\n              Statement\n            </Text>\n            <Text style={{ marginTop: 4, color: \"#6B7280\" }}>\n              {periodLabel}\n            </Text>",
+      "theirsContent": "            <View style={{ padding: 14 }}>\n              <Text\n                style={{ fontSize: 16, fontWeight: \"900\", color: \"#111827\" }}\n              >\n                Statement period\n              </Text>"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "                  View / Save\n                </Text>\n              </Pressable>",
+      "theirsContent": "                  <Printer\n                    size={18}\n                    color={printableUrl ? \"#FFFFFF\" : \"#6B7280\"}\n                  />\n                  <Text\n                    style={{\n                      color: printableUrl ? \"#FFFFFF\" : \"#6B7280\",\n                      fontWeight: \"900\",\n                    }}\n                  >\n                    View / Save\n                  </Text>\n                </Pressable>"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "              <Pressable\n                onPress={onOpenBrowser}\n                disabled={!printableUrl}\n                style={{\n                  flex: 1,\n                  borderWidth: 1,\n                  borderColor: \"#0B4AA2\",\n                  backgroundColor: \"#FFFFFF\",\n                  paddingVertical: 12,\n                  borderRadius: 12,\n                  alignItems: \"center\",\n                  flexDirection: \"row\",\n                  justifyContent: \"center\",\n                  gap: 8,\n                  opacity: printableUrl ? 1 : 0.5,\n                }}\n              >\n                <ExternalLink size={18} color=\"#0B4AA2\" />\n                <Text style={{ color: \"#0B4AA2\", fontWeight: \"900\" }}>\n                  Browser",
+      "theirsContent": "                <Pressable\n                  onPress={onOpenBrowser}\n                  disabled={!printableUrl}\n                  style={{\n                    flex: 1,\n                    borderWidth: 1,\n                    borderColor: printableUrl ? \"#0B4AA2\" : \"#E5E7EB\",\n                    backgroundColor: \"#FFFFFF\",\n                    paddingVertical: 12,\n                    borderRadius: 12,\n                    alignItems: \"center\",\n                    flexDirection: \"row\",\n                    justifyContent: \"center\",\n                    gap: 8,\n                    opacity: printableUrl ? 1 : 0.6,\n                  }}\n                >\n                  <ExternalLink size={18} color=\"#0B4AA2\" />\n                  <Text style={{ color: \"#0B4AA2\", fontWeight: \"900\" }}>\n                    Browser\n                  </Text>\n                </Pressable>\n              </View>\n\n              {!root ? (\n                <Text style={{ marginTop: 10, color: \"#B91C1C\" }}>\n                  Missing EXPO_PUBLIC_BASE_URL / EXPO_PUBLIC_PROXY_BASE_URL."
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "          {/* Activity */}",
+      "theirsContent": "          {/* Activity (more Chase-like list rows) */}"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "                  const showBorder = idx !== transactions.length - 1;\n",
+      "theirsContent": "                  const showTopBorder = idx !== 0;\n"
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/mobile/src/app/statements/[accountId].jsx",
+      "oursContent": "                        paddingHorizontal: 14,\n                        paddingVertical: 12,\n                        borderBottomWidth: showBorder ? 1 : 0,\n                        borderBottomColor: \"#E5E7EB\",",
+      "theirsContent": "                        paddingVertical: 12,\n                        paddingHorizontal: 14,\n                        borderTopWidth: showTopBorder ? 1 : 0,\n                        borderTopColor: \"#E5E7EB\",\n                        backgroundColor: \"#FFFFFF\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "import {\n  ChevronLeft,\n  ChevronDown,\n  ExternalLink,\n  Printer,\n} from \"lucide-react-native\";",
+      "theirsContent": "import { ChevronLeft, FileText, ChevronDown } from \"lucide-react-native\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "import * as Linking from \"expo-linking\";\nimport { LinearGradient } from \"expo-linear-gradient\";",
+      "theirsContent": "import { LinearGradient } from \"expo-linear-gradient\";"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "function AccountHeader({ title, subtitle, onBack, onSwitchAccount }) {",
+      "theirsContent": "function AccountHeader({ title, subtitle, onBack, onOpenAccountPicker }) {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "    <LinearGradient\n      colors={[\"#0B4AA2\", \"#083A7A\"]}\n      start={{ x: 0, y: 0 }}\n      end={{ x: 1, y: 1 }}",
+      "theirsContent": "    <LinearGradient\n      colors={[\"#0B4AA2\", \"#0A3E86\"]}\n      start={{ x: 0, y: 0 }}\n      end={{ x: 1, y: 1 }}"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "        paddingTop: 10,\n        paddingBottom: 12,",
+      "theirsContent": "        paddingTop: 14,\n        paddingBottom: 14,"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "          backgroundColor: \"rgba(255,255,255,0.18)\",",
+      "theirsContent": "          backgroundColor: \"rgba(255,255,255,0.16)\",\n          borderWidth: 1,\n          borderColor: \"rgba(255,255,255,0.25)\","
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "        <Text style={{ fontSize: 20, fontWeight: \"900\", color: \"#FFFFFF\" }}>",
+      "theirsContent": "        <Text style={{ fontSize: 18, fontWeight: \"900\", color: \"#FFFFFF\" }}>"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "\n      <Pressable\n        onPress={onSwitchAccount}\n        style={{\n          paddingHorizontal: 12,\n          paddingVertical: 10,\n          borderRadius: 999,\n          backgroundColor: \"rgba(255,255,255,0.18)\",\n          flexDirection: \"row\",\n          alignItems: \"center\",\n          gap: 6,\n        }}\n        accessibilityRole=\"button\"\n        accessibilityLabel=\"Switch account\"\n      >\n        <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }}>Account</Text>\n        <ChevronDown size={16} color=\"#FFFFFF\" />\n      </Pressable>\n    </LinearGradient>",
+      "theirsContent": "\n      {onOpenAccountPicker ? (\n        <Pressable\n          onPress={onOpenAccountPicker}\n          style={{\n            flexDirection: \"row\",\n            alignItems: \"center\",\n            gap: 6,\n            paddingHorizontal: 12,\n            paddingVertical: 10,\n            borderRadius: 999,\n            backgroundColor: \"rgba(255,255,255,0.16)\",\n            borderWidth: 1,\n            borderColor: \"rgba(255,255,255,0.25)\",\n          }}\n          accessibilityRole=\"button\"\n          accessibilityLabel=\"Switch account\"\n        >\n          <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }}>Account</Text>\n          <ChevronDown size={16} color=\"#FFFFFF\" />\n        </Pressable>\n      ) : null}\n    </LinearGradient>"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "  const [accountSwitchOpen, setAccountSwitchOpen] = useState(false);\n  const [transferAccountPickerOpen, setTransferAccountPickerOpen] =\n    useState(false);",
+      "theirsContent": "  const [accountPickerOpen, setAccountPickerOpen] = useState(false);\n  const [accountSwitchOpen, setAccountSwitchOpen] = useState(false);"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "          onSwitchAccount={() => setAccountSwitchOpen(true)}",
+      "theirsContent": "          onOpenAccountPicker={() => setAccountSwitchOpen(true)}"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "            {/* Balance + quick actions */}\n            <LinearGradient\n              colors={[\"#0B4AA2\", \"#083A7A\"]}\n              start={{ x: 0, y: 0 }}\n              end={{ x: 1, y: 1 }}",
+      "theirsContent": "            {/* Balance card (Chase-like) */}\n            <LinearGradient\n              colors={[\"#0B4AA2\", \"#0A3E86\"]}\n              start={{ x: 0, y: 0 }}\n              end={{ x: 1, y: 1 }}"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "                borderRadius: 18,\n                padding: 16,",
+      "theirsContent": "                borderRadius: 18,\n                overflow: \"hidden\","
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "              <Text\n                style={{ color: \"rgba(255,255,255,0.85)\", fontWeight: \"700\" }}\n              >\n                Available balance\n              </Text>\n              <Text\n                style={{\n                  marginTop: 6,\n                  fontSize: 34,\n                  fontWeight: \"900\",\n                  color: \"#FFFFFF\",\n                }}\n              >\n                {balanceLabel}\n              </Text>",
+      "theirsContent": "              <View style={{ padding: 16 }}>\n                <Text style={{ color: \"rgba(255,255,255,0.85)\" }}>\n                  Available balance\n                </Text>\n                <Text\n                  style={{\n                    marginTop: 8,\n                    fontSize: 36,\n                    fontWeight: \"900\",\n                    color: \"#FFFFFF\",\n                    letterSpacing: 0.2,\n                  }}\n                >\n                  {balanceLabel}\n                </Text>"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "              <View style={{ marginTop: 14, flexDirection: \"row\", gap: 10 }}>\n                <Pressable\n                  onPress={onQuickTransfer}",
+      "theirsContent": "                <Pressable\n                  onPress={() =>\n                    router.push({\n                      pathname: \"/statements/[accountId]\",\n                      params: { accountId: String(accountId) },\n                    })\n                  }"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "                    flex: 1,\n                    backgroundColor: \"rgba(255,255,255,0.16)\",\n                    borderWidth: 1,\n                    borderColor: \"rgba(255,255,255,0.28)\",\n                    paddingVertical: 12,\n                    borderRadius: 12,",
+      "theirsContent": "                    marginTop: 14,\n                    borderRadius: 14,\n                    backgroundColor: \"rgba(255,255,255,0.16)\",\n                    borderWidth: 1,\n                    borderColor: \"rgba(255,255,255,0.25)\",\n                    paddingVertical: 12,\n                    paddingHorizontal: 12,\n                    flexDirection: \"row\","
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "",
+      "theirsContent": "                    justifyContent: \"space-between\","
+    },
+    {
+      "blockIndex": 16,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "                  <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }}>\n                    Transfer\n                  </Text>\n                </Pressable>\n\n                <Pressable\n                  onPress={onQuickStatements}\n                  style={{\n                    flex: 1,\n                    backgroundColor: \"#FFFFFF\",\n                    paddingVertical: 12,\n                    borderRadius: 12,\n                    alignItems: \"center\",\n                  }}\n                  accessibilityRole=\"button\"\n                  accessibilityLabel=\"Statements\"\n                >\n                  <Text style={{ color: \"#0B4AA2\", fontWeight: \"900\" }}>\n                    Statements",
+      "theirsContent": "                  <View\n                    style={{\n                      flexDirection: \"row\",\n                      alignItems: \"center\",\n                      gap: 10,\n                    }}\n                  >\n                    <FileText size={18} color=\"#FFFFFF\" />\n                    <Text style={{ color: \"#FFFFFF\", fontWeight: \"900\" }}>\n                      Statements\n                    </Text>\n                  </View>\n                  <Text\n                    style={{\n                      color: \"rgba(255,255,255,0.9)\",\n                      fontWeight: \"900\",\n                    }}\n                  >\n                    Open"
+    },
+    {
+      "blockIndex": 17,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "                </Pressable>\n              </View>\n            </LinearGradient>\n\n            {/* Segmented control */}\n            <View style={{ marginTop: 14 }}>\n              <SegmentedControl\n                options={segments}\n                value={activeSegment}\n                onChange={(v) => setActiveSegment(String(v))}\n              />\n            </View>",
+      "theirsContent": "                </Pressable>\n              </View>\n            </LinearGradient>"
+    },
+    {
+      "blockIndex": 18,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "        {/* Switch account */}",
+      "theirsContent": "        {/* Transfer account picker */}"
+    },
+    {
+      "blockIndex": 19,
+      "filePath": "/apps/mobile/src/app/account/[id].jsx",
+      "oursContent": "\n        <WebModal\n          title=\"Statement\"\n          url={printableUrl}\n          visible={webOpen}\n          onClose={() => setWebOpen(false)}\n        />",
+      "theirsContent": "\n        {/* Account switcher (changes the screen) */}\n        <SelectModal\n          title=\"Switch account\"\n          visible={accountSwitchOpen}\n          onClose={() => setAccountSwitchOpen(false)}\n          options={accountOptions.map((o) => ({\n            value: o.value,\n            label: o.label,\n          }))}\n          value={String(accountId)}\n          onSelect={(v) => {\n            const nextId = String(v);\n            setAccountSwitchOpen(false);\n            router.replace(`/account/${encodeURIComponent(nextId)}`);\n          }}\n        />"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/statements/[accountId].jsx",
+    "/apps/mobile/src/app/account/[id].jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

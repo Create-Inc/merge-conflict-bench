@@ -1,0 +1,35 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/utils/tradeShowTabs.js",
+      "oursContent": "    label: \"Concierge\",",
+      "theirsContent": "    label: \"Travel Concierge\","
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/utils/tradeShowTabs.js",
+      "oursContent": "    premium: true,\n    addon: \"concierge\",",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "              note=\"Requires All-access • Not included in trial\"",
+      "theirsContent": "              note=\"Add-on • White-glove support & escalation\""
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Tradeshow/MainHeader.jsx",
+      "oursContent": "    // Clarify what the trial covers (concierge is a separate add-on).\n    return `All-access trial: ${trialDaysLeft} ${dayLabel} left`;",
+      "theirsContent": "    return `Trial ends in ${trialDaysLeft} ${dayLabel}`;"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/utils/tradeShowTabs.js",
+    "/apps/web/src/app/pricing/page.jsx",
+    "/apps/web/src/components/Tradeshow/MainHeader.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

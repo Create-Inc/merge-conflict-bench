@@ -1,0 +1,59 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/route.js",
+      "oursContent": "    // Get invitation details (only select columns we can rely on)",
+      "theirsContent": "    // Get invitation details (keep compatible with older schemas)"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/route.js",
+      "oursContent": "    // Treat share links as status='active' with empty (or null) email\n    const emailValue = (invitation.email || \"\").trim();\n    const isShareLink =\n      invitation.status === \"active\" && emailValue.length === 0;",
+      "theirsContent": "    const isShareLink =\n      invitation.status === \"active\" &&\n      (invitation.email === null || invitation.email === \"\");"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/route.js",
+      "oursContent": "    if (isShareLink) {\n      // ok\n    } else {\n      // Email invite\n      if (invitation.status !== \"pending\") {\n        return Response.json(\n          { error: \"This invitation has already been used\" },\n          { status: 410 },\n        );\n      }",
+      "theirsContent": "    if (isShareLink) {\n      // Reusable share link must remain active\n      if (invitation.status !== \"active\") {\n        return Response.json(\n          { error: \"This invite link is no longer active\" },\n          { status: 410 },\n        );\n      }\n    } else {\n      // Email invites are single-use\n      if (invitation.status !== \"pending\") {\n        return Response.json(\n          { error: \"This invitation has already been used\" },\n          { status: 410 },\n        );\n      }"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/clubs/[id]/invite-link/route.js",
+      "oursContent": "    // Revoke any existing active links (including older rows with email NULL)",
+      "theirsContent": "    // Revoke any existing active links (note: keep compatible with older schemas)"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/accept/route.js",
+      "oursContent": "    // Only select columns we can rely on",
+      "theirsContent": "    // Get invitation details (keep compatible with older schemas)"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/accept/route.js",
+      "oursContent": "    const emailValue = (invitation.email || \"\").trim();\n    const isShareLink =\n      invitation.status === \"active\" && emailValue.length === 0;",
+      "theirsContent": "    const isShareLink =\n      invitation.status === \"active\" &&\n      (invitation.email === null || invitation.email === \"\");"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/accept/route.js",
+      "oursContent": "    if (isShareLink) {\n      // ok (reusable)\n    } else {\n      // Email invite",
+      "theirsContent": "    if (isShareLink) {\n      if (invitation.status !== \"active\") {\n        return Response.json(\n          { error: \"This invite link is no longer active\" },\n          { status: 410 },\n        );\n      }\n    } else {"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/invitations/[token]/accept/route.js",
+      "oursContent": "    // For email invites, mark as accepted; for share links, keep active so it's reusable\n    if (!isShareLink) {",
+      "theirsContent": "    // Mark email invitations as accepted. Keep share-links reusable.\n    if (!isShareLink) {"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/invitations/[token]/route.js",
+    "/apps/web/src/app/api/clubs/[id]/invite-link/route.js",
+    "/apps/web/src/app/api/invitations/[token]/accept/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

@@ -1,0 +1,9 @@
+{
+  "name": "mfa_email_send",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "d5dd25eb-ad4e-4878-a001-192f9eee1a04",
+  "sourceTimestamp": "2026-02-06T14:46:16.214Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 4
+}

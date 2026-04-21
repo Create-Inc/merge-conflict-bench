@@ -1,0 +1,9 @@
+{
+  "name": "export_compliance_tests",
+  "description": "Merge conflict with 5 conflict(s) across 5 file(s)",
+  "sourceConflictId": "b91fb017-a91f-4be5-8f5a-c4e56678f6fb",
+  "sourceTimestamp": "2026-01-24T12:32:20.395Z",
+  "language": "javascript",
+  "conflictedFileCount": 5,
+  "conflictBlockCount": 5
+}

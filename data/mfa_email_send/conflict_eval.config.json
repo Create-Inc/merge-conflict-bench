@@ -1,0 +1,34 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/utils/sendEmail.js",
+      "oursContent": "    // This used to silently skip, which can look like \"it worked\" while sending nothing.\n    // For OTP and password-reset flows we *must* fail loudly.\n    const err = new Error(\"Email service is not configured\");\n    err.status = 500;\n    throw err;",
+      "theirsContent": "    console.warn(\"⚠️ RESEND_API_KEY is not set; skipping email send\");\n    return { skipped: true };"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/mfa/email/request/route.js",
+      "oursContent": "    // Use Resend's dev sender by default to avoid domain-verification issues.\n    const sendResult = await sendEmail({\n      to: toEmail,\n      subject,\n      text,\n      html,\n      from: \"WHCC <onboarding@resend.dev>\",\n    });",
+      "theirsContent": "    const emailResult = await sendEmail({ to: toEmail, subject, text, html });"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/mfa/email/request/route.js",
+      "oursContent": "    // Resend typically returns { id: \"...\" }\n    const messageId = sendResult?.id || null;\n\n    return Response.json({ ok: true, messageId });",
+      "theirsContent": "    // Check if email was skipped due to missing API key\n    if (emailResult?.skipped) {\n      console.error(\"❌ EMAIL SKIPPED - RESEND_API_KEY NOT CONFIGURED\");\n      return Response.json(\n        { error: \"Email service is not configured. Please contact support.\" },\n        { status: 500 },\n      );\n    }\n\n    console.log(\"✅ Email sent successfully to:\", toEmail);\n    return Response.json({ ok: true });"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/mfa/email/request/route.js",
+      "oursContent": "    console.error(\"POST /api/mfa/email/request error\", error);\n\n    const msg = String(error?.message || \"\");\n    if (msg.toLowerCase().includes(\"email service is not configured\")) {\n      return Response.json(\n        {\n          error:\n            \"Email is not configured for this environment. Please contact an admin to set RESEND_API_KEY.\",\n        },\n        { status: 500 },\n      );\n    }\n",
+      "theirsContent": "    console.error(\"❌ POST /api/mfa/email/request error\", error);"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/utils/sendEmail.js",
+    "/apps/web/src/app/api/mfa/email/request/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

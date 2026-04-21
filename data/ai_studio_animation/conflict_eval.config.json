@@ -1,0 +1,88 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        background: rgba(2,6,23,0.18);",
+      "theirsContent": "        background: linear-gradient(\n          180deg,\n          rgba(2,6,23,0.18),\n          rgba(2,6,23,0.30)\n        );"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        opacity: 0.42;\n        filter: grayscale(1) contrast(3.25) brightness(1.5);",
+      "theirsContent": "        opacity: 0.38;\n        filter: grayscale(1) contrast(3.4) brightness(1.75);"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "          linear-gradient(90deg, rgba(34,211,238,0.34) 1px, rgba(34,211,238,0.0) 1px),\n          linear-gradient(rgba(34,211,238,0.34) 1px, rgba(34,211,238,0.0) 1px);\n        background-size: 100% 100%, 20px 20px, 20px 20px;\n        animation: hsGridDrift 2.0s ease-in-out infinite;",
+      "theirsContent": "          linear-gradient(90deg, rgba(34,211,238,0.70) 1px, rgba(34,211,238,0.0) 1px),\n          linear-gradient(rgba(34,211,238,0.70) 1px, rgba(34,211,238,0.0) 1px);\n        background-size: 100% 100%, 22px 22px, 22px 22px;\n        animation: hsGridDrift 1.6s ease-in-out infinite;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "      /* NEW: diagonal sweep that crosses the full image (helps the \"scan\" read instantly) */\n      @keyframes hsDiagonalSweep {\n        0% { transform: translate3d(-60%, -20%, 0); opacity: 0.0; }\n        12% { opacity: 0.85; }\n        55% { opacity: 0.55; }\n        100% { transform: translate3d(60%, 120%, 0); opacity: 0.0; }\n      }\n\n      /* NEW: crosshair pulse */\n      @keyframes hsCrosshairPulse {\n        0% { opacity: 0.35; transform: scale(0.98); }\n        50% { opacity: 0.75; transform: scale(1.02); }\n        100% { opacity: 0.35; transform: scale(0.98); }\n      }\n\n      /* NEW: slight \"signal\" shimmer for readout lines */\n      @keyframes hsReadoutFlicker {\n        0%, 100% { opacity: 0.9; }\n        18% { opacity: 0.7; }\n        44% { opacity: 1; }\n        72% { opacity: 0.75; }\n      }\n\n      /* pseudo face-mesh \"nodes\" + diagonals, drifting/shimmering */\n      .hs-scan-mesh {",
+      "theirsContent": "      /* NEW: a diagonal sweep band for extra motion readability */\n      .hs-scan-sweep {"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        width: 240px;\n        height: 170px;\n        border-radius: 10px;",
+      "theirsContent": "        width: 240px;\n        height: 175px;\n        border-radius: 6px; /* less \"rounded rectangle\", more CV box */"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "          0 0 46px rgba(34,211,238,0.42);\n        background:\n          radial-gradient(circle at 50% 50%, rgba(34,211,238,0.14), rgba(34,211,238,0.0) 72%),\n          linear-gradient(to right, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) top left / 48px 2px no-repeat,\n          linear-gradient(to bottom, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) top left / 2px 48px no-repeat,\n          linear-gradient(to left, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) top right / 48px 2px no-repeat,\n          linear-gradient(to bottom, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) top right / 2px 48px no-repeat,\n          linear-gradient(to right, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) bottom left / 48px 2px no-repeat,\n          linear-gradient(to top, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) bottom left / 2px 48px no-repeat,\n          linear-gradient(to left, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) bottom right / 48px 2px no-repeat,\n          linear-gradient(to top, rgba(34,211,238,0.85), rgba(34,211,238,0.0)) bottom right / 2px 48px no-repeat;\n        animation: hsTargetMove 2.8s ease-in-out infinite;",
+      "theirsContent": "          0 0 52px rgba(34,211,238,0.55);\n        background:\n          radial-gradient(circle at 50% 50%, rgba(34,211,238,0.14), rgba(34,211,238,0.0) 72%),\n          linear-gradient(to right, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) top left / 26px 2px no-repeat,\n          linear-gradient(to bottom, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) top left / 2px 26px no-repeat,\n          linear-gradient(to left, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) top right / 26px 2px no-repeat,\n          linear-gradient(to bottom, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) top right / 2px 26px no-repeat,\n          linear-gradient(to right, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) bottom left / 26px 2px no-repeat,\n          linear-gradient(to top, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) bottom left / 2px 26px no-repeat,\n          linear-gradient(to left, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) bottom right / 26px 2px no-repeat,\n          linear-gradient(to top, rgba(165,243,252,0.95), rgba(165,243,252,0.0)) bottom right / 2px 26px no-repeat;\n        animation: hsTargetMove 2.6s ease-in-out infinite;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "          width: 190px;\n          height: 140px;",
+      "theirsContent": "          width: 190px;\n          height: 145px;"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "          rgba(34,211,238,0.18) 28%,\n          rgba(165,243,252,0.36) 50%,\n          rgba(34,211,238,0.18) 72%,",
+      "theirsContent": "          rgba(34,211,238,0.22) 28%,\n          rgba(165,243,252,0.55) 50%,\n          rgba(34,211,238,0.22) 72%,"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        height: 10px;",
+      "theirsContent": "        height: 26px;"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        filter: drop-shadow(0 0 28px rgba(34,211,238,0.78));\n        animation: hsScanLine 2.4s linear infinite;",
+      "theirsContent": "        filter: drop-shadow(0 0 36px rgba(34,211,238,0.95));\n        animation: hsScanLine 2.4s linear infinite;"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+      "oursContent": "        .hs-scan-sweep,\n        .hs-scan-crosshair,",
+      "theirsContent": "        .hs-scan-crosshair,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnalyzingAnimation.jsx",
+      "oursContent": "",
+      "theirsContent": "              {/* More visible sci‑fi scan layers */}"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnalyzingAnimation.jsx",
+      "oursContent": "              <div className=\"hs-scan-sweep\" />\n\n              <div className=\"hs-scan-crosshair\">\n                <div className=\"hs-scan-crosshair-inner\">\n                  <div className=\"hs-scan-crosshair-h\" />\n                  <div className=\"hs-scan-crosshair-v\" />\n                  <div className=\"hs-scan-crosshair-dot\" />\n                </div>\n              </div>\n",
+      "theirsContent": "              <div className=\"hs-scan-crosshair\" />"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnimationStyles.jsx",
+    "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnalyzingAnimation.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

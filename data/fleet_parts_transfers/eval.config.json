@@ -1,0 +1,9 @@
+{
+  "name": "fleet_parts_transfers",
+  "description": "Merge conflict with 4 conflict(s) across 4 file(s)",
+  "sourceConflictId": "49c170b0-d4ee-45bb-83f7-6ce3ec0a16fd",
+  "sourceTimestamp": "2026-01-01T10:54:54.865Z",
+  "language": "javascript",
+  "conflictedFileCount": 4,
+  "conflictBlockCount": 46
+}

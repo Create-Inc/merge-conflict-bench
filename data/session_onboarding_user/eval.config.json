@@ -1,0 +1,9 @@
+{
+  "name": "session_onboarding_user",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "d6a06ca6-a6ea-4451-b37c-3ae367b1ca9d",
+  "sourceTimestamp": "2026-01-08T12:15:31.999Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 10
+}

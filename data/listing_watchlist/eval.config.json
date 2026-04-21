@@ -1,0 +1,9 @@
+{
+  "name": "listing_watchlist",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "6d4382e3-802e-4e53-b422-f56523342924",
+  "sourceTimestamp": "2026-02-26T01:38:42.045Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 25
+}

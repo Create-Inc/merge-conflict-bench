@@ -1,0 +1,9 @@
+{
+  "name": "club_invite_accept",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "8ec74efa-a15c-46ad-bc0f-1b52ae8a3a04",
+  "sourceTimestamp": "2026-01-06T14:57:43.373Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 8
+}

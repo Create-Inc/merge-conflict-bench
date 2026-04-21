@@ -1,0 +1,65 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/HomePage/FloatingDemoCTA.jsx",
+      "oursContent": "        // IMPORTANT: force white text so it can't be overridden by the global marketing link styling\n        className=\"group inline-flex items-center gap-2 rounded-2xl px-5 py-4 text-sm font-bold bg-[#2B86C6] !text-white shadow-2xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2579B3]\"\n        style={{ color: \"#ffffff\" }}",
+      "theirsContent": "        className=\"group inline-flex items-center gap-2 rounded-2xl px-5 py-4 text-sm font-bold bg-[#2B86C6] text-white !text-white shadow-2xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#2579B3]\""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/HomePage/FloatingDemoCTA.jsx",
+      "oursContent": "        <span\n          className=\"whitespace-nowrap !text-white\"\n          style={{ color: \"#ffffff\" }}\n        >\n          Try the demo\n        </span>\n        <span\n          className=\"transition-transform duration-300 group-hover:translate-x-0.5 !text-white\"\n          style={{ color: \"#ffffff\" }}\n        >",
+      "theirsContent": "        <span className=\"whitespace-nowrap text-white !text-white\">\n          Try the demo\n        </span>\n        <span className=\"transition-transform duration-300 group-hover:translate-x-0.5 text-white !text-white\">"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "",
+      "theirsContent": "            {/* removed the \"Guided Setup\" box */}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "// Support clearing cookies with varying Domain/SameSite/Path to ensure deletion matches how they were set.\nfunction clearCookie(\n  name,\n  { secure, path = \"/\", domain = null, sameSite = \"Lax\" },\n) {",
+      "theirsContent": "// Support clearing cookies for different Path values (some browsers/storefronts differ)\nfunction clearCookie(name, { secure, path = \"/\", domain, sameSite = \"Lax\" }) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "    // Domain must be omitted for __Host- cookies; only add when explicitly requested\n    ...(domain ? [`Domain=${domain}`] : []),",
+      "theirsContent": "    // Domain must match exactly for deletion. Only include when provided.\n    ...(domain ? [`Domain=${domain}`] : []),"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "function normalizeHost(hostHeader) {\n  if (!hostHeader) return null;\n  const host = String(hostHeader).trim();\n  // strip port if present\n  return host.split(\":\")[0];\n}",
+      "theirsContent": "function getHostNameFromRequest(request) {\n  const host = (\n    request.headers.get(\"x-forwarded-host\") ||\n    request.headers.get(\"host\") ||\n    \"\"\n  ).toString();\n  // strip port\n  return host.split(\":\")[0].trim();\n}"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "function getApexDomain(host) {\n  if (!host) return null;\n  // localhost or single-label hosts have no apex domain logic\n  const parts = host.split(\".\").filter(Boolean);\n  if (parts.length <= 2) return host;\n  return parts.slice(-2).join(\".\");",
+      "theirsContent": "function getCandidateDomains(hostname) {\n  if (!hostname) return [];\n\n  const parts = hostname.split(\".\").filter(Boolean);\n  const apex = parts.length >= 2 ? parts.slice(-2).join(\".\") : hostname;\n\n  // Order matters a bit; we’ll try a few common possibilities.\n  const domains = [hostname, `.${hostname}`];\n\n  if (apex && apex !== hostname) {\n    domains.push(apex, `.${apex}`);\n  }\n\n  // de-dupe\n  return Array.from(new Set(domains));"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "function appendClearCookies(res, name, hostHeader) {\n  const host = normalizeHost(hostHeader);\n  const apex = host ? getApexDomain(host) : null;\n\n  const paths = [\"/\", \"/api/auth\"]; // clear scoped + root variants\n\n  // Most common domain variants seen in the wild\n  const domains = [\n    null,\n    host,\n    host ? `.${host}` : null,\n    apex,\n    apex ? `.${apex}` : null,\n  ].filter((d, i, arr) => arr.indexOf(d) === i); // uniq\n\n  const sameSiteVariants = [\n    { sameSite: \"Lax\", secure: false },\n    { sameSite: \"Lax\", secure: true },\n    // Some deployments use SameSite=None + Secure\n    { sameSite: \"None\", secure: true },\n  ];\n\n  for (const path of paths) {\n    for (const domain of domains) {\n      for (const v of sameSiteVariants) {\n        // IMPORTANT: __Host- cookies MUST NOT include Domain and MUST be Path=/\n        if (name.startsWith(\"__Host-\") && (domain || path !== \"/\")) {\n          continue;\n        }\n        res.headers.append(\n          \"Set-Cookie\",\n          clearCookie(name, {\n            path,\n            domain,\n            secure: v.secure,\n            sameSite: v.sameSite,\n          }),\n        );\n      }\n    }\n  }\n}\n",
+      "theirsContent": "function appendClearCookies(res, name, request) {\n  const hostname = getHostNameFromRequest(request);\n  const domains = getCandidateDomains(hostname);\n\n  const isHostCookie = name.startsWith(\"__Host-\");\n\n  // __Host- cookies must be Secure, path=/, and MUST NOT include Domain.\n  if (isHostCookie) {\n    res.headers.append(\n      \"Set-Cookie\",\n      clearCookie(name, { secure: true, path: \"/\", sameSite: \"Lax\" }),\n    );\n    // Some setups may have SameSite=None on secure cookies\n    res.headers.append(\n      \"Set-Cookie\",\n      clearCookie(name, { secure: true, path: \"/\", sameSite: \"None\" }),\n    );\n    return;\n  }\n\n  const paths = [\"/\", \"/api/auth\"];\n\n  for (const path of paths) {\n    // no Domain variant\n    res.headers.append(\n      \"Set-Cookie\",\n      clearCookie(name, { secure: false, path, sameSite: \"Lax\" }),\n    );\n    res.headers.append(\n      \"Set-Cookie\",\n      clearCookie(name, { secure: true, path, sameSite: \"Lax\" }),\n    );\n    res.headers.append(\n      \"Set-Cookie\",\n      clearCookie(name, { secure: true, path, sameSite: \"None\" }),\n    );\n\n    // domain variants (best-effort)\n    for (const domain of domains) {\n      res.headers.append(\n        \"Set-Cookie\",\n        clearCookie(name, { secure: false, path, domain, sameSite: \"Lax\" }),\n      );\n      res.headers.append(\n        \"Set-Cookie\",\n        clearCookie(name, { secure: true, path, domain, sameSite: \"Lax\" }),\n      );\n      res.headers.append(\n        \"Set-Cookie\",\n        clearCookie(name, { secure: true, path, domain, sameSite: \"None\" }),\n      );\n    }\n  }\n}\n"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/auth/platform-signout/route.js",
+      "oursContent": "      appendClearCookies(res, name, hostHeader);",
+      "theirsContent": "      appendClearCookies(res, name, request);"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/HomePage/FloatingDemoCTA.jsx",
+    "/apps/web/src/app/pricing/page.jsx",
+    "/apps/web/src/app/api/auth/platform-signout/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

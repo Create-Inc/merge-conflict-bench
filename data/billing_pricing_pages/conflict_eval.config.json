@@ -1,0 +1,53 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "              description=\"A quiet, intelligent layer that works in the background to keep your shows accurate and complete — reviewing uploaded or forwarded documents and flagging gaps early. Not a chatbot.\"",
+      "theirsContent": "              description=\"A quiet assistant layer that helps keep your shows complete, accurate, and organized — flagging gaps early and helping route uploaded/forwarded documents to the right show.\""
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/billing/page.jsx",
+      "oursContent": "      \"A quiet, intelligent layer that works in the background — not a chatbot, and not a manual service.\",\n      \"Helps users find information, settings, and features across the platform.\",\n      \"Monitors shows for missing, inconsistent, or incomplete info and flags items that may need attention.\",\n      \"Reviews uploaded or forwarded documents and helps with data entry + routing into the correct show.\",\n      \"Surfaces potential issues or gaps early so teams can fix them before they become problems.\",\n      \"Supports forwarding via email so teams can send documents into the system to be reviewed and placed appropriately.\",",
+      "theirsContent": "      \"A built-in assistant layer that helps teams stay organized, accurate, and on track — quietly in the background (not a chatbot, and not a manual service).\",\n      \"Helps users find information, settings, and features across the platform.\",\n      \"Monitors shows for missing, inconsistent, or incomplete information and highlights items that may need attention.\",\n      \"Reviews uploaded or forwarded documents (invoices, receipts, shipping confirmations, exhibitor kits, etc.).\",\n      \"Helps with data entry and organizes documents into the correct show.\",\n      \"Supports forwarding via email so teams can send documents into the system to be reviewed and placed appropriately.\","
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/billing/page.jsx",
+      "oursContent": "      \"Role-based permissions (optional / future-ready)\",\n      \"Standard support (email + in-app)\",",
+      "theirsContent": "      \"Role-based permissions (optional / future-ready)\",\n      \"Standard support (email and in-app)\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "                <Bullet text=\"Unlimited seats/users\" />\n                <Bullet text=\"Task and timeline management per show\" />\n                <Bullet text=\"Team assignments and responsibility tracking\" />\n                <Bullet text=\"Travel + logistics tracking (flights, hotels, shipping, schedules)\" />\n                <Bullet text=\"Budget + expense tracking per show and across shows\" />",
+      "theirsContent": "                <Bullet text=\"Unlimited team seats/users\" />\n                <Bullet text=\"Task and timeline management per show\" />\n                <Bullet text=\"Team assignments and responsibility tracking\" />\n                <Bullet text=\"Travel and logistics tracking (flights, hotels, shipping, schedules)\" />\n                <Bullet text=\"Budget and expense tracking per show and across shows\" />"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "                <Bullet text=\"ROI + performance reports\" />\n                <Bullet text=\"Inventory and shipping management\" />\n                <Bullet text=\"Automatic document uploads and attachments\" />\n                <Bullet text=\"Team communication and notifications\" />\n                <Bullet text=\"Role-based permissions (optional / future-ready)\" />\n                <Bullet text=\"Standard support (email + in-app)\" />\n                <Bullet text=\"360 Assistant (included)\" />",
+      "theirsContent": "                <Bullet text=\"ROI and performance reports\" />\n                <Bullet text=\"Inventory and shipping management\" />\n                <Bullet text=\"Automatic document uploads and attachments\" />\n                <Bullet text=\"Team communication and notifications\" />\n                <Bullet text=\"Role-based permissions (optional / future-ready)\" />\n                <Bullet text=\"Standard support (email and in-app)\" />\n                <Bullet text=\"360 Assistant (included)\" />"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "                A quiet, intelligent layer that works in the background to help\n                your team stay organized, accurate, and on track — not a\n                chatbot, and not a manual service.",
+      "theirsContent": "                A quiet, intelligent layer that works in the background to help\n                teams stay organized, accurate, and on track — not a chatbot,\n                and not a manual service. It’s optional to use, but always there\n                when you want it."
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/pricing/page.jsx",
+      "oursContent": "                <Bullet text=\"Helps users find information, settings, and features across the platform\" />\n                <Bullet text=\"Monitors shows for missing, inconsistent, or incomplete info and highlights items that may need attention\" />\n                <Bullet text=\"Reviews uploaded or forwarded documents (invoices, receipts, shipping confirmations, exhibitor kits, etc.) and helps with data entry + routing into the correct show\" />\n                <Bullet text=\"Surfaces potential issues or gaps early so teams can fix them before they become problems\" />\n                <Bullet text=\"Assists with logistics, timelines, budgeting, and best practices\" />\n                <Bullet text=\"Supports forwarding via email so teams can send documents into the system to be reviewed and placed appropriately\" />",
+      "theirsContent": "                <Bullet text=\"Helps users find information, settings, and features across the platform\" />\n                <Bullet text=\"Monitors shows for missing, inconsistent, or incomplete information and highlights items that may need attention\" />\n                <Bullet text=\"Reviews uploaded or forwarded documents (invoices, receipts, shipping confirmations, exhibitor kits, etc.)\" />\n                <Bullet text=\"Helps with data entry and organizes documents into the correct show\" />\n                <Bullet text=\"Surfaces gaps early so teams can fix issues before they become problems\" />\n                <Bullet text=\"Supports forwarding via email so users can forward documents into the system to be reviewed and placed appropriately\" />"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/page.jsx",
+    "/apps/web/src/app/billing/page.jsx",
+    "/apps/web/src/app/pricing/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

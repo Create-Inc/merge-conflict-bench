@@ -1,0 +1,9 @@
+{
+  "name": "dashboard_data_hooks",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "e242f3b9-578d-4df7-b2cb-9a56edd0cc89",
+  "sourceTimestamp": "2026-01-05T19:11:22.715Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 12
+}

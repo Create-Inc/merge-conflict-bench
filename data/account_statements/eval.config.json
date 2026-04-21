@@ -1,0 +1,9 @@
+{
+  "name": "account_statements",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "b69a874e-3b35-4027-ba96-e28ff7da9ca8",
+  "sourceTimestamp": "2026-01-04T19:20:18.554Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 36
+}

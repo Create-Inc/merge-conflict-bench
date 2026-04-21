@@ -1,0 +1,109 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/CustomerDetail/CustomerHeader.jsx",
+      "oursContent": "  onNewTicket,",
+      "theirsContent": "  setTicketOpen,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/modules/crm/[id]/page.jsx",
+      "oursContent": "import React, { useCallback, useMemo, useState } from \"react\";",
+      "theirsContent": "import React, { useMemo, useState } from \"react\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/modules/crm/[id]/page.jsx",
+      "oursContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n\n  const ticketPriorityOptions = [\"low\", \"medium\", \"high\"];\n",
+      "theirsContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/modules/crm/[id]/page.jsx",
+      "oursContent": "          onNewTicket={openTicket}",
+      "theirsContent": "          setTicketOpen={(v) => openTicket(v)}"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/modules/crm/[id]/page.jsx",
+      "oursContent": "\n      <CreateTicketModal\n        show={ticketOpen}\n        error={ticketError}\n        createDraft={ticketDraft}\n        customers={customer ? [customer] : []}\n        priorityOptions={ticketPriorityOptions}\n        isCreating={createTicketMutation.isPending}\n        onClose={closeTicket}\n        onDraftChange={setTicketDraft}\n        onCreate={onCreateTicket}\n      />",
+      "theirsContent": "\n      <CreateTicketModal\n        show={ticketOpen}\n        error={ticketError}\n        createDraft={ticketDraft}\n        customers={customer ? [customer] : []}\n        priorityOptions={ticketPriorityOptions}\n        isCreating={createTicketMutation.isPending}\n        onClose={() => openTicket(false)}\n        onDraftChange={setTicketDraft}\n        onCreate={onCreateTicket}\n      />"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+      "oursContent": "import React, { useCallback, useMemo, useState } from \"react\";",
+      "theirsContent": "import React, { useMemo, useState } from \"react\";\nimport { useCallback } from \"react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+      "oursContent": "import { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";",
+      "theirsContent": "import { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";\nimport { LifeBuoy } from \"lucide-react\";"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+      "oursContent": "  const queryClient = useQueryClient();\n",
+      "theirsContent": "  const queryClient = useQueryClient();\n  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+      "oursContent": "    userLoading ||\n    companyQuery.isLoading ||\n    customersQuery.isLoading ||\n    dashboardQuery.isLoading;",
+      "theirsContent": "    userLoading ||\n    companyQuery.isLoading ||\n    dashboardQuery.isLoading ||\n    customersQuery.isLoading;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+      "oursContent": "              <button\n                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New ticket\n              </button>",
+      "theirsContent": "\n              <button\n                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New Ticket\n              </button>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/modules/crm/deals/page.jsx",
+      "oursContent": "import { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";\nimport { LifeBuoy, Plus, Search } from \"lucide-react\";",
+      "theirsContent": "import { Plus, Search, LifeBuoy } from \"lucide-react\";\nimport { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/modules/crm/deals/page.jsx",
+      "oursContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n\n  const ticketPriorityOptions = [\"low\", \"medium\", \"high\"];\n\n  const createTicketMutation = useMutation({\n    mutationFn: async (payload) =>\n      fetchJson(\"/api/helpdesk/tickets\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify(payload),\n      }),\n    onSuccess: () => {\n      queryClient.invalidateQueries({ queryKey: [\"helpdesk\", \"tickets\"] });\n      setTicketOpen(false);\n      setTicketError(null);\n      setTicketDraft(DEFAULT_TICKET_DRAFT);\n    },\n    onError: (err) => {\n      console.error(err);\n      setTicketError(\n        err?.message ? String(err.message) : \"Could not create ticket\",\n      );\n    },\n  });\n\n  const openTicket = useCallback(() => {\n    setTicketError(null);\n    setTicketDraft(DEFAULT_TICKET_DRAFT);\n    setTicketOpen(true);\n  }, []);\n\n  const closeTicket = useCallback(() => {\n    setTicketOpen(false);\n    setTicketError(null);\n    setTicketDraft(DEFAULT_TICKET_DRAFT);\n  }, []);\n\n  const onCreateTicket = useCallback(\n    (e) => {\n      e.preventDefault();\n      setTicketError(null);\n\n      const subjectRaw = String(ticketDraft.subject || \"\").trim();\n      if (!subjectRaw) {\n        setTicketError(\"Subject is required\");\n        return;\n      }\n\n      const tagRaw = String(ticketDraft.areaTag || \"\").trim();\n      const tag = tagRaw.toUpperCase();\n      const subject = tag ? `[${tag}] ${subjectRaw}` : subjectRaw;\n\n      const isFieldWorkTag = new Set([\n        \"FIELD\",\n        \"FSM\",\n        \"FIELDWORK\",\n        \"FIELD WORK\",\n      ]).has(String(tag).trim());\n\n      const customerId = ticketDraft.customerId\n        ? Number(ticketDraft.customerId)\n        : null;\n      const requesterEmail =\n        String(ticketDraft.requesterEmail || \"\").trim() || null;\n      const description = String(ticketDraft.description || \"\").trim() || null;\n      const priority = String(ticketDraft.priority || \"medium\").trim();\n\n      const payload = {\n        subject,\n        description,\n        requesterEmail,\n        customerId: Number.isFinite(customerId) ? customerId : null,\n        priority,\n      };\n\n      if (isFieldWorkTag) {\n        payload.autoCreateJobCard = !!ticketDraft.autoCreateJobCard;\n      }\n\n      createTicketMutation.mutate(payload);\n    },\n    [ticketDraft, createTicketMutation],\n  );\n",
+      "theirsContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/modules/crm/deals/page.jsx",
+      "oursContent": "                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New ticket\n              </button>\n              <button",
+      "theirsContent": "                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New Ticket\n              </button>\n              <button"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/modules/crm/tasks/page.jsx",
+      "oursContent": "import { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";\nimport { LifeBuoy, Plus, Search } from \"lucide-react\";",
+      "theirsContent": "import { Plus, Search, LifeBuoy } from \"lucide-react\";\nimport { CreateTicketModal } from \"@/components/HelpDesk/CreateTicketModal\";\nimport { useMutation, useQueryClient } from \"@tanstack/react-query\";\nimport { fetchJson } from \"@/utils/fetchJson\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/modules/crm/tasks/page.jsx",
+      "oursContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n\n  const ticketPriorityOptions = [\"low\", \"medium\", \"high\"];\n\n  const createTicketMutation = useMutation({\n    mutationFn: async (payload) =>\n      fetchJson(\"/api/helpdesk/tickets\", {\n        method: \"POST\",\n        headers: { \"Content-Type\": \"application/json\" },\n        body: JSON.stringify(payload),\n      }),\n    onSuccess: () => {\n      queryClient.invalidateQueries({ queryKey: [\"helpdesk\", \"tickets\"] });\n      setTicketOpen(false);\n      setTicketError(null);\n      setTicketDraft(DEFAULT_TICKET_DRAFT);\n    },\n    onError: (err) => {\n      console.error(err);\n      setTicketError(\n        err?.message ? String(err.message) : \"Could not create ticket\",\n      );\n    },\n  });\n\n  const openTicket = useCallback(() => {\n    setTicketError(null);\n    setTicketDraft(DEFAULT_TICKET_DRAFT);\n    setTicketOpen(true);\n  }, []);\n\n  const closeTicket = useCallback(() => {\n    setTicketOpen(false);\n    setTicketError(null);\n    setTicketDraft(DEFAULT_TICKET_DRAFT);\n  }, []);\n\n  const onCreateTicket = useCallback(\n    (e) => {\n      e.preventDefault();\n      setTicketError(null);\n\n      const subjectRaw = String(ticketDraft.subject || \"\").trim();\n      if (!subjectRaw) {\n        setTicketError(\"Subject is required\");\n        return;\n      }\n\n      const tagRaw = String(ticketDraft.areaTag || \"\").trim();\n      const tag = tagRaw.toUpperCase();\n      const subject = tag ? `[${tag}] ${subjectRaw}` : subjectRaw;\n\n      const isFieldWorkTag = new Set([\n        \"FIELD\",\n        \"FSM\",\n        \"FIELDWORK\",\n        \"FIELD WORK\",\n      ]).has(String(tag).trim());\n\n      const customerId = ticketDraft.customerId\n        ? Number(ticketDraft.customerId)\n        : null;\n      const requesterEmail =\n        String(ticketDraft.requesterEmail || \"\").trim() || null;\n      const description = String(ticketDraft.description || \"\").trim() || null;\n      const priority = String(ticketDraft.priority || \"medium\").trim();\n\n      const payload = {\n        subject,\n        description,\n        requesterEmail,\n        customerId: Number.isFinite(customerId) ? customerId : null,\n        priority,\n      };\n\n      if (isFieldWorkTag) {\n        payload.autoCreateJobCard = !!ticketDraft.autoCreateJobCard;\n      }\n\n      createTicketMutation.mutate(payload);\n    },\n    [ticketDraft, createTicketMutation],\n  );\n",
+      "theirsContent": "  const [ticketOpen, setTicketOpen] = useState(false);\n  const [ticketDraft, setTicketDraft] = useState(DEFAULT_TICKET_DRAFT);\n  const [ticketError, setTicketError] = useState(null);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/modules/crm/tasks/page.jsx",
+      "oursContent": "                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New ticket\n              </button>\n              <button",
+      "theirsContent": "                type=\"button\"\n                onClick={openTicket}\n                className=\"px-4 py-2 rounded-full font-semibold border border-gray-200 dark:border-gray-700 text-[#6B7280] dark:text-[#9CA3AF] hover:bg-gray-50 dark:hover:bg-gray-800 inline-flex items-center gap-2\"\n              >\n                <LifeBuoy size={18} />\n                New Ticket\n              </button>\n              <button"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/CustomerDetail/CustomerHeader.jsx",
+    "/apps/web/src/app/modules/crm/[id]/page.jsx",
+    "/apps/web/src/app/modules/crm/dashboard/page.jsx",
+    "/apps/web/src/app/modules/crm/deals/page.jsx",
+    "/apps/web/src/app/modules/crm/tasks/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

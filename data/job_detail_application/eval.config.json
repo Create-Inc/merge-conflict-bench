@@ -1,0 +1,9 @@
+{
+  "name": "job_detail_application",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "e8769b07-271b-470e-858a-5ebdf0b6a7bb",
+  "sourceTimestamp": "2026-01-04T19:53:40.670Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 4
+}

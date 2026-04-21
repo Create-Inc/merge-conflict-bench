@@ -1,0 +1,52 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "  const [sendHint, setSendHint] = useState(null);\n  const [devResetUrl, setDevResetUrl] = useState(null);\n  const [devEmailError, setDevEmailError] = useState(null);",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "      setSendHint(null);\n\n      // If email isn't configured in this environment (common on published site if secrets weren't set)",
+      "theirsContent": "      // If email isn't configured in this environment (common when prod secrets\n      // weren't set), show a clear message, but still allow a reset via fallback link."
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "          \"Email sending isn’t set up on the published site yet. Please add RESEND_API_KEY to your Production secrets, publish updates, then try again.\",",
+      "theirsContent": "          \"Email sending isn’t set up on this site yet. Use the reset link below, or add RESEND_API_KEY to your secrets to enable emails.\","
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "      setError(null);\n\n      // If sending failed (but key exists), show a prod-safe hint so you know it's not Gmail spam.\n      if (data?.sent === false && data?.hint === \"email_send_failed\") {\n        setSendHint(\n          \"The site tried to send the email but the provider rejected it. This is usually a Resend domain/from-address issue on the published domain.\",\n        );\n      }\n\n      setDevResetUrl(data?.devResetUrl || null);\n      setDevEmailError(data?.devEmailError || null);",
+      "theirsContent": "      setFallbackResetUrl(data?.fallbackResetUrl || null);\n      setError(null);"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "      setSendHint(null);\n      setDevResetUrl(null);\n      setDevEmailError(null);",
+      "theirsContent": "      setFallbackResetUrl(null);"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/account/forgot-password/page.jsx",
+      "oursContent": "          {sendHint ? (\n            <div className=\"rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-200\">\n              <div className=\"font-semibold\">Email delivery issue</div>\n              <div className=\"mt-1\">{sendHint}</div>\n            </div>\n          ) : null}\n\n          {devEmailError ? (",
+      "theirsContent": "          {fallbackResetUrl ? ("
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/password-reset/request/route.js",
+      "oursContent": "    // Only include debug information outside production.",
+      "theirsContent": "    // If email delivery failed, return a fallback reset link even in prod.\n    // This avoids blocking the user when email deliverability is flaky.\n    if (!sent) {\n      payload.fallbackResetUrl = resetUrl;\n    }\n\n    // Dev convenience: return the link + error so you can debug quickly."
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/account/forgot-password/page.jsx",
+    "/apps/web/src/app/api/password-reset/request/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

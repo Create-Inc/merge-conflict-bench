@@ -1,0 +1,196 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "import {\n  Menu,\n  X,\n  LogOut,\n  UserCog,\n  ChevronLeft,\n  ChevronRight,\n} from \"lucide-react\";",
+      "theirsContent": "import {\n  X,\n  LogOut,\n  UserCog,\n  PanelLeftClose,\n  PanelLeftOpen,\n} from \"lucide-react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "  const { collapsed, toggle } = useSidebarCollapsed();\n  const desktopWidthClass = collapsed ? \"lg:w-20\" : \"lg:w-64\";\n  const headerHeightClass = collapsed ? \"lg:h-20\" : \"lg:h-32\";\n  const navPaddingClass = collapsed ? \"px-3 lg:px-2\" : \"px-3\";\n  const orgPaddingClass = collapsed ? \"px-6 lg:px-3\" : \"px-6\";\n\n  const desktopCollapseLinkClass = collapsed\n    ? \"lg:justify-center lg:gap-0 lg:px-2\"\n    : \"\";\n  const desktopCollapseLabelClass = collapsed ? \"lg:hidden\" : \"\";\n\n  const ToggleIcon = collapsed ? ChevronRight : ChevronLeft;\n  const toggleTitle = collapsed ? \"Expand sidebar\" : \"Collapse sidebar\";\n",
+      "theirsContent": "  const isCollapsed = !!collapsed;\n\n  const sidebarWidthClass = isCollapsed ? \"w-64 lg:w-20\" : \"w-64\";\n\n  const itemBaseClass =\n    \"mb-1 flex items-center rounded-lg py-2.5 text-sm font-medium transition-all\";\n\n  const itemPaddingClass = isCollapsed\n    ? \"gap-3 px-3 lg:justify-center lg:gap-0 lg:px-0\"\n    : \"gap-3 px-3\";\n\n  const labelClass = isCollapsed ? \"lg:hidden\" : \"\";\n\n  const orgTextClass = isCollapsed ? \"lg:hidden\" : \"\";\n\n  const signOutTextClass = isCollapsed ? \"lg:hidden\" : \"\";\n\n  const toggleButton =\n    typeof onToggleCollapsed === \"function\" ? (\n      <button\n        type=\"button\"\n        onClick={onToggleCollapsed}\n        className=\"hidden lg:flex items-center justify-center rounded-lg border border-gray-200 bg-white/80 p-2 text-gray-700 shadow-sm hover:bg-white\"\n        title={isCollapsed ? \"Expand sidebar\" : \"Collapse sidebar\"}\n        aria-label={isCollapsed ? \"Expand sidebar\" : \"Collapse sidebar\"}\n      >\n        {isCollapsed ? (\n          <PanelLeftOpen size={18} />\n        ) : (\n          <PanelLeftClose size={18} />\n        )}\n      </button>\n    ) : null;\n\n  const safePrimaryModules = Array.isArray(primaryModules)\n    ? primaryModules\n    : [];\n  const safeSecondaryModules = Array.isArray(secondaryModules)\n    ? secondaryModules\n    : [];\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "        className={`fixed inset-y-0 left-0 z-30 w-64 ${desktopWidthClass} transform transition-transform duration-300 lg:relative lg:translate-x-0 ${",
+      "theirsContent": "        className={`fixed inset-y-0 left-0 z-30 ${sidebarWidthClass} transform transition-transform duration-300 lg:relative lg:translate-x-0 ${"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "          {/* Logo (white area stays square) */}\n          <div\n            className={`relative flex h-32 ${headerHeightClass} items-center justify-center border-b border-gray-200 bg-white`}\n          >",
+      "theirsContent": "          {/* Logo */}\n          <div className=\"relative flex h-32 items-center justify-center border-b border-gray-200 bg-white px-3\">"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "",
+      "theirsContent": "\n            {/* When collapsed on desktop, show a small logo avatar instead of the full header image */}\n            <div\n              className={`hidden items-center justify-center lg:flex ${\n                isCollapsed ? \"\" : \"lg:hidden\"\n              }`}\n            >\n              <div className=\"flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white ring-1 ring-gray-200\">\n                <img\n                  src={sidebarLogoUrl}\n                  alt={tenantName ? `${tenantName} logo` : \"Verity End2End\"}\n                  className=\"h-10 w-10 object-contain\"\n                  onError={handleLogoError}\n                />\n              </div>\n            </div>\n"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "            <nav\n              className={`flex flex-1 flex-col overflow-y-auto ${navPaddingClass} pt-8 pb-4`}\n            >\n              {primaryModules.map((module, idx) => {",
+      "theirsContent": "            <nav\n              className={`flex flex-1 flex-col overflow-y-auto pt-8 pb-4 ${\n                isCollapsed ? \"px-3 lg:px-2\" : \"px-3\"\n              }`}\n            >\n              {safePrimaryModules.map((module, idx) => {"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                const itemClass = module.active\n                  ? \"bg-[var(--tenant-accent)] text-white\"\n                  : \"text-white/80 hover:bg-white/10\";\n",
+      "theirsContent": "                const isActive = !!module.active;\n                const stateClass = isActive\n                  ? \"bg-[var(--tenant-accent)] text-white\"\n                  : \"text-white/80 hover:bg-white/10\";\n"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                    title={module.name}\n                    className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${itemClass} ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                    className={`${itemBaseClass} ${itemPaddingClass} ${stateClass}`}\n                    title={module.name}\n                    aria-label={module.name}"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                    <span className={desktopCollapseLabelClass}>\n                      {module.name}\n                    </span>",
+      "theirsContent": "                    <span className={labelClass}>{module.name}</span>"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                const itemClass = module.active\n                  ? \"bg-[var(--tenant-accent)] text-white\"\n                  : \"text-white/80 hover:bg-white/10\";\n",
+      "theirsContent": "                const isActive = !!module.active;\n                const stateClass = isActive\n                  ? \"bg-[var(--tenant-accent)] text-white\"\n                  : \"text-white/80 hover:bg-white/10\";\n"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                    title={module.name}\n                    className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${itemClass} ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                    className={`${itemBaseClass} ${itemPaddingClass} ${stateClass}`}\n                    title={module.name}\n                    aria-label={module.name}"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                    <span className={desktopCollapseLabelClass}>\n                      {module.name}\n                    </span>",
+      "theirsContent": "                    <span className={labelClass}>{module.name}</span>"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "            {/* Bottom info block (above Sign Out) */}\n            <div className={`border-t border-white/10 ${orgPaddingClass} py-4`}>",
+      "theirsContent": "            {/* Bottom info block */}\n            <div\n              className={`border-t border-white/10 py-4 ${\n                isCollapsed ? \"px-3 lg:px-2\" : \"px-6\"\n              }`}\n            >"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                <div\n                  className={`flex-1 overflow-hidden ${desktopCollapseLabelClass}`}\n                >",
+      "theirsContent": "                <div className={`flex-1 overflow-hidden ${orgTextClass}`}>"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                  title=\"Sign Out\"\n                  className={`flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                  className={`flex items-center rounded-lg py-2.5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 ${\n                    isCollapsed\n                      ? \"flex-1 gap-3 px-3 lg:justify-center lg:gap-0 lg:px-0\"\n                      : \"flex-1 gap-3 px-3\"\n                  }`}\n                  title=\"Sign Out\""
+    },
+    {
+      "blockIndex": 15,
+      "filePath": "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+      "oursContent": "                  <span className={desktopCollapseLabelClass}>Sign Out</span>",
+      "theirsContent": "                  <span className={signOutTextClass}>Sign Out</span>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "import { X, LogOut, UserCog, ChevronLeft, ChevronRight } from \"lucide-react\";",
+      "theirsContent": "import {\n  X,\n  LogOut,\n  UserCog,\n  PanelLeftClose,\n  PanelLeftOpen,\n} from \"lucide-react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "  const { collapsed, toggle } = useSidebarCollapsed();\n  const desktopWidthClass = collapsed ? \"lg:w-20\" : \"lg:w-64\";\n  const headerHeightClass = collapsed ? \"lg:h-20\" : \"lg:h-32\";\n  const navPaddingClass = collapsed ? \"px-3 lg:px-2\" : \"px-3\";\n  const orgPaddingClass = collapsed ? \"px-6 lg:px-3\" : \"px-6\";\n\n  const desktopCollapseLinkClass = collapsed\n    ? \"lg:justify-center lg:gap-0 lg:px-2\"\n    : \"\";\n  const desktopCollapseLabelClass = collapsed ? \"lg:hidden\" : \"\";\n\n  const ToggleIcon = collapsed ? ChevronRight : ChevronLeft;\n  const toggleTitle = collapsed ? \"Expand sidebar\" : \"Collapse sidebar\";\n",
+      "theirsContent": "  const isCollapsed = !!collapsed;\n  const sidebarWidthClass = isCollapsed ? \"w-64 lg:w-20\" : \"w-64\";\n\n  const itemBaseClass =\n    \"mb-1 flex items-center rounded-lg py-2.5 text-sm font-medium transition-all\";\n\n  const itemPaddingClass = isCollapsed\n    ? \"gap-3 px-3 lg:justify-center lg:gap-0 lg:px-0\"\n    : \"gap-3 px-3\";\n\n  const labelClass = isCollapsed ? \"lg:hidden\" : \"\";\n  const orgTextClass = isCollapsed ? \"lg:hidden\" : \"\";\n  const signOutTextClass = isCollapsed ? \"lg:hidden\" : \"\";\n\n  const toggleButton =\n    typeof onToggleCollapsed === \"function\" ? (\n      <button\n        type=\"button\"\n        onClick={onToggleCollapsed}\n        className=\"hidden lg:flex items-center justify-center rounded-lg border border-gray-200 bg-white/80 p-2 text-gray-700 shadow-sm hover:bg-white\"\n        title={isCollapsed ? \"Expand sidebar\" : \"Collapse sidebar\"}\n        aria-label={isCollapsed ? \"Expand sidebar\" : \"Collapse sidebar\"}\n      >\n        {isCollapsed ? (\n          <PanelLeftOpen size={18} />\n        ) : (\n          <PanelLeftClose size={18} />\n        )}\n      </button>\n    ) : null;\n\n  const safePrimary = Array.isArray(primaryModules) ? primaryModules : [];\n  const safeSecondary = Array.isArray(secondaryModules) ? secondaryModules : [];\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "        className={`fixed inset-y-0 left-0 z-30 w-64 ${desktopWidthClass} transform transition-transform duration-300 lg:relative lg:translate-x-0 ${",
+      "theirsContent": "        className={`fixed inset-y-0 left-0 z-30 ${sidebarWidthClass} transform transition-transform duration-300 lg:relative lg:translate-x-0 ${"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "          <div\n            className={`relative flex h-32 ${headerHeightClass} items-center justify-center border-b border-gray-200 bg-white`}\n          >",
+      "theirsContent": "          <div className=\"relative flex h-32 items-center justify-center border-b border-gray-200 bg-white px-3\">"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "",
+      "theirsContent": "\n            <div\n              className={`hidden items-center justify-center lg:flex ${\n                isCollapsed ? \"\" : \"lg:hidden\"\n              }`}\n            >\n              <div className=\"flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white ring-1 ring-gray-200\">\n                <img\n                  src={sidebarLogoUrl}\n                  alt={logoAlt}\n                  className=\"h-10 w-10 object-contain\"\n                  onError={handleLogoError}\n                />\n              </div>\n            </div>\n"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "              className=\"absolute right-3 text-gray-700 lg:hidden\"\n              type=\"button\"",
+      "theirsContent": "              className=\"absolute right-3 top-3 text-gray-700 lg:hidden\"\n              type=\"button\"\n              aria-label=\"Close menu\""
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "            <nav\n              className={`flex flex-1 flex-col overflow-y-auto ${navPaddingClass} pt-8 pb-4`}\n            >\n              {primaryModules.map((module, idx) => {",
+      "theirsContent": "            <nav\n              className={`flex flex-1 flex-col overflow-y-auto pt-8 pb-4 ${\n                isCollapsed ? \"px-3 lg:px-2\" : \"px-3\"\n              }`}\n            >\n              {safePrimary.map((module, idx) => {"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                    title={module.name}\n                    className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${itemClass} ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                    className={`${itemBaseClass} ${itemPaddingClass} ${itemClass}`}\n                    title={module.name}\n                    aria-label={module.name}"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                    <span className={desktopCollapseLabelClass}>\n                      {module.name}\n                    </span>",
+      "theirsContent": "                    <span className={labelClass}>{module.name}</span>"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                    title={module.name}\n                    className={`mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${itemClass} ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                    className={`${itemBaseClass} ${itemPaddingClass} ${itemClass}`}\n                    title={module.name}\n                    aria-label={module.name}"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                    <span className={desktopCollapseLabelClass}>\n                      {module.name}\n                    </span>",
+      "theirsContent": "                    <span className={labelClass}>{module.name}</span>"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "            <div className={`border-t border-white/10 ${orgPaddingClass} py-4`}>",
+      "theirsContent": "            <div\n              className={`border-t border-white/10 py-4 ${\n                isCollapsed ? \"px-3 lg:px-2\" : \"px-6\"\n              }`}\n            >"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                <div\n                  className={`flex-1 overflow-hidden ${desktopCollapseLabelClass}`}\n                >",
+      "theirsContent": "                <div className={`flex-1 overflow-hidden ${orgTextClass}`}>"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                  title=\"Sign Out\"\n                  className={`flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 ${desktopCollapseLinkClass}`}",
+      "theirsContent": "                  className={`flex items-center rounded-lg py-2.5 text-sm font-medium text-white/80 transition-all hover:bg-white/10 ${\n                    isCollapsed\n                      ? \"flex-1 gap-3 px-3 lg:justify-center lg:gap-0 lg:px-0\"\n                      : \"flex-1 gap-3 px-3\"\n                  }`}\n                  title=\"Sign Out\""
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/web/src/components/Dispatch/Sidebar.jsx",
+      "oursContent": "                  <span className={desktopCollapseLabelClass}>Sign Out</span>",
+      "theirsContent": "                  <span className={signOutTextClass}>Sign Out</span>"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/Dashboard/DashboardSidebar.jsx",
+    "/apps/web/src/components/Dispatch/Sidebar.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

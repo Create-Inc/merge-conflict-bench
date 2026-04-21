@@ -1,0 +1,94 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "  const urlObj = safeParseUrl(request.url);\n\n  // Compute secureCookie based on request URL when possible to avoid cookie-name mismatches.\n  const isSecure = urlObj?.protocol\n    ? urlObj.protocol === \"https:\"\n    : !!process.env.AUTH_URL && process.env.AUTH_URL.startsWith(\"https\");\n",
+      "theirsContent": "  const reqUrl = safeRequestUrl(request);\n  const isSecure = reqUrl.protocol === \"https:\";\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "        headers,",
+      "theirsContent": "        headers: {\n          \"Content-Type\": \"text/html\",\n          \"Cache-Control\": \"no-store\",\n        },"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "  if (!token) {\n    return new Response(\n      htmlWithPostMessage({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeFailed\",\n        details: \"Session decoded, but raw token string was not available.\",\n      }),\n      {\n        status: 500,\n        headers,\n      },\n    );\n  }\n",
+      "theirsContent": "  if (!token) {\n    return new Response(\n      htmlWithPostMessage({\n        type: \"AUTH_ERROR\",\n        error: \"TokenExchangeFailed\",\n        details: \"Session decoded, but raw token string was not available.\",\n      }),\n      {\n        status: 500,\n        headers: {\n          \"Content-Type\": \"text/html\",\n          \"Cache-Control\": \"no-store\",\n        },\n      },\n    );\n  }\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/auth/expo-web-success/route.js",
+      "oursContent": "    headers,",
+      "theirsContent": "    headers: {\n      \"Content-Type\": \"text/html\",\n      \"Cache-Control\": \"no-store\",\n    },"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "    // Use a safe URL parser because in some runtimes request.url may be relative.\n    const urlObj = safeParseUrl(request.url);\n\n    // Compute secureCookie based on the incoming request URL when possible.\n    let isSecure = false;\n    if (urlObj?.protocol) {\n      isSecure = urlObj.protocol === \"https:\";\n    } else {\n      isSecure =\n        !!process.env.AUTH_URL && process.env.AUTH_URL.startsWith(\"https\");\n    }",
+      "theirsContent": "    // IMPORTANT:\n    // GET is used as a browser/WebView navigation target (the callbackUrl in mobile auth).\n    // In iOS WKWebView, if this endpoint returns JSON (or bare `null`), JS may not run,\n    // and the app never receives AUTH_SUCCESS.\n    // So: for GET, ALWAYS return an HTML document that posts a message."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "    const format = (urlObj?.searchParams.get(\"format\") || \"\").toLowerCase();",
+      "theirsContent": "    if (!jwt) {\n      return new Response(\n        htmlWithPostMessage({\n          type: \"AUTH_ERROR\",\n          error: \"Unauthorized\",\n          details: \"No session cookie/token found on callback.\",\n        }),\n        {\n          status: 401,\n          headers: {\n            \"Content-Type\": \"text/html\",\n            \"Cache-Control\": \"no-store\",\n          },\n        },\n      );\n    }"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "    const commonHeaders = wantsHtml\n      ? {\n          \"Content-Type\": \"text/html; charset=utf-8\",\n          \"Cache-Control\": \"no-store\",\n        }\n      : {\n          \"Content-Type\": \"application/json\",\n          \"Cache-Control\": \"no-store\",\n        };\n",
+      "theirsContent": "    return new Response(\n      htmlWithPostMessage({\n        type: \"AUTH_ERROR\",\n        error: \"InternalError\",\n        details: err?.message || \"Unknown error\",\n      }),\n      {\n        status: 500,\n        headers: {\n          \"Content-Type\": \"text/html\",\n          \"Cache-Control\": \"no-store\",\n        },\n      },\n    );\n  }\n}\n\nexport async function POST(request) {\n  try {\n    // POST is for programmatic token exchange (returns JSON).\n    const secureCookie = isSecureRequest(request);\n\n    const [token, jwt] = await Promise.all([\n      getToken({\n        req: request,\n        secret: process.env.AUTH_SECRET,\n        secureCookie,\n        raw: true,\n      }),\n      getToken({\n        req: request,\n        secret: process.env.AUTH_SECRET,\n        secureCookie,\n      }),\n    ]);\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "      if (wantsHtml) {\n        return new Response(\n          htmlWithPostMessage({\n            type: \"AUTH_ERROR\",\n            error: \"Unauthorized\",\n            details: \"No session cookie/token found on callback.\",\n          }),\n          { status: 401, headers: commonHeaders },\n        );\n      }\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "        headers: commonHeaders,",
+      "theirsContent": "        headers: {\n          \"Content-Type\": \"application/json\",\n          \"Cache-Control\": \"no-store\",\n        },"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "      if (wantsHtml) {\n        return new Response(\n          htmlWithPostMessage({\n            type: \"AUTH_ERROR\",\n            error: \"TokenExchangeFailed\",\n            details: \"Session decoded, but raw token string was not available.\",\n          }),\n          { status: 500, headers: commonHeaders },\n        );\n      }\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "          headers: commonHeaders,",
+      "theirsContent": "          headers: {\n            \"Content-Type\": \"application/json\",\n            \"Cache-Control\": \"no-store\",\n          },"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "    const payload = {\n      jwt: token,\n      user: {\n        id: jwt.sub,\n        email: jwt.email,\n        name: jwt.name,\n      },\n    };\n\n    if (wantsHtml) {\n      return new Response(\n        htmlWithPostMessage({ type: \"AUTH_SUCCESS\", ...payload }),\n        {\n          headers: commonHeaders,",
+      "theirsContent": "    return new Response(\n      JSON.stringify({\n        jwt: token,\n        user: { id: jwt.sub, email: jwt.email, name: jwt.name },\n      }),\n      {\n        headers: {\n          \"Content-Type\": \"application/json\",\n          \"Cache-Control\": \"no-store\","
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "      );\n    }\n\n    return new Response(JSON.stringify(payload), { headers: commonHeaders });",
+      "theirsContent": "      },\n    );"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "    // Avoid throwing inside the error handler (request.url may be relative).\n    const urlObj = safeParseUrl(request.url);\n    const format = (urlObj?.searchParams.get(\"format\") || \"\").toLowerCase();\n    const accept = (request.headers.get(\"accept\") || \"\").toLowerCase();\n    const secFetchDest = (\n      request.headers.get(\"sec-fetch-dest\") || \"\"\n    ).toLowerCase();\n\n    const wantsHtml =\n      format === \"html\" ||\n      accept.includes(\"text/html\") ||\n      secFetchDest === \"document\" ||\n      String(request.url || \"\").includes(\"format=html\");\n\n    if (wantsHtml) {\n      return new Response(\n        htmlWithPostMessage({\n          type: \"AUTH_ERROR\",\n          error: \"InternalError\",\n          details: err?.message || \"Unknown error\",\n        }),\n        {\n          status: 500,\n          headers: {\n            \"Content-Type\": \"text/html; charset=utf-8\",\n            \"Cache-Control\": \"no-store\",\n          },\n        },\n      );\n    }\n",
+      "theirsContent": ""
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/auth/expo-web-success/route.js",
+    "/apps/web/src/app/api/auth/token/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

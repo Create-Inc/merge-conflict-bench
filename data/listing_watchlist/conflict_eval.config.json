@@ -1,0 +1,161 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "      const token = useAuthStore.getState().auth?.token;\n      if (!token) {\n        return { watchlist: [] };\n      }",
+      "theirsContent": "      // Get fresh auth from store at fetch time\n      const currentAuth = useAuthStore.getState().auth;\n      const token = currentAuth?.token;"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "",
+      "theirsContent": "      if (typeof token !== \"string\" || token.length === 0) {\n        return { watchlist: [] };\n      }\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "          Authorization: `Bearer ${token}`,\n          \"x-session-token\": token,",
+      "theirsContent": "          authorization: `Bearer ${token}`,"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "      const token = useAuthStore.getState().auth?.token;\n      if (!token) {\n        throw new Error(\"Unauthorized\");\n      }",
+      "theirsContent": "      // Get fresh auth from store at fetch time\n      const token = useAuthStore.getState().auth?.token;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "          Authorization: `Bearer ${token}`,\n          \"x-session-token\": token,",
+      "theirsContent": "          authorization: `Bearer ${token}`,"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/(tabs)/listing.jsx",
+      "oursContent": "        throw new Error(data.error || \"Failed to remove from watchlist\");",
+      "theirsContent": "        const errBody = await response.json().catch(() => null);\n        const errMsg = errBody?.error || \"Failed to remove from watchlist\";\n        throw new Error(errMsg);"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "      if (!token) {",
+      "theirsContent": "      if (typeof token !== \"string\" || token.length === 0) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "          // Some environments strip Authorization, so we send both\n          Authorization: `Bearer ${token}`,\n          \"x-session-token\": token,",
+      "theirsContent": "          authorization: `Bearer ${token}`,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "        // don’t throw here; we want the screen to still work even if watchlist fails",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "    enabled: !!auth?.id,",
+      "theirsContent": "    enabled: typeof auth?.token === \"string\" && auth.token.length > 0,"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "      const token = useAuthStore.getState().auth?.token;\n      if (!token) {\n        throw new Error(\"Unauthorized\");\n      }",
+      "theirsContent": "      // Get fresh auth from store at fetch time\n      const currentAuth = useAuthStore.getState().auth;\n      const token = currentAuth?.token;"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "",
+      "theirsContent": "      if (typeof token !== \"string\" || token.length === 0) {\n        throw new Error(\"Unauthorized\");\n      }\n"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "          Authorization: `Bearer ${token}`,\n          \"x-session-token\": token,",
+      "theirsContent": "          authorization: `Bearer ${token}`,"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "      const responseData = await response.json().catch(() => ({}));",
+      "theirsContent": "      const responseData = await response.json();"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/mobile/src/app/listing/[id].jsx",
+      "oursContent": "    const token = useAuthStore.getState().auth?.token;\n    if (!token) {\n      Alert.alert(\"Sign in required\", \"Please sign in to save listings\");",
+      "theirsContent": "    const token = useAuthStore.getState().auth?.token;\n\n    if (typeof token !== \"string\" || token.length === 0) {\n      Alert.alert(\"Sign in required\", \"Please sign in to save listings\", [\n        { text: \"Sign In\", onPress: () => router.push(\"/auth-landing\") },\n        { text: \"Cancel\", style: \"cancel\" },\n      ]);"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "function getTokenFromRequest(request, body) {\n  const authHeader = request.headers.get(\"authorization\");\n  if (authHeader?.startsWith(\"Bearer \")) {\n    const token = authHeader.substring(7).trim();\n    if (token) {\n      return token;\n    }\n  }\n\n  const headerToken = request.headers.get(\"x-session-token\");\n  if (headerToken) {\n    return headerToken.trim();\n  }\n\n  // fallback for environments that might strip auth headers\n  if (body?.token) {\n    return String(body.token).trim();\n  }\n\n  // last-resort fallback (not used by the app, but handy for debugging)\n  try {\n    const url = new URL(request.url);\n    const tokenFromQuery = url.searchParams.get(\"token\");\n    if (tokenFromQuery) {\n      return tokenFromQuery.trim();\n    }\n  } catch {\n    // ignore\n  }",
+      "theirsContent": "const getUserIdFromBearerToken = async (request) => {\n  const authHeader = request.headers.get(\"authorization\");\n  if (!authHeader?.startsWith(\"Bearer \")) {\n    return { error: \"Unauthorized\", status: 401 };\n  }\n\n  const token = authHeader.substring(7);\n  if (!token || token === \"undefined\") {\n    return { error: \"Unauthorized\", status: 401 };\n  }"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "  return null;\n}",
+      "theirsContent": "  const [session] = await sql`\n    SELECT user_id\n    FROM sessions\n    WHERE token = ${token} AND expires_at > NOW()\n  `;"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "async function requireUserIdFromToken(token) {\n  const [session] = await sql`\n    SELECT user_id\n    FROM sessions\n    WHERE token = ${token} AND expires_at > NOW()\n  `;",
+      "theirsContent": "  if (!session) {\n    return { error: \"Invalid or expired token\", status: 401 };\n  }"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "  if (!session) {\n    return { userId: null, error: \"Invalid or expired token\" };\n  }",
+      "theirsContent": "  const [profile] = await sql`\n    SELECT user_id\n    FROM user_profiles\n    WHERE user_id = ${session.user_id}\n  `;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "  return { userId: session.user_id, error: null };\n}\n\n// Get user's watchlist\nexport async function GET(request) {\n  try {\n    const token = getTokenFromRequest(request, null);\n    if (!token) {\n      return Response.json({ error: \"Unauthorized\" }, { status: 401 });",
+      "theirsContent": "  if (!profile) {\n    return { error: \"Profile not found\", status: 404 };\n  }\n\n  return { userId: profile.user_id };\n};\n\n// Get user's watchlist\nexport async function GET(request) {\n  try {\n    const auth = await getUserIdFromBearerToken(request);\n    if (auth.error) {\n      return Response.json({ error: auth.error }, { status: auth.status });"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "    const { userId, error } = await requireUserIdFromToken(token);\n    if (!userId) {\n      return Response.json({ error }, { status: 401 });\n    }",
+      "theirsContent": "    const userId = auth.userId;"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "    const body = await request.json().catch(() => ({}));\n    const token = getTokenFromRequest(request, body);\n\n    if (!token) {\n      return Response.json({ error: \"Unauthorized\" }, { status: 401 });",
+      "theirsContent": "    const auth = await getUserIdFromBearerToken(request);\n    if (auth.error) {\n      return Response.json({ error: auth.error }, { status: auth.status });"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "    const { userId, error } = await requireUserIdFromToken(token);\n    if (!userId) {\n      return Response.json({ error }, { status: 401 });\n    }\n\n    const { listing_id } = body;",
+      "theirsContent": "    const userId = auth.userId;\n    const { listing_id } = await request.json();"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "    const body = await request.json().catch(() => ({}));\n    const token = getTokenFromRequest(request, body);\n\n    if (!token) {\n      return Response.json({ error: \"Unauthorized\" }, { status: 401 });",
+      "theirsContent": "    const auth = await getUserIdFromBearerToken(request);\n    if (auth.error) {\n      return Response.json({ error: auth.error }, { status: auth.status });"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/web/src/app/api/watchlist/route.js",
+      "oursContent": "    const { userId, error } = await requireUserIdFromToken(token);\n    if (!userId) {\n      return Response.json({ error }, { status: 401 });\n    }\n\n    const { listing_id } = body;",
+      "theirsContent": "    const userId = auth.userId;\n    const { listing_id } = await request.json();"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/(tabs)/listing.jsx",
+    "/apps/mobile/src/app/listing/[id].jsx",
+    "/apps/web/src/app/api/watchlist/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

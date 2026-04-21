@@ -1,0 +1,145 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/_layout.jsx",
+      "oursContent": "      {/* ✅ Live chat is now only opened from the Profile screen */}",
+      "theirsContent": "      {/* No global chat button. Live chat lives in Profile only. */}\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/(tabs)/chat.jsx",
+      "oursContent": "import { Redirect } from \"expo-router\";",
+      "theirsContent": "import { useEffect } from \"react\";\nimport { View, Text } from \"react-native\";\nimport { StatusBar } from \"expo-status-bar\";\nimport { useSafeAreaInsets } from \"react-native-safe-area-context\";\nimport { router } from \"expo-router\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/(tabs)/chat.jsx",
+      "oursContent": "",
+      "theirsContent": "import { useTheme } from \"../../components/hooks/useTheme\";\nimport { useLanguage } from \"../../utils/LanguageContext\";\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/(tabs)/chat.jsx",
+      "oursContent": "  // ✅ Live chat should only be accessed via Profile.\n  return <Redirect href=\"/(tabs)/profile?openChat=1\" />;",
+      "theirsContent": "  const insets = useSafeAreaInsets();\n  const { colors, isDark } = useTheme();\n  const { translate } = useLanguage();\n\n  // Redirect: live chat is only in Profile\n  useEffect(() => {\n    router.replace(\"/(tabs)/profile?openLiveChat=1\");\n  }, []);\n\n  return (\n    <View\n      style={{\n        flex: 1,\n        backgroundColor: colors.background,\n        paddingTop: insets.top + 16,\n        paddingHorizontal: 20,\n      }}\n    >\n      <StatusBar style={isDark ? \"light\" : \"dark\"} />\n      <Text\n        style={{\n          color: colors.text,\n          fontSize: 18,\n          fontWeight: \"700\",\n          marginBottom: 8,\n        }}\n      >\n        {translate(\"openingLiveChat\", {}, \"Åpner live chat...\")}\n      </Text>\n      <Text style={{ color: colors.textSecondary, fontSize: 14 }}>\n        {translate(\n          \"liveChatMovedToProfile\",\n          {},\n          \"Live chat finnes nå i Profil.\",\n        )}\n      </Text>\n    </View>\n  );"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/(tabs)/profile.jsx",
+      "oursContent": "  const params = useLocalSearchParams();\n  const openChatParam = Array.isArray(params?.openChat)\n    ? params.openChat[0]\n    : params?.openChat;\n\n  const openedFromParamRef = useRef(false);",
+      "theirsContent": "  const params = useLocalSearchParams();"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/(tabs)/profile.jsx",
+      "oursContent": "    const shouldOpen = openChatParam === \"1\" || openChatParam === \"true\";\n    if (!shouldOpen) {\n      return;\n    }\n    if (openedFromParamRef.current) {\n      return;\n    }\n    openedFromParamRef.current = true;\n    setShowLiveChat(true);\n  }, [openChatParam]);\n\n  useEffect(() => {",
+      "theirsContent": "    const raw = Array.isArray(params?.openLiveChat)\n      ? params.openLiveChat[0]\n      : params?.openLiveChat;\n\n    const shouldOpen = raw === \"1\" || raw === \"true\";\n    if (shouldOpen) {\n      setShowLiveChat(true);\n    }\n  }, [params?.openLiveChat]);\n\n  useEffect(() => {"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/settings/HelpSupportSection.jsx",
+      "oursContent": "    // ✅ Live chat should only live in Profile.\n    router.push(\"/(tabs)/profile?openChat=1\");",
+      "theirsContent": "    // Live chat lives in Profile\n    router.push(\"/(tabs)/profile?openLiveChat=1\");"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "import { useLanguage } from \"@/utils/LanguageContext\";",
+      "theirsContent": "import { useLanguage } from \"../../utils/LanguageContext\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  const errorTitle = translate(\"error\", {}, \"Feil\");\n",
+      "theirsContent": "  const locale = useMemo(() => {\n    const map = {\n      nb: \"nb-NO\",\n      nn: \"nb-NO\",\n      en: \"en-US\",\n      sv: \"sv-SE\",\n      da: \"da-DK\",\n      fi: \"fi-FI\",\n      de: \"de-DE\",\n      fr: \"fr-FR\",\n      es: \"es-ES\",\n      nl: \"nl-NL\",\n      it: \"it-IT\",\n      pt: \"pt-PT\",\n      pl: \"pl-PL\",\n    };\n    return map[language] || \"nb-NO\";\n  }, [language]);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "      Alert.alert(\n        errorTitle,\n        translate(\"failedToLoad\", {}, \"Mangler gruppe-id\"),\n      );",
+      "theirsContent": "      Alert.alert(\n        translate(\"error\", {}, \"Feil\"),\n        translate(\"missingGroupId\", {}, \"Mangler gruppe-id\"),\n      );"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  }, [errorTitle, groupId, translate]);",
+      "theirsContent": "  }, [groupId, translate]);"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "      Alert.alert(\n        errorTitle,\n        translate(\"failedToLoad\", {}, \"Mangler gruppe-id\"),\n      );",
+      "theirsContent": "      Alert.alert(\n        translate(\"error\", {}, \"Feil\"),\n        translate(\"missingGroupId\", {}, \"Mangler gruppe-id\"),\n      );"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  }, [errorTitle, groupId, translate]);",
+      "theirsContent": "  }, [groupId, translate]);"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "        throw new Error(\n          translate(\"failedToLoad\", {}, \"Kunne ikke laste gruppe\"),\n        );",
+      "theirsContent": "        throw new Error(\n          translate(\"couldNotLoadGroup\", {}, \"Kunne ikke laste gruppe\"),\n        );"
+    },
+    {
+      "blockIndex": 7,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "        Alert.alert(\n          errorTitle,\n          translate(\"tryAgain\", {}, \"Kunne ikke laste gruppe. Prøv igjen.\"),\n        );",
+      "theirsContent": "        Alert.alert(\n          translate(\"error\", {}, \"Feil\"),\n          translate(\n            \"couldNotLoadGroupTryAgain\",\n            {},\n            \"Kunne ikke laste gruppe. Prøv igjen.\",\n          ),\n        );"
+    },
+    {
+      "blockIndex": 8,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "        const errMsg =\n          data?.error ||\n          translate(\"somethingWentWrong\", {}, \"Kunne ikke sende melding\");",
+      "theirsContent": "        const errMsg =\n          data?.error ||\n          translate(\"couldNotSendMessage\", {}, \"Kunne ikke sende melding\");"
+    },
+    {
+      "blockIndex": 9,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "        errorTitle,\n        error.message ||\n          translate(\"tryAgain\", {}, \"Kunne ikke sende melding. Prøv igjen.\"),",
+      "theirsContent": "        translate(\"error\", {}, \"Feil\"),\n        error.message ||\n          translate(\n            \"couldNotSendMessageTryAgain\",\n            {},\n            \"Kunne ikke sende melding. Prøv igjen.\",\n          ),"
+    },
+    {
+      "blockIndex": 10,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  }, [\n    actorKey,\n    apiHeaders,\n    errorTitle,\n    groupId,\n    message,\n    sending,\n    translate,\n    user,\n  ]);",
+      "theirsContent": "  }, [actorKey, apiHeaders, groupId, message, sending, translate, user]);"
+    },
+    {
+      "blockIndex": 11,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  const formatTime = useCallback(\n    (timestamp) => {\n      const locale = language === \"nb\" ? \"no-NO\" : \"en-US\";\n      return new Date(timestamp).toLocaleTimeString(locale, {\n        hour: \"2-digit\",\n        minute: \"2-digit\",\n      });\n    },\n    [language],\n  );",
+      "theirsContent": "  const formatTime = useCallback(\n    (timestamp) => {\n      return new Date(timestamp).toLocaleTimeString(locale, {\n        hour: \"2-digit\",\n        minute: \"2-digit\",\n      });\n    },\n    [locale],\n  );"
+    },
+    {
+      "blockIndex": 12,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "        <Text style={{ color: colors.text }}>{loadingText}</Text>",
+      "theirsContent": "        <Text style={{ color: colors.text }}>\n          {translate(\"loadingGroupChat\", {}, \"Laster gruppe chat...\")}\n        </Text>"
+    },
+    {
+      "blockIndex": 13,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "  const membersWord = translate(\"membersLabel\", {}, \"medlemmer\");\n  const headerMemberText = `${activeMemberCount} ${membersWord}`;",
+      "theirsContent": "  const headerMemberText = `${activeMemberCount} ${translate(\"membersLabel\", {}, \"medlemmer\")}`;"
+    },
+    {
+      "blockIndex": 14,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "            placeholder={translate(\"typeMessage\", {}, \"Skriv en melding...\")}",
+      "theirsContent": "            placeholder={translate(\n              \"writeMessagePlaceholder\",\n              {},\n              \"Skriv en melding...\",\n            )}"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/_layout.jsx",
+    "/apps/mobile/src/app/(tabs)/chat.jsx",
+    "/apps/mobile/src/app/(tabs)/profile.jsx",
+    "/apps/mobile/src/components/settings/HelpSupportSection.jsx",
+    "/apps/mobile/src/app/group-chat/[groupId].jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

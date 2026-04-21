@@ -1,0 +1,89 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "        <div className=\"w-full max-w-md bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden\">\n          <div className=\"px-6 py-5 border-b border-slate-200 bg-slate-50/50\">\n            <h1 className=\"text-xl font-semibold text-slate-900\">\n              cashmike SMTP checker\n            </h1>\n            <p className=\"text-sm text-slate-500 mt-1\">\n              Choose a user to sign in\n            </p>\n          </div>\n\n          <div className=\"p-6 space-y-3\">",
+      "theirsContent": "        <div className=\"w-full max-w-md bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden\">\n          <div className=\"px-6 py-5 border-b border-slate-200 bg-slate-50/50\">\n            <h1 className=\"text-xl font-semibold text-slate-900\">\n              cashmike SMTP checker\n            </h1>\n            <p className=\"mt-1 text-sm text-slate-600\">\n              Choose a user to sign in\n            </p>\n          </div>\n\n          <div className=\"p-6 space-y-3\">"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "              href=\"/account/signin?user=admin&callbackUrl=/\"\n              className=\"w-full block text-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm transition-colors\"",
+      "theirsContent": "              href=\"/account/signin?callbackUrl=/&user=admin\"\n              className=\"block w-full text-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm\""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/page.jsx",
+      "oursContent": "              href=\"/account/signin?user=alonsy-y&callbackUrl=/\"\n              className=\"w-full block text-center px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium rounded-lg text-sm transition-colors\"",
+      "theirsContent": "              href=\"/account/signin?callbackUrl=/&user=alonsy-y\"\n              className=\"block w-full text-center px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg text-sm\""
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/signup/page.jsx",
+      "oursContent": "export default function SignUpDisabledPage() {",
+      "theirsContent": "export default function MainComponent() {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/signup/page.jsx",
+      "oursContent": "      <div className=\"w-full max-w-md rounded-2xl bg-white p-8 shadow-xl border border-slate-200\">\n        <h1 className=\"mb-3 text-center text-2xl font-bold text-slate-900\">\n          Sign up is disabled",
+      "theirsContent": "      <div className=\"w-full max-w-md rounded-2xl bg-white p-8 shadow-xl border border-slate-200\">\n        <h1 className=\"mb-2 text-center text-2xl font-bold text-gray-800\">\n          Sign up is disabled"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/account/signup/page.jsx",
+      "oursContent": "        <p className=\"text-center text-sm text-slate-600\">\n          This app only supports the built-in users.\n        </p>\n        <div className=\"mt-6\">\n          <a\n            href=\"/\"\n            className=\"w-full block text-center rounded-lg bg-blue-600 px-4 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700\"\n          >\n            Back\n          </a>\n        </div>\n      </div>",
+      "theirsContent": "        <p className=\"mb-6 text-center text-sm text-slate-600\">\n          This app uses pre-made accounts only.\n        </p>\n        <a\n          href=\"/\"\n          className=\"block w-full text-center rounded-lg bg-blue-600 px-4 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700\"\n        >\n          Go to home\n        </a>\n      </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "  const [lockedUser, setLockedUser] = useState(null);\n  const [callbackUrl, setCallbackUrl] = useState(\"/\");",
+      "theirsContent": "  const [lockedUser, setLockedUser] = useState(false);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "  useEffect(() => {\n    if (typeof window === \"undefined\") {\n      return;\n    }\n    const params = new URLSearchParams(window.location.search);\n    const userParam = params.get(\"user\");\n    const cb = params.get(\"callbackUrl\");\n\n    if (cb && cb.trim()) {\n      setCallbackUrl(cb);\n    }\n\n    if (userParam && userParam.trim()) {\n      const u = userParam.trim();\n      setLockedUser(u);\n      setEmail(u);\n    }\n  }, []);\n\n  const emailLabel = lockedUser ? \"User\" : \"Email or Username\";\n  const emailPlaceholder = lockedUser ? \"\" : \"Enter your email or username\";\n",
+      "theirsContent": "  useEffect(() => {\n    if (typeof window === \"undefined\") {\n      return;\n    }\n\n    const params = new URLSearchParams(window.location.search);\n    const presetUser = (params.get(\"user\") || \"\").trim();\n\n    if (presetUser) {\n      // we treat this as a username, not an email\n      setEmail(presetUser);\n      setLockedUser(true);\n    }\n  }, []);\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "        CredentialsSignin: \"Incorrect email/username or password. Try again.\",",
+      "theirsContent": "        CredentialsSignin: \"Incorrect email or password. Try again.\","
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "        <p className=\"mb-8 text-center text-sm text-slate-500\">\n          cashmike SMTP checker\n        </p>",
+      "theirsContent": "        <p className=\"mb-8 text-center text-sm text-slate-600\">\n          This app has only two users:{\" \"}\n          <span className=\"font-semibold\">Admin</span> and{\" \"}\n          <span className=\"font-semibold\">ALONSY-Y</span>.\n        </p>"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "              {emailLabel}",
+      "theirsContent": "              Username"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "                placeholder={emailPlaceholder}\n                disabled={Boolean(lockedUser)}\n                className=\"w-full bg-transparent text-lg outline-none disabled:text-slate-500\"",
+      "theirsContent": "                placeholder=\"admin or alonsy-y\"\n                disabled={lockedUser}\n                className=\"w-full bg-transparent text-lg outline-none disabled:text-slate-500\""
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/account/signin/page.jsx",
+      "oursContent": "          <div className=\"text-center\">\n            <a href=\"/\" className=\"text-sm text-slate-600 hover:text-slate-800\">\n              Back\n            </a>\n          </div>",
+      "theirsContent": "          <p className=\"text-center text-sm text-gray-600\">\n            <a href=\"/\" className=\"text-blue-600 hover:text-blue-700\">\n              Back to home\n            </a>\n          </p>"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/page.jsx",
+    "/apps/web/src/app/account/signup/page.jsx",
+    "/apps/web/src/app/account/signin/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

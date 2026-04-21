@@ -1,0 +1,9 @@
+{
+  "name": "password_reset_full",
+  "description": "Merge conflict with 5 conflict(s) across 5 file(s)",
+  "sourceConflictId": "8da449da-93d0-4264-a290-859bdefa637e",
+  "sourceTimestamp": "2026-01-15T03:45:45.956Z",
+  "language": "javascript",
+  "conflictedFileCount": 5,
+  "conflictBlockCount": 5
+}

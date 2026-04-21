@@ -1,0 +1,71 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/utils/useUser.js",
+      "oursContent": "      const res = await fetch(\"/api/profile\", {\n        method: \"GET\",\n        credentials: \"include\",\n        headers: {\n          Accept: \"application/json\",\n        },\n      });\n",
+      "theirsContent": "      const res = await fetch(\"/api/profile\");\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/utils/useUser.js",
+      "oursContent": "        // Keep at least the session user so pages don't think we \"logged out\".\n        console.warn(\n          `useUser: /api/profile returned [${res.status}] ${res.statusText}`,\n        );\n        setUser(sessionUser);\n        return;",
+      "theirsContent": "        return null;"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/onboarding/page.jsx",
+      "oursContent": "      window.location.href = \"/account/signin?callbackUrl=/onboarding\";",
+      "theirsContent": "      // Use callbackUrl (Auth.js standard)\n      window.location.href = \"/account/signin?callbackUrl=/onboarding\";"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "// NOTE: Anything uses Auth.js (CreateAuth) sessions. In our project, the cookie\n// value may be an encrypted token (not a raw DB sessionToken), so we rely on\n// `auth()` to validate it.\nexport async function getSessionFromRequest(_request) {",
+      "theirsContent": "export async function getSessionFromRequest(_request) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "    const session = await auth();\n\n    const sessionUser = session?.user ?? null;\n    if (!sessionUser?.id && !sessionUser?.email) {",
+      "theirsContent": "    const session = await auth();\n    const rawId = session?.user?.id;\n\n    if (!session || rawId === undefined || rawId === null) {"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "    // Hydrate the full user row (role, 2FA flags, etc.) from the database.\n    let userId = sessionUser.id;\n    if (typeof userId === \"string\") {\n      const parsed = Number.parseInt(userId, 10);\n      if (Number.isFinite(parsed)) {\n        userId = parsed;\n      }",
+      "theirsContent": "    const userId =\n      typeof rawId === \"string\" ? parseInt(rawId, 10) : Number(rawId);\n\n    if (!Number.isFinite(userId)) {\n      return null;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "    let dbUser = null;",
+      "theirsContent": "    const rows = await sql`\n      SELECT\n        id,\n        email,\n        name,\n        role,\n        two_factor_enabled,\n        locked_until,\n        failed_login_attempts\n      FROM auth_users\n      WHERE id = ${userId}\n      LIMIT 1\n    `;"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "    if (typeof userId === \"number\" && Number.isFinite(userId)) {\n      const rows = await sql`\n        SELECT\n          id,\n          email,\n          name,\n          role,\n          approved,\n          approved_at,\n          terms_accepted_at,\n          two_factor_enabled,\n          two_factor_verified_at,\n          locked_until,\n          failed_login_attempts\n        FROM auth_users\n        WHERE id = ${userId}\n        LIMIT 1\n      `;\n      dbUser = rows?.[0] ?? null;\n    } else if (typeof sessionUser.email === \"string\") {\n      const rows = await sql`\n        SELECT\n          id,\n          email,\n          name,\n          role,\n          approved,\n          approved_at,\n          terms_accepted_at,\n          two_factor_enabled,\n          two_factor_verified_at,\n          locked_until,\n          failed_login_attempts\n        FROM auth_users\n        WHERE email = ${sessionUser.email}\n        LIMIT 1\n      `;\n      dbUser = rows?.[0] ?? null;",
+      "theirsContent": "    if (!rows || rows.length === 0) {\n      return null;"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "    // If the account is temporarily locked, treat it as no session.\n    if (dbUser?.locked_until && new Date(dbUser.locked_until) > new Date()) {",
+      "theirsContent": "    const userRow = rows[0];\n\n    if (userRow.locked_until && new Date(userRow.locked_until) > new Date()) {"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/app/api/utils/get-session.js",
+      "oursContent": "      ...session,\n      user: mergedUser,",
+      "theirsContent": "      user: {\n        id: userRow.id,\n        email: userRow.email ?? session.user?.email,\n        name: userRow.name ?? session.user?.name,\n        role: userRow.role,\n        two_factor_enabled: userRow.two_factor_enabled,\n      },\n      expires: session.expires,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/utils/useUser.js",
+    "/apps/web/src/app/onboarding/page.jsx",
+    "/apps/web/src/app/api/utils/get-session.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

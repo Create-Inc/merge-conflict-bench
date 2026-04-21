@@ -1,0 +1,67 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/version.js",
+      "oursContent": "// Bumped for: fix song-card taps from Year/Decade/Genre/Generation lists by routing through buildSongDetailParams (prevents blank Song Details on M-DETAILS-SONG-201).\nexport const APP_VERSION = \"01.01.06.005.presentation_redesign.032\";",
+      "theirsContent": "// Bumped for:\n// - show route (page path) next to each Screen ID in the Admin → Screen/Card Association Report (e.g. M-DETAILS-SONG-201 → /details/song)\n// - ensure list screens + movie links use buildSongDetailParams when opening Song Details, so Song Details doesn't feel \"blank\" due to missing params\nexport const APP_VERSION = \"01.01.06.005.presentation_redesign.032\";"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/search/decade.jsx",
+      "oursContent": "        const navParams = buildSongDetailParams(\n          item,\n          item?.artist || item?.artistName || item?.artist_name || \"\",\n        );\n        if (!navParams.songId && !navParams.songTitle) {\n          console.error(\"DecadeSearch song press missing identity\", item);\n          return;\n        }",
+      "theirsContent": "        const fallbackArtist = item?.artist || item?.artistName || \"\";\n        const songParams = buildSongDetailParams(item, fallbackArtist);\n        if (!songParams.songId && !songParams.songTitle) {\n          console.error(\"Decade search song press missing identity\", item);\n          return;\n        }\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/search/decade.jsx",
+      "oursContent": "          params: navParams,",
+      "theirsContent": "          params: songParams,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/search/year.jsx",
+      "oursContent": "        const navParams = buildSongDetailParams(\n          item,\n          item?.artist || item?.artistName || item?.artist_name || \"\",\n        );\n        if (!navParams.songId && !navParams.songTitle) {\n          console.error(\"YearSearch song press missing identity\", item);\n          return;\n        }",
+      "theirsContent": "        const fallbackArtist = item?.artist || item?.artistName || \"\";\n        const songParams = buildSongDetailParams(item, fallbackArtist);\n        if (!songParams.songId && !songParams.songTitle) {\n          console.error(\"Year search song press missing identity\", item);\n          return;\n        }\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/search/year.jsx",
+      "oursContent": "          params: navParams,",
+      "theirsContent": "          params: songParams,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/search/generation.jsx",
+      "oursContent": "        const navParams = buildSongDetailParams(\n          item,\n          item?.artist || item?.artistName || item?.artist_name || \"\",\n        );\n        if (!navParams.songId && !navParams.songTitle) {\n          console.error(\"GenerationSearch song press missing identity\", item);\n          return;\n        }",
+      "theirsContent": "        const fallbackArtist = item?.artist || item?.artistName || \"\";\n        const songParams = buildSongDetailParams(item, fallbackArtist);\n        if (!songParams.songId && !songParams.songTitle) {\n          console.error(\"Generation search song press missing identity\", item);\n          return;\n        }\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/search/generation.jsx",
+      "oursContent": "          params: navParams,",
+      "theirsContent": "          params: songParams,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/search/genre.jsx",
+      "oursContent": "        const navParams = buildSongDetailParams(\n          item,\n          item?.artist || item?.artistName || item?.artist_name || \"\",\n        );\n        if (!navParams.songId && !navParams.songTitle) {\n          console.error(\"GenreSearch song press missing identity\", item);\n          return;\n        }",
+      "theirsContent": "        const fallbackArtist = item?.artist || item?.artistName || \"\";\n        const songParams = buildSongDetailParams(item, fallbackArtist);\n        if (!songParams.songId && !songParams.songTitle) {\n          console.error(\"Genre search song press missing identity\", item);\n          return;\n        }\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/search/genre.jsx",
+      "oursContent": "          params: navParams,",
+      "theirsContent": "          params: songParams,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/utils/version.js",
+    "/apps/mobile/src/app/search/decade.jsx",
+    "/apps/mobile/src/app/search/year.jsx",
+    "/apps/mobile/src/app/search/generation.jsx",
+    "/apps/mobile/src/app/search/genre.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

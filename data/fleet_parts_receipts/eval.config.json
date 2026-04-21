@@ -1,0 +1,9 @@
+{
+  "name": "fleet_parts_receipts",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "1b7d7ba2-8c02-411b-9a9a-4a48b370aae8",
+  "sourceTimestamp": "2026-01-01T10:42:57.021Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 34
+}

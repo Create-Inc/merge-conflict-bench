@@ -1,0 +1,9 @@
+{
+  "name": "dealer_integration_csv",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "f59c515e-a607-407e-844a-3cdd930b4b16",
+  "sourceTimestamp": "2026-01-07T18:37:36.417Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 17
+}

@@ -1,0 +1,41 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/metroconfig.js",
+      "oursContent": "// Metro configuration for Expo (project root)\n//\n// Expo/Metro resolves metro.config.js from the Expo project root.\n// In this repo, that root is /apps/mobile.\n//\n// We delegate to the config under src/ so the existing custom resolver + prelude logic is used.",
+      "theirsContent": "// Metro configuration forwarder for this repo.\n//\n// In this Anything project, the Metro config that actually contains our settings\n// (including the early Reflect.construct prelude) lives at:\n//   /apps/mobile/src/metro.config.js\n//\n// Some tooling in this environment loads /apps/mobile/metroconfig.js,\n// so this file must be valid JS and should forward to the real config."
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/reflectConstructPolyfill.js",
+      "oursContent": "    const makeSafeConstruct = () => {\n      return function construct(Target, args, newTarget) {",
+      "theirsContent": "      next.construct = function construct(Target, args, newTarget) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/utils/reflectConstructPolyfill.js",
+      "oursContent": "    };\n\n    // Ensure Reflect.construct is a real function.\n    // Also: if it exists but is missing `.apply`, Babel's helper can still crash.\n    const needsReplacement =\n      typeof g.Reflect.construct !== \"function\" ||\n      typeof g.Reflect.construct.apply !== \"function\";\n\n    if (needsReplacement) {\n      g.Reflect.construct = makeSafeConstruct();",
+      "theirsContent": "\n      try {\n        g.Reflect = next;\n      } catch (_e) {\n        // If we can't replace the global Reflect, fall back to mutating the existing object.\n        try {\n          existing.construct = next.construct;\n        } catch (_e2) {\n          // ignore\n        }\n      }\n\n      reflectObj =\n        g.Reflect && typeof g.Reflect === \"object\" ? g.Reflect : existing;"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/reflectConstructPrelude.js",
+      "oursContent": "    const makeSafeConstruct = () => {\n      // Always use a JS implementation (so we can attach properties like `sham` and `apply`).\n      return function construct(Target, args, newTarget) {",
+      "theirsContent": "    let reflectObj = existing;\n\n    // If construct is missing OR not a function, create a safe replacement Reflect object\n    // and assign it back onto the global.\n    if (typeof existing.construct !== \"function\") {\n      const next = {};\n      try {\n        for (const k in existing) {\n          next[k] = existing[k];\n        }\n      } catch (_e) {\n        // ignore copy failures\n      }\n\n      next.construct = function construct(Target, args, newTarget) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/utils/reflectConstructPrelude.js",
+      "oursContent": "    };\n\n    // If Reflect.construct exists but is missing `.apply` (can happen if Function.prototype.apply\n    // is not available in the runtime), Babel helpers can crash at Reflect.construct.apply(...).\n    // Easiest, safest fix: replace with our own JS construct.\n    const needsReplacement =\n      typeof g.Reflect.construct !== \"function\" ||\n      typeof g.Reflect.construct.apply !== \"function\";\n\n    if (needsReplacement) {\n      g.Reflect.construct = makeSafeConstruct();",
+      "theirsContent": "\n      try {\n        g.Reflect = next;\n      } catch (_e) {\n        // If we can't replace the global Reflect, fall back to mutating the existing object.\n        try {\n          existing.construct = next.construct;\n        } catch (_e2) {\n          // ignore\n        }\n      }\n\n      reflectObj =\n        g.Reflect && typeof g.Reflect === \"object\" ? g.Reflect : existing;"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/metroconfig.js",
+    "/apps/mobile/src/utils/reflectConstructPolyfill.js",
+    "/apps/mobile/src/utils/reflectConstructPrelude.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

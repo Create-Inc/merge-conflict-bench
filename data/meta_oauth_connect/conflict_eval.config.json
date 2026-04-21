@@ -1,0 +1,47 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Dashboard/ProfileTab/components/MetaConnectSection.jsx",
+      "oursContent": "    } else if (metaParam === \"forbidden\") {\n      setInlineMessageTone(\"error\");\n      setInlineMessage(\n        \"You don’t have access to connect Meta for this dashboard. Make sure you’re signed in with the same email used for this business.\",\n      );\n    } else if (metaParam === \"config_error\") {\n      setInlineMessageTone(\"error\");\n      setInlineMessage(\n        \"Meta connect isn’t configured yet (missing Meta App settings). Please reach out and we’ll fix it.\",\n      );",
+      "theirsContent": "    } else if (metaParam === \"signin_required\") {\n      setInlineMessageTone(\"error\");\n      setInlineMessage(\"Please sign in to connect Meta.\");\n    } else if (metaParam === \"forbidden\") {\n      setInlineMessageTone(\"error\");\n      setInlineMessage(\n        \"You don't have access to connect Meta for this business. Check you're signed in with the right email.\",\n      );\n    } else if (metaParam === \"config_error\") {\n      setInlineMessageTone(\"error\");\n      setInlineMessage(\n        \"Meta connect isn't configured on the server yet. Please try again in a moment.\",\n      );"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/meta/oauth/callback/route.js",
+      "oursContent": "      // If the user got logged out (or cookies didn't carry across www/non-www),\n      // don't leave them staring at a JSON API response. Send them to sign in,\n      // then back to this exact callback URL (code+state preserved).\n      const accept = request.headers.get(\"accept\") || \"\";\n      const wantsHtml = accept.includes(\"text/html\");\n      const status = access?.response?.status;\n\n      if (wantsHtml && status === 401) {\n        const cb = `${url.pathname}${url.search}`;\n        return Response.redirect(\n          `/account/signin?callbackUrl=${encodeURIComponent(cb)}`,\n          302,\n        );\n      }\n\n      if (wantsHtml && status === 403) {\n        return Response.redirect(\n          safeDashboardRedirect(businessId, \"forbidden\"),\n          302,\n        );\n      }\n\n      return access.response;",
+      "theirsContent": "      const status = access?.response?.status;\n\n      if (status === 401) {\n        const callbackUrl = safeDashboardRedirect(\n          businessId,\n          \"signin_required\",\n        );\n        return Response.redirect(\n          `/account/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`,\n          302,\n        );\n      }\n\n      if (status === 403) {\n        return Response.redirect(\n          safeDashboardRedirect(businessId, \"forbidden\"),\n          302,\n        );\n      }\n\n      return Response.redirect(safeDashboardRedirect(businessId, \"error\"), 302);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/meta/oauth/callback/route.js",
+      "oursContent": "      // Prefer a friendly redirect when this is loaded in the browser.\n      const accept = request.headers.get(\"accept\") || \"\";\n      if (accept.includes(\"text/html\")) {\n        return Response.redirect(\n          safeDashboardRedirect(businessId, \"config_error\"),\n          302,\n        );\n      }\n\n      return Response.json(\n        {\n          error:\n            \"META_APP_ID / META_APP_SECRET are not set. Add them in Project Settings → Secrets (dev + prod).\",\n        },\n        { status: 500 },",
+      "theirsContent": "      return Response.redirect(\n        safeDashboardRedirect(businessId, \"config_error\"),\n        302,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/meta/oauth/start/route.js",
+      "oursContent": "      // If the user navigated here via a normal link click, don't strand them on a JSON API page.\n      const accept = request.headers.get(\"accept\") || \"\";\n      const wantsHtml = accept.includes(\"text/html\");\n      const status = access?.response?.status;\n\n      if (wantsHtml) {\n        if (status === 401) {\n          const cb = `/api/meta/oauth/start?businessId=${encodeURIComponent(String(businessId))}`;\n          return Response.redirect(\n            `/account/signin?callbackUrl=${encodeURIComponent(cb)}`,\n            302,\n          );\n        }\n\n        if (status === 403) {\n          return Response.redirect(\n            `/dashboard/${encodeURIComponent(String(businessId))}?tab=profile&meta=forbidden`,\n            302,\n          );\n        }\n\n        return Response.redirect(\n          `/dashboard/${encodeURIComponent(String(businessId))}?tab=profile&meta=error`,\n          302,\n        );\n      }\n\n      return access.response;",
+      "theirsContent": "      const status = access?.response?.status;\n\n      if (status === 401) {\n        const callbackUrl = safeDashboardRedirect(\n          businessId,\n          \"signin_required\",\n        );\n        return Response.redirect(\n          `/account/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`,\n          302,\n        );\n      }\n\n      if (status === 403) {\n        return Response.redirect(\n          safeDashboardRedirect(businessId, \"forbidden\"),\n          302,\n        );\n      }\n\n      return Response.redirect(safeDashboardRedirect(businessId, \"error\"), 302);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/meta/oauth/start/route.js",
+      "oursContent": "      const accept = request.headers.get(\"accept\") || \"\";\n      if (accept.includes(\"text/html\")) {\n        return Response.redirect(\n          `/dashboard/${encodeURIComponent(String(businessId))}?tab=profile&meta=config_error`,\n          302,\n        );\n      }\n\n      return Response.json(\n        {\n          error:\n            \"META_APP_ID is not set. Add it in Project Settings → Secrets (dev + prod).\",\n        },\n        { status: 500 },",
+      "theirsContent": "      return Response.redirect(\n        safeDashboardRedirect(businessId, \"config_error\"),\n        302,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/meta/oauth/start/route.js",
+      "oursContent": "      const accept = request.headers.get(\"accept\") || \"\";\n      if (accept.includes(\"text/html\")) {\n        return Response.redirect(\n          `/dashboard/${encodeURIComponent(String(businessId))}?tab=profile&meta=config_error`,\n          302,\n        );\n      }\n\n      return Response.json(\n        {\n          error:\n            \"META_APP_SECRET is not set. Add it in Project Settings → Secrets (dev + prod).\",\n        },\n        { status: 500 },",
+      "theirsContent": "      return Response.redirect(\n        safeDashboardRedirect(businessId, \"config_error\"),\n        302,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/Dashboard/ProfileTab/components/MetaConnectSection.jsx",
+    "/apps/web/src/app/api/meta/oauth/callback/route.js",
+    "/apps/web/src/app/api/meta/oauth/start/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

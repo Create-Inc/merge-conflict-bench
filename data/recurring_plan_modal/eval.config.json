@@ -1,0 +1,9 @@
+{
+  "name": "recurring_plan_modal",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "2c5dc0f8-0add-437b-b828-d9c5ae2cdedd",
+  "sourceTimestamp": "2026-02-13T22:00:01.999Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 3
+}

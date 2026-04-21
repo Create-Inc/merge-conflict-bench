@@ -1,0 +1,65 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/arena-preview/page.jsx",
+      "oursContent": "      {/* Sponsor ring inside arena */}\n      <div\n        className=\"hidden md:block absolute left-1/2 -translate-x-1/2 bottom-2 w-[720px]\"\n        style={{ zIndex: 22 }}\n      >",
+      "theirsContent": "        {/* 🧨 FLOOR */}\n        <div\n          className=\"floor\"\n          style={{\n            position: \"relative\",\n            overflow: \"hidden\",\n            borderTop: \"1px solid #1E2538\",\n            borderBottom: \"1px solid #1E2538\",\n            backgroundColor: \"#121826\",\n            display: \"flex\",\n            flexDirection: \"column\",\n            minHeight: 0,\n          }}\n        >\n          <BattleHeader\n            sideA={sideA}\n            sideB={sideB}\n            showJoinButtons={showJoinButtons}\n            joinSeatMutation={joinSeatMutation}\n            leaveSeatMutation={leaveSeatMutation}\n            onCashDrop={() => {}}\n            onBonanza={() => {}}\n            isGameOver={false}\n            prizePoolText={\"Preview\"}\n          />\n\n          {/* Arena seating bowl */}\n          <div style={{ padding: \"0 6px 10px\" }}>\n            <SeatingMap\n              seats={seats}\n              capacity={seatingCapacity}\n              homeColor={sideA.color}\n              awayColor={sideB.color}\n              energyByUserId={energyByUserId}\n            />\n          </div>\n\n          <ChatFeed\n            messages={messages}\n            handleToggleLike={handleToggleLike}\n            userId={userId}\n            selectedAvatar={selectedAvatar}\n            seatLabelMode=\"team\"\n            sideAColor={sideA.color}\n            sideBColor={sideB.color}\n          />\n\n          <MessageInput\n            message={message}\n            setMessage={setMessage}\n            handleSendMessage={handleSendMessage}\n            userSeat={userSeat}\n            canSendMessage={canSendMessage}\n          />\n        </div>\n\n        {/* 🧾 SPONSOR RING */}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": " * - energyByUserId: Map<user_id, 0..1> for heat coloring occupied seats\n * - userSeatId: optional seat id to highlight\n * - variant: \"card\" (default) | \"fullscreen\" (fills the parent)",
+      "theirsContent": " * - energyByUserId: Map<user_id, 0..1>"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "  userSeatId,\n  onSeatClick,\n  variant = \"card\",",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "  const isFullscreen = variant === \"fullscreen\";\n\n  const layout = useMemo(() => {\n    // viewBox: wide + short, matches the screenshot vibe (bowl + court).\n    const vbW = 520;\n    const vbH = 260;",
+      "theirsContent": "  const sections = useMemo(() => {\n    // Three tiers like a real arena.\n    const tierCount = 3;\n    const perTier = 18; // total sections per tier\n    const total = tierCount * perTier;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "  const outerWrapStyle = isFullscreen\n    ? {\n        width: \"100%\",\n        height: \"100%\",\n        margin: 0,\n        padding: 0,\n      }\n    : {\n        width: \"100%\",\n        maxWidth: 1120,\n        margin: \"0 auto\",\n        padding: 12,\n      };\n\n  const cardStyle = isFullscreen\n    ? {\n        borderRadius: 0,\n        border: \"none\",\n        background:\n          \"radial-gradient(140% 140% at 50% 50%, rgba(255,255,255,0.06) 0%, rgba(18,24,38,0.55) 42%, rgba(11,15,25,0.92) 100%)\",\n        overflow: \"hidden\",\n        height: \"100%\",\n      }\n    : {\n        borderRadius: 18,\n        border: \"1px solid rgba(255,255,255,0.10)\",\n        background:\n          \"radial-gradient(120% 120% at 50% 50%, rgba(255,255,255,0.06) 0%, rgba(18,24,38,0.55) 40%, rgba(11,15,25,0.85) 100%)\",\n        overflow: \"hidden\",\n      };\n\n  const svgHeight = isFullscreen ? \"100%\" : 220;\n\n  return (\n    <div style={outerWrapStyle}>\n      <div style={cardStyle}>\n        {/* Hide the title/legend in fullscreen; parent overlays its own UI */}\n        {!isFullscreen ? (\n          <div\n            className=\"font-inter\"\n            style={{\n              padding: \"10px 12px\",\n              display: \"flex\",\n              justifyContent: \"space-between\",\n              alignItems: \"center\",\n              borderBottom: \"1px solid rgba(255,255,255,0.08)\",\n              color: \"#AAB1C3\",\n              fontSize: 12,\n            }}\n          >\n            <div>\n              Arena map • {safeN.toLocaleString()} seats\n              {safeN > 0 ? \"\" : \" (no seats yet)\"}\n            </div>\n            <div style={{ display: \"flex\", gap: 10, alignItems: \"center\" }}>\n              <div style={{ display: \"flex\", gap: 6, alignItems: \"center\" }}>\n                <span\n                  style={{\n                    width: 10,\n                    height: 10,\n                    borderRadius: 999,\n                    backgroundColor: rgba(homeColor, 0.7),\n                    border: \"1px solid rgba(255,255,255,0.18)\",\n                  }}\n                />\n                <span>Home</span>\n              </div>\n              <div style={{ display: \"flex\", gap: 6, alignItems: \"center\" }}>\n                <span\n                  style={{\n                    width: 10,\n                    height: 10,\n                    borderRadius: 999,\n                    backgroundColor: rgba(awayColor, 0.7),\n                    border: \"1px solid rgba(255,255,255,0.18)\",\n                  }}\n                />\n                <span>Away</span>\n              </div>\n            </div>\n          </div>\n        ) : null}\n",
+      "theirsContent": "  return (\n    <div style={{ width: \"100%\", maxWidth: 1200, margin: \"0 auto\" }}>\n      <div\n        style={{\n          borderRadius: 22,\n          border: \"1px solid rgba(255,255,255,0.10)\",\n          background:\n            \"radial-gradient(120% 120% at 50% 50%, rgba(255,255,255,0.05) 0%, rgba(18,24,38,0.55) 40%, rgba(11,15,25,0.92) 100%)\",\n          overflow: \"hidden\",\n        }}\n      >"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "            padding: isFullscreen ? 0 : 10,\n            height: isFullscreen ? \"100%\" : \"auto\",",
+      "theirsContent": "            padding: \"12px 14px\",\n            display: \"flex\",\n            justifyContent: \"space-between\",\n            alignItems: \"center\",\n            borderBottom: \"1px solid rgba(255,255,255,0.08)\",\n            color: \"#AAB1C3\",\n            fontSize: 12,"
+    },
+    {
+      "blockIndex": 5,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "",
+      "theirsContent": "          <div>\n            Arena • {cap.toLocaleString()} capacity •{\" \"}\n            {stats.occupiedCount.toLocaleString()} in seats\n          </div>\n          <div style={{ display: \"flex\", gap: 10, alignItems: \"center\" }}>\n            <div style={{ display: \"flex\", gap: 6, alignItems: \"center\" }}>\n              <span\n                style={{\n                  width: 10,\n                  height: 10,\n                  borderRadius: 999,\n                  backgroundColor: rgba(homeColor, 0.75),\n                  border: \"1px solid rgba(255,255,255,0.20)\",\n                }}\n              />\n              <span>Home</span>\n            </div>\n            <div style={{ display: \"flex\", gap: 6, alignItems: \"center\" }}>\n              <span\n                style={{\n                  width: 10,\n                  height: 10,\n                  borderRadius: 999,\n                  backgroundColor: rgba(awayColor, 0.75),\n                  border: \"1px solid rgba(255,255,255,0.20)\",\n                }}\n              />\n              <span>Away</span>\n            </div>\n          </div>\n        </div>\n\n        <div style={{ padding: 10 }}>"
+    },
+    {
+      "blockIndex": 6,
+      "filePath": "/apps/web/src/components/Arena/SeatingMap.jsx",
+      "oursContent": "            height={svgHeight}",
+      "theirsContent": "            height={260}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/arena/[gameId]/page.jsx",
+      "oursContent": "      {/* Sponsor ring sits inside the arena */}\n      <div\n        className=\"hidden md:block absolute left-1/2 -translate-x-1/2 bottom-2 w-[720px]\"\n        style={{ zIndex: 22 }}\n      >\n        <SponsorRing\n          sponsors={sponsorTiles}\n          flashSponsorName={flashSponsorName}\n        />\n      </div>",
+      "theirsContent": "        {/* Arena seating bowl */}\n        <div style={{ padding: \"0 6px 10px\" }}>\n          <SeatingMap\n            seats={seats}\n            capacity={seatingCapacity}\n            homeColor={sideA.color}\n            awayColor={sideB.color}\n            energyByUserId={energyByUserId}\n          />\n        </div>"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/arena-preview/page.jsx",
+    "/apps/web/src/components/Arena/SeatingMap.jsx",
+    "/apps/web/src/app/arena/[gameId]/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

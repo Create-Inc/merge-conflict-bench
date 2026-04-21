@@ -1,0 +1,71 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/version.js",
+      "oursContent": "// Bumped per request (daily reset time default is 3AM EST).\nexport const APP_VERSION = \"01.01.06.005.presentation_redesign.020\";",
+      "theirsContent": "// Bumped per request.\nexport const APP_VERSION = \"01.01.06.005.presentation_redesign.020\";"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+      "oursContent": "import React, { useMemo, useState, useEffect, useCallback } from \"react\";\nimport {\n  View,\n  Text,\n  TouchableOpacity,\n  Modal,\n  ScrollView,\n  Alert,\n} from \"react-native\";\nimport { useQuery, useMutation, useQueryClient } from \"@tanstack/react-query\";",
+      "theirsContent": "import React, { useEffect, useMemo, useState } from \"react\";\nimport {\n  View,\n  Text,\n  TouchableOpacity,\n  Modal,\n  ScrollView,\n  Alert,\n} from \"react-native\";\nimport { useMutation, useQuery, useQueryClient } from \"@tanstack/react-query\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+      "oursContent": "const RESET_DEFAULT = {\n  hour: 3,\n  ampm: \"am\",\n  timeZone: \"America/New_York\",\n  timeZoneLabel: \"EST\",\n};\n\nconst TZ_OPTIONS = [\n  { label: \"EST\", value: \"America/New_York\" },\n  { label: \"PST\", value: \"America/Los_Angeles\" },\n  { label: \"UTC\", value: \"UTC\" },\n];\n",
+      "theirsContent": "function tzLabel(tz) {\n  if (tz === \"America/New_York\") return \"EST\";\n  if (tz === \"America/Los_Angeles\") return \"PST\";\n  if (tz === \"UTC\") return \"UTC\";\n  return String(tz || \"EST\");\n}\n\nfunction normalizeReset(raw) {\n  const r = raw && typeof raw === \"object\" ? raw : {};\n  const hour12 = Math.max(1, Math.min(12, Number(r.hour12 || 3)));\n  const ampm = String(r.ampm || \"pm\").toLowerCase() === \"am\" ? \"am\" : \"pm\";\n\n  const tzRaw = String(r.timeZone || \"America/New_York\");\n  const allowed = [\"America/New_York\", \"America/Los_Angeles\", \"UTC\"];\n  const timeZone = allowed.includes(tzRaw) ? tzRaw : \"America/New_York\";\n\n  return { hour12, ampm, timeZone };\n}\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+      "oursContent": "    const todayText = t\n      ? `Today starts ${t} ${todayTzLabel || \"\"}`.trim()\n      : null;",
+      "theirsContent": "    const todayText = t\n      ? `Today window starts ${t} (${tzLabel(todayTz)})`\n      : null;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+      "oursContent": "  // NEW: Reset time picker modal\n  const [pickerOpen, setPickerOpen] = useState(false);\n  const [pickerKind, setPickerKind] = useState(null); // 'hour' | 'tz'\n\n  const openHourPicker = () => {\n    setPickerKind(\"hour\");\n    setPickerOpen(true);\n  };\n\n  const openTzPicker = () => {\n    setPickerKind(\"tz\");\n    setPickerOpen(true);\n  };\n\n  const closePicker = () => {\n    setPickerOpen(false);\n    setPickerKind(null);\n  };\n\n  // NEW: modal to drill down YouTube by hour",
+      "theirsContent": "  // Modal to drill down YouTube by hour"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+      "oursContent": "      {/* NEW: picker modal (hour / timezone) */}",
+      "theirsContent": "      {/* Timeline modal */}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js",
+      "oursContent": "// --- Daily reset configuration (admin-controlled) ---\n// Stored in app_settings so you can change what \"Today\" means without changing the raw metrics.\nconst RESET_SETTING_KEY = \"api_usage_reset\";\nconst DEFAULT_RESET = {\n  hour: 3, // 1-12\n  ampm: \"am\", // 'am' | 'pm'\n  timeZone: \"America/New_York\", // treat as EST/ET label in the UI\n  timeZoneLabel: \"EST\",\n};\n\nfunction safeObj(v) {\n  return v && typeof v === \"object\" && !Array.isArray(v) ? v : null;\n}\n\nfunction normalizeResetConfig(input) {\n  const obj = safeObj(input) || {};\n\n  const hourRaw = Number(obj.hour);\n  const hour =\n    Number.isFinite(hourRaw) && hourRaw >= 1 && hourRaw <= 12 ? hourRaw : null;\n\n  const ampmRaw = String(obj.ampm || \"\").toLowerCase();\n  const ampm = ampmRaw === \"pm\" ? \"pm\" : ampmRaw === \"am\" ? \"am\" : null;\n\n  const tzRaw = String(obj.timeZone || \"\").trim();\n  const tzLabelRaw = String(obj.timeZoneLabel || \"\").trim();\n\n  // Keep this small + predictable. (No external tz libs.)\n  const tzOptions = {\n    EST: \"America/New_York\",\n    PST: \"America/Los_Angeles\",\n    UTC: \"UTC\",\n  };\n\n  // Accept either IANA tz OR label.\n  const timeZoneFromLabel = tzOptions[tzLabelRaw] || null;\n\n  const allowedTimeZones = new Set(Object.values(tzOptions));\n  const timeZone = allowedTimeZones.has(tzRaw)\n    ? tzRaw\n    : allowedTimeZones.has(timeZoneFromLabel)\n      ? timeZoneFromLabel\n      : null;\n\n  const timeZoneLabel =\n    Object.entries(tzOptions).find(([, v]) => v === timeZone)?.[0] || null;\n\n  if (!hour || !ampm || !timeZone || !timeZoneLabel) {\n    return { ...DEFAULT_RESET };\n  }\n\n  return { hour, ampm, timeZone, timeZoneLabel };\n}\n\nfunction hour12To24(hour, ampm) {\n  const h = Number(hour);\n  const a = String(ampm || \"\").toLowerCase();\n  if (!Number.isFinite(h) || h < 1 || h > 12) return 0;\n  if (a === \"am\") return h === 12 ? 0 : h;\n  if (a === \"pm\") return h === 12 ? 12 : h + 12;\n  return 0;\n}\n\nasync function getResetConfigFromDb() {\n  try {\n    const rows = await sql(\n      `SELECT value FROM app_settings WHERE key = $1 LIMIT 1`,\n      [RESET_SETTING_KEY],\n    );\n    const raw = rows?.[0]?.value ?? null;\n    return normalizeResetConfig(raw);\n  } catch (_) {\n    return { ...DEFAULT_RESET };\n  }\n}\n\nasync function setResetConfigInDb(cfg) {\n  const next = normalizeResetConfig(cfg);\n  await sql(\n    `INSERT INTO app_settings (key, value, updated_at)\n     VALUES ($1, $2::jsonb, NOW())\n     ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()`,\n    [RESET_SETTING_KEY, JSON.stringify(next)],\n  );\n  return next;\n}\n",
+      "theirsContent": "const RESET_KEY = \"api_usage_reset\";\n\nfunction normalizeResetConfig(raw) {\n  const r = raw && typeof raw === \"object\" ? raw : {};\n\n  const hour12 = Math.max(1, Math.min(12, Number(r.hour12 || 3)));\n  const ampmRaw = String(r.ampm || \"pm\").toLowerCase();\n  const ampm = ampmRaw === \"am\" ? \"am\" : \"pm\";\n\n  // We support a small curated list to avoid UI + validation exploding.\n  const tzRaw = String(r.timeZone || r.tz || \"America/New_York\");\n  const allowed = [\n    \"America/New_York\", // ET\n    \"America/Los_Angeles\", // PT\n    \"UTC\",\n  ];\n  const timeZone = allowed.includes(tzRaw) ? tzRaw : \"America/New_York\";\n\n  return { hour12, ampm, timeZone };\n}\n\nasync function getResetConfig() {\n  try {\n    const rows = await sql(\n      `SELECT value FROM app_settings WHERE key = $1 LIMIT 1`,\n      [RESET_KEY],\n    );\n    const value = rows?.[0]?.value ?? null;\n    return normalizeResetConfig(value);\n  } catch (_) {\n    return normalizeResetConfig(null);\n  }\n}\n\nasync function setResetConfig(next) {\n  const clean = normalizeResetConfig(next);\n  await sql(\n    `INSERT INTO app_settings (key, value, updated_at)\n     VALUES ($1, $2::jsonb, now())\n     ON CONFLICT (key) DO UPDATE\n       SET value = EXCLUDED.value,\n           updated_at = now()`,\n    [RESET_KEY, JSON.stringify(clean)],\n  );\n  return clean;\n}\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js",
+      "oursContent": "function makeDateAtTimeZoneLocalTime(date, timeZone, hour24, minute = 0) {\n  const p = getDatePartsInTimeZone(date, timeZone);\n  const utcGuess = new Date(\n    Date.UTC(p.year, p.month - 1, p.day, hour24, minute, 0),\n  );\n  const offsetMin = getTimeZoneOffsetMinutes(utcGuess, timeZone);\n  let candidate = new Date(utcGuess.getTime() - offsetMin * 60000);\n\n  // If we haven't reached today's reset yet, the \"current day\" started at yesterday's reset.\n  if (candidate.getTime() > date.getTime()) {\n    const prev = new Date(date.getTime() - 86400000);\n    const pp = getDatePartsInTimeZone(prev, timeZone);\n    const utcGuess2 = new Date(\n      Date.UTC(pp.year, pp.month - 1, pp.day, hour24, minute, 0),\n    );\n    const offsetMin2 = getTimeZoneOffsetMinutes(utcGuess2, timeZone);\n    candidate = new Date(utcGuess2.getTime() - offsetMin2 * 60000);\n  }\n\n  return candidate;\n}\n",
+      "theirsContent": "function hour12To24(hour12, ampm) {\n  const h = Math.max(1, Math.min(12, Number(hour12 || 12)));\n  const a = String(ampm || \"am\").toLowerCase() === \"pm\" ? \"pm\" : \"am\";\n  if (a === \"am\") return h === 12 ? 0 : h;\n  return h === 12 ? 12 : h + 12;\n}\n\nfunction computeTodayStart({ now, reset }) {\n  const tz = reset.timeZone;\n  const hour24 = hour12To24(reset.hour12, reset.ampm);\n\n  const candidate = makeDateAtTimeZone(now, tz, hour24, 0);\n  if (now >= candidate) return candidate;\n\n  // Before reset time today: treat \"today\" as starting at yesterday's reset.\n  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);\n  return makeDateAtTimeZone(yesterday, tz, hour24, 0);\n}\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js",
+      "oursContent": "\n  const reset = await getResetConfigFromDb();\n  const hour24 = hour12To24(reset.hour, reset.ampm);\n\n  const todayStart = makeDateAtTimeZoneLocalTime(\n    now,\n    reset.timeZone,\n    hour24,\n    0,\n  );\n",
+      "theirsContent": "  const reset = await getResetConfig();\n  const todayStart = computeTodayStart({ now, reset });"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js",
+      "oursContent": "      todayTimeZone: reset.timeZone,\n      todayTimeZoneLabel: reset.timeZoneLabel,",
+      "theirsContent": "      todayTimeZone: reset.timeZone,"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/utils/version.js",
+    "/apps/mobile/src/components/Admin/ApiUsageReportSection.jsx",
+    "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

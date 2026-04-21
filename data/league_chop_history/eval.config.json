@@ -1,0 +1,9 @@
+{
+  "name": "league_chop_history",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "0bedb314-d20d-45e1-a50c-fb16572886e9",
+  "sourceTimestamp": "2026-01-16T08:05:58.921Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 3
+}

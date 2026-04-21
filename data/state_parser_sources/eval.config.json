@@ -1,0 +1,9 @@
+{
+  "name": "state_parser_sources",
+  "description": "Merge conflict with 7 conflict(s) across 7 file(s)",
+  "sourceConflictId": "eb37d3c5-c915-4420-a0a5-561027f69dbb",
+  "sourceTimestamp": "2026-01-28T19:31:52.532Z",
+  "language": "javascript",
+  "conflictedFileCount": 7,
+  "conflictBlockCount": 15
+}

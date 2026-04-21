@@ -1,0 +1,34 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/head.jsx",
+      "oursContent": "  // Use a same-origin API route for the favicon.\n  // On some custom domain setups, paths like /favicon.ico or /favicon.png may not resolve,\n  // but /api routes do.\n  // Cache-bust because Chrome/CDNs cache favicons very aggressively.\n  const faviconVersion = \"20260107\";",
+      "theirsContent": "  // Chrome is extremely aggressive about favicon caching and may ignore query params.\n  // So we use a *versioned path* (not just ?v=) to force a refresh.\n  const faviconPath = \"/api/site-icon-v20260107\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/head.jsx",
+      "oursContent": "  const faviconUrl = `/api/favicon?v=${faviconVersion}`;\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/head.jsx",
+      "oursContent": "      {/* Icons */}\n      <link rel=\"icon\" type=\"image/png\" href={faviconUrl} />\n      <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href={faviconUrl} />\n      <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href={faviconUrl} />\n      <link rel=\"shortcut icon\" href={faviconUrl} />\n      <link rel=\"apple-touch-icon\" sizes=\"180x180\" href={faviconUrl} />",
+      "theirsContent": "      {/* Icons (same-origin, versioned path) */}\n      <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href={faviconPath} />\n      <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href={faviconPath} />\n      <link rel=\"shortcut icon\" href={faviconPath} />\n      <link rel=\"apple-touch-icon\" sizes=\"180x180\" href={faviconPath} />"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/layout.jsx",
+      "oursContent": "    // Safety net: make sure the favicon is set client-side.\n    // Browsers cache /favicon.ico aggressively and some custom domain setups don't serve dot-paths.\n    // /api routes are reliable, so we use /api/favicon.\n    const faviconUrl = \"/api/favicon?v=20260107\";",
+      "theirsContent": "    // Safety net: also set the favicon client-side.\n    // Chrome sometimes caches /favicon.ico very aggressively and may ignore query params,\n    // so we use a versioned PATH.\n    const faviconUrl = \"/api/site-icon-v20260107\";"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/head.jsx",
+    "/apps/web/src/app/layout.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

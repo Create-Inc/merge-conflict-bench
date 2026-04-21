@@ -1,0 +1,47 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/GlobalLayout.jsx",
+      "oursContent": "  // UPDATED: show for ALL authenticated users (except auth routes)\n  // IMPORTANT: do NOT memoize this with [] because layout can stay mounted across client-side navigation.\n  const onAuthRoute = (() => {",
+      "theirsContent": "  // show for ALL authenticated users (including admins), but skip auth + onboarding routes.\n  const onAuthRoute = useMemo(() => {"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/settings/public/route.js",
+      "oursContent": "    // Spec: treat it as \"configured\" based on VERSION being set.",
+      "theirsContent": "    // We only consider it enabled if BOTH text + version are set."
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/settings/public/route.js",
+      "oursContent": "",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/settings/public/route.js",
+      "oursContent": "    const userAgreementText = agreementTextRaw; // preserve formatting\n    const userAgreementVersion =\n      agreementVersionRaw && agreementVersionRaw.length > 0\n        ? agreementVersionRaw\n        : null;",
+      "theirsContent": "    const agreementEnabled =\n      String(agreementTextRaw || \"\").trim().length > 0 &&\n      String(agreementVersionRaw || \"\").trim().length > 0;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/settings/public/route.js",
+      "oursContent": "",
+      "theirsContent": "    const userAgreementText = agreementEnabled ? agreementTextRaw : \"\";\n    const userAgreementVersion = agreementEnabled\n      ? String(agreementVersionRaw).trim()\n      : null;\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/user-agreements/accept/route.js",
+      "oursContent": "    if (!hasCurrentVersion) {",
+      "theirsContent": "    if (!enabled) {\n      // Gate should not show, but fail safely if called anyway."
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/GlobalLayout.jsx",
+    "/apps/web/src/app/api/settings/public/route.js",
+    "/apps/web/src/app/api/user-agreements/accept/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

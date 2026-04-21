@@ -1,0 +1,53 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/components/Employees/CreateUserModal.jsx",
+      "oursContent": "        <label className=\"mt-3 flex items-center gap-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]\">\n          <input\n            type=\"checkbox\"\n            checked={!!createUserSetAsHead}\n            onChange={(e) => setCreateUserSetAsHead(e.target.checked)}\n          />\n          Set as head/approver of employee's department\n        </label>\n",
+      "theirsContent": "        <div className=\"mt-3\">\n          <label className=\"flex items-center gap-2 text-sm text-[#6B7280] dark:text-[#9CA3AF]\">\n            <input\n              type=\"checkbox\"\n              checked={!!createUserSetAsHead}\n              onChange={(e) => setCreateUserSetAsHead(e.target.checked)}\n            />\n            Set as head of this employee’s department (approver)\n          </label>\n        </div>\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/modules/users/page.jsx",
+      "oursContent": "  const departmentsQuery = useDepartments(!!user && canManageUsers);\n  const departments = Array.isArray(departmentsQuery.data?.departments)\n    ? departmentsQuery.data.departments\n    : [];\n",
+      "theirsContent": "  const departmentsQuery = useQuery({\n    queryKey: [\"departments\"],\n    enabled: !!user && !!company && canManageUsers,\n    queryFn: async () => fetchJson(\"/api/departments\"),\n  });\n\n  const departments = Array.isArray(departmentsQuery.data?.departments)\n    ? departmentsQuery.data.departments\n    : [];\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/modules/users/page.jsx",
+      "oursContent": "    companyUsersQuery.isFetching ||\n    (canManageUsers &&\n      (departmentsQuery.isLoading || departmentsQuery.isFetching));",
+      "theirsContent": "    companyUsersQuery.isFetching ||\n    (canManageUsers && departmentsQuery.isLoading);"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/modules/users/page.jsx",
+      "oursContent": "            <UserRolesManager\n              companyUsers={companyUsers}\n              departments={departments}\n              onUpdateUserRole={handleUpdateUserRole}\n              isUpdating={updateRoleMutation.isPending}\n            />",
+      "theirsContent": "            <>\n              {departmentsQuery.isError ? (\n                <div className=\"rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-3 text-sm text-red-600 dark:text-red-400\">\n                  Could not load departments. Department is required when\n                  creating users.\n                </div>\n              ) : null}\n              <UserRolesManager\n                companyUsers={companyUsers}\n                departments={departments}\n                onUpdateUserRole={handleUpdateUserRole}\n                isUpdating={updateRoleMutation.isPending}\n              />\n            </>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/company-users/invite/route.js",
+      "oursContent": "    // Optional: allow setting this user as a head/approver for additional departments.\n    const headDepartmentIdsRaw = normalizeDepartmentIdArray(\n      body?.headDepartmentIds,\n    );\n    const headValidation = await validateDepartmentsExist({\n      companyId: company.id,\n      departmentIds: headDepartmentIdsRaw,\n    });\n    if (!headValidation.ok) {\n      return Response.json({ error: headValidation.error }, { status: 400 });\n    }\n\n    const headDeptIds = (() => {\n      const ids = [...headValidation.departmentIds];\n      if (role === \"dept_head\" || setAsDepartmentHead) {\n        ids.push(deptId);\n      }\n      // de-dupe\n      const out = [];\n      const seen = new Set();\n      for (const id of ids) {\n        const key = String(Number(id));\n        if (!Number.isFinite(Number(id))) continue;\n        if (seen.has(key)) continue;\n        seen.add(key);\n        out.push(Number(id));\n      }\n      return out;\n    })();\n",
+      "theirsContent": "    // NEW: treat dept_head role OR explicit checkbox as \"department head\" intent\n    const shouldBeDeptHead = role === \"dept_head\" || setAsDepartmentHead;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/company-users/invite/route.js",
+      "oursContent": "      // Optional: set them as head/approver of departments (includes selected department when requested)\n      if (headDeptIds.length) {",
+      "theirsContent": "      // Optional: set them as department head\n      if (shouldBeDeptHead) {"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/company-users/invite/route.js",
+      "oursContent": "    // Optional: set them as head/approver of departments (includes selected department when requested)\n    if (headDeptIds.length) {",
+      "theirsContent": "    // Optional: set them as department head\n    if (shouldBeDeptHead) {"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/components/Employees/CreateUserModal.jsx",
+    "/apps/web/src/app/modules/users/page.jsx",
+    "/apps/web/src/app/api/company-users/invite/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

@@ -1,0 +1,59 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/hooks/useAssessmentDetail.js",
+      "oursContent": "  const categoryRaw =\n    typeof assessment?.category === \"string\" ? assessment.category : \"\";\n  const category = categoryRaw.toLowerCase();\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/hooks/useAssessmentDetail.js",
+      "oursContent": "  // If an assessment is truly a LIFT Business assessment, its template_key is lift_business\n  // AND it should not be an engagement-category assessment.\n  const isLiftBusiness =\n    templateKey === \"lift_business\" && !isEngagementCategory;\n\n  const isHiringFactor = templateKey === \"lift_hiring_factor\";\n  const isJobFitFactor = templateKey === \"lift_job_fit_factor\";\n  const isLiftSales = templateKey === \"LIFT_Factor_Sales\";",
+      "theirsContent": "  // Extra safety: sometimes the assessment type name is a generic \"Business\" label,\n  // but the user clearly named it as an Engagement Survey.\n  const looksLikeEngagementSurveyName =\n    nameLower.includes(\"engagement\") && !nameLower.includes(\"business\");"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/hooks/useAssessmentDetail.js",
+      "oursContent": "    isEngagementCategory ||\n    looksLikeEngagementSurveyType;",
+      "theirsContent": "    // Back-compat: if the assessment type name says \"Engagement\" (and not \"Business\"),\n    // treat it as an Engagement Survey so admins can reach the right setup screen.\n    looksLikeEngagementSurveyType ||\n    // Last-resort: use the assessment name as a hint.\n    looksLikeEngagementSurveyName;"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/hooks/useAssessmentDetail.js",
+      "oursContent": "",
+      "theirsContent": "    // If template_key is missing/misaligned, fall back to type/name hints.\n    if (looksLikeEngagementSurveyType || looksLikeEngagementSurveyName)\n      return \"Employee Engagement Survey\";\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/hooks/useAssessmentDetail.js",
+      "oursContent": "  }, [isEngagementSurvey, templateKey]);",
+      "theirsContent": "  }, [\n    isEngagementSurvey,\n    looksLikeEngagementSurveyName,\n    looksLikeEngagementSurveyType,\n    templateKey,\n  ]);"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/assessments/[id]/setup-engagement/page.jsx",
+      "oursContent": "  const category = safeString(assessment?.category).toLowerCase();\n  if (category === \"engagement\") return true;\n\n  const name = safeString(assessment?.type_name).toLowerCase();\n  if (!name) return false;\n\n  // Back-compat: if category is missing, fall back to name heuristics.\n  // Do not exclude the word \"business\" here because some mis-created engagement\n  // surveys can carry the wrong label yet still need conversion.\n  return name.includes(\"engagement\");",
+      "theirsContent": "  const typeName = safeString(assessment?.type_name).toLowerCase();\n  const name = safeString(assessment?.name).toLowerCase();\n\n  // If the user named it as an engagement survey, treat it as such (even if the type label is generic).\n  const nameHint = name.includes(\"engagement\") && !name.includes(\"business\");\n\n  if (nameHint) return true;\n\n  if (!typeName) return false;\n  if (typeName.includes(\"business\")) return false;\n  return typeName.includes(\"engagement\");"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/assessments/[id]/convert-to-engagement-survey/route.js",
+      "oursContent": "function looksLikeEngagementSurveyType({ typeName, category }) {\n  const cat = safeString(category).toLowerCase();\n  if (cat === \"engagement\") return true;\n",
+      "theirsContent": "function looksLikeEngagementSurveyType({ typeName, assessmentName }) {"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/assessments/[id]/convert-to-engagement-survey/route.js",
+      "oursContent": "    const okType = looksLikeEngagementSurveyType({\n      typeName,\n      category: assessment.category,\n    });",
+      "theirsContent": "    const okType = looksLikeEngagementSurveyType({\n      typeName,\n      assessmentName: assessment?.name,\n    });"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/hooks/useAssessmentDetail.js",
+    "/apps/web/src/app/assessments/[id]/setup-engagement/page.jsx",
+    "/apps/web/src/app/api/assessments/[id]/convert-to-engagement-survey/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

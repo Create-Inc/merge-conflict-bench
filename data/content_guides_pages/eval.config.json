@@ -1,0 +1,9 @@
+{
+  "name": "content_guides_pages",
+  "description": "Merge conflict with 6 conflict(s) across 6 file(s)",
+  "sourceConflictId": "e1c4a02b-719e-4178-be85-6b54fb735fe1",
+  "sourceTimestamp": "2026-01-12T23:46:06.082Z",
+  "language": "javascript",
+  "conflictedFileCount": 6,
+  "conflictBlockCount": 16
+}

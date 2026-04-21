@@ -1,0 +1,22 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/users/route.js",
+      "oursContent": "      const roles = rows.map((r) => normalizeRole(r?.role)).filter(Boolean);",
+      "theirsContent": "\n      const roleSet = new Set(\n        (rows || [])\n          .map((r) =>\n            String(r.role || \"\")\n              .trim()\n              .toLowerCase(),\n          )\n          .filter(Boolean),\n      );\n\n      // 2) derived roles (back-compat for older accounts)\n      try {\n        const [\n          companyOwned,\n          companyManaged,\n          partnerOwned,\n          partnerManaged,\n          seller,\n          consultant,\n        ] = await sql.transaction((txn) => [\n          txn(\"SELECT 1 FROM company_profiles WHERE user_id = $1 LIMIT 1\", [\n            userId,\n          ]),\n          txn(\n            \"SELECT 1 FROM company_managers WHERE manager_user_id = $1 LIMIT 1\",\n            [userId],\n          ),\n          txn(\n            \"SELECT 1 FROM partner_company_profiles WHERE user_id = $1 LIMIT 1\",\n            [userId],\n          ),\n          txn(\n            \"SELECT 1 FROM partner_managers WHERE manager_user_id = $1 LIMIT 1\",\n            [userId],\n          ),\n          txn(\"SELECT 1 FROM seller_profiles WHERE user_id = $1 LIMIT 1\", [\n            userId,\n          ]),\n          txn(\"SELECT 1 FROM consultant_profiles WHERE user_id = $1 LIMIT 1\", [\n            userId,\n          ]),\n        ]);\n\n        if (companyOwned?.[0] || companyManaged?.[0]) roleSet.add(\"company\");\n        if (partnerOwned?.[0] || partnerManaged?.[0]) roleSet.add(\"partner\");\n        if (seller?.[0]) roleSet.add(\"seller\");\n        if (consultant?.[0]) roleSet.add(\"consultant\");\n      } catch (e) {\n        console.error(\n          \"/api/users endpoint=role: derived role lookup failed\",\n          e,\n        );\n      }\n\n      const roles = Array.from(roleSet);"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/matchmaking/utils/userHelpers.js",
+      "oursContent": "  const normalized = (rows || [])\n    .map((r) => normalizeRole(r?.role))\n    .filter(Boolean);\n  return new Set(normalized);",
+      "theirsContent": "\n  const roleSet = new Set(\n    (rows || [])\n      .map((r) =>\n        String(r.role || \"\")\n          .trim()\n          .toLowerCase(),\n      )\n      .filter(Boolean),\n  );\n\n  // Back-compat: some older users have profiles but no user_roles entries.\n  // Treat existing profiles/manager links as roles.\n  try {\n    const [\n      companyOwned,\n      companyManaged,\n      partnerOwned,\n      partnerManaged,\n      seller,\n      consultant,\n    ] = await sql.transaction((txn) => [\n      txn(\"SELECT 1 FROM company_profiles WHERE user_id = $1 LIMIT 1\", [\n        userId,\n      ]),\n      txn(\"SELECT 1 FROM company_managers WHERE manager_user_id = $1 LIMIT 1\", [\n        userId,\n      ]),\n      txn(\"SELECT 1 FROM partner_company_profiles WHERE user_id = $1 LIMIT 1\", [\n        userId,\n      ]),\n      txn(\"SELECT 1 FROM partner_managers WHERE manager_user_id = $1 LIMIT 1\", [\n        userId,\n      ]),\n      txn(\"SELECT 1 FROM seller_profiles WHERE user_id = $1 LIMIT 1\", [userId]),\n      txn(\"SELECT 1 FROM consultant_profiles WHERE user_id = $1 LIMIT 1\", [\n        userId,\n      ]),\n    ]);\n\n    if (companyOwned?.[0] || companyManaged?.[0]) roleSet.add(\"company\");\n    if (partnerOwned?.[0] || partnerManaged?.[0]) roleSet.add(\"partner\");\n    if (seller?.[0]) roleSet.add(\"seller\");\n    if (consultant?.[0]) roleSet.add(\"consultant\");\n  } catch (e) {\n    // Non-fatal: role lookups should never block the request.\n    console.error(\"getUserRoleSet: derived role lookup failed\", e);\n  }\n\n  return roleSet;"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/users/route.js",
+    "/apps/web/src/app/api/matchmaking/utils/userHelpers.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

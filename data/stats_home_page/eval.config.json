@@ -1,0 +1,9 @@
+{
+  "name": "stats_home_page",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "6f09d56d-f742-4a8c-939c-77ccf442bbbf",
+  "sourceTimestamp": "2026-01-14T07:21:48.107Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 33
+}

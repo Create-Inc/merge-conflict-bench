@@ -1,0 +1,9 @@
+{
+  "name": "telephony_voice_test",
+  "description": "Merge conflict with 7 conflict(s) across 7 file(s)",
+  "sourceConflictId": "e0964ccf-8943-4137-8ea2-1054b754c4a3",
+  "sourceTimestamp": "2026-01-22T07:19:14.602Z",
+  "language": "javascript",
+  "conflictedFileCount": 7,
+  "conflictBlockCount": 15
+}

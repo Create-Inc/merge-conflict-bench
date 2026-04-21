@@ -1,0 +1,9 @@
+{
+  "name": "sme_leader_domains",
+  "description": "Merge conflict with 3 conflict(s) across 3 file(s)",
+  "sourceConflictId": "0c7632cf-3dc0-48aa-87e9-6dc64a5e0275",
+  "sourceTimestamp": "2026-01-08T14:58:34.508Z",
+  "language": "javascript",
+  "conflictedFileCount": 3,
+  "conflictBlockCount": 3
+}

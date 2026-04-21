@@ -1,0 +1,9 @@
+{
+  "name": "notification_workflow",
+  "description": "Merge conflict with 6 conflict(s) across 6 file(s)",
+  "sourceConflictId": "eabf6e52-1751-422c-8dcd-7d1ccf58c3df",
+  "sourceTimestamp": "2026-02-07T08:51:05.451Z",
+  "language": "javascript",
+  "conflictedFileCount": 6,
+  "conflictBlockCount": 13
+}

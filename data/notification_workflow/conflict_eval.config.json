@@ -1,0 +1,92 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/utils/notify.js",
+      "oursContent": "  workflow_created: \"workflow_activity\",\n",
+      "theirsContent": "  // General workflow activity (create/import/install/etc.)\n  workflow_created: \"workflow_activity\",\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/utils/notify.js",
+      "oursContent": "  team_member_joined: \"team_invites\",",
+      "theirsContent": "  team_joined: \"team_invites\","
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/workflows/route.js",
+      "oursContent": "    await createNotification({\n      userId,\n      notificationType: \"workflow_created\",\n      title: `Workflow created: ${workflow.name}`,\n      message: \"Your workflow was created as a draft.\",\n      metadata: { workflowId: workflow.id },\n    });\n",
+      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow created: ${workflow.name}`,\n        message: \"Ready when you are — open it to start building.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      // Non-fatal\n      console.error(\"Failed to create workflow_created notification\", e);\n    }\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/settings/notifications/page.jsx",
+      "oursContent": "                  workflow_activity: hydrated.workflow_activity !== false,",
+      "theirsContent": "                  workflow_activity: hydrated.workflow_activity,"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/settings/notifications/page.jsx",
+      "oursContent": "                  email_on_broadcast: !!hydrated.email_on_broadcast,",
+      "theirsContent": "                  email_on_broadcast: hydrated.email_on_broadcast,"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/settings/notifications/page.jsx",
+      "oursContent": "              <label className=\"block text-sm font-medium text-gray-700 mb-1\">\n                Email\n              </label>\n              <input\n                value={hydrated.email || \"\"}\n                onChange={(e) => onUpdate({ email: e.target.value })}\n                placeholder={user?.email || \"you@example.com\"}\n                className=\"w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none\"\n              />\n\n              <div className=\"mt-4 border-t border-gray-200\" />\n\n              <div className=\"divide-y divide-gray-200\">\n                <ToggleRow\n                  title=\"Email on broadcast updates\"\n                  description=\"When the app sends a broadcast update, also email you (in addition to in-app).\"\n                  value={!!hydrated.email_on_broadcast}\n                  onChange={(v) => onUpdate({ email_on_broadcast: v })}\n                />\n              </div>",
+      "theirsContent": "              <div className=\"divide-y divide-gray-200\">\n                <ToggleRow\n                  title=\"Email on important updates\"\n                  description='When an \"Important update\" is broadcast, also send it to your email.'\n                  value={!!hydrated.email_on_broadcast}\n                  onChange={(v) => onUpdate({ email_on_broadcast: v })}\n                />\n              </div>\n\n              <div className=\"mt-5\">\n                <label className=\"block text-sm font-medium text-gray-700 mb-1\">\n                  Email destination\n                </label>\n                <input\n                  value={hydrated.email || \"\"}\n                  onChange={(e) => onUpdate({ email: e.target.value })}\n                  placeholder={user?.email || \"you@example.com\"}\n                  className=\"w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none\"\n                />\n                <p className=\"mt-2 text-xs text-gray-500\">\n                  Leave blank to use your account email.\n                </p>\n              </div>"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/notifications/broadcast/route.js",
+      "oursContent": "import { sendEmail } from \"@/app/api/utils/send-email\";\nimport { renderBroadcastEmail } from \"@/app/api/utils/emailTemplates\";",
+      "theirsContent": "import { sendEmail } from \"@/app/api/utils/send-email\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/notifications/broadcast/route.js",
+      "oursContent": "      sender_user_id: validators.number({ required: false, integer: true }),",
+      "theirsContent": "      // Only needed for internal calls that want email sending.\n      sender_user_id: validators.number({ required: false, integer: true }),"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/web/src/app/api/notifications/broadcast/route.js",
+      "oursContent": "    if (allowInternal && sender_user_id) {\n      senderUserId = Number(sender_user_id);\n    }\n",
+      "theirsContent": "    if (allowInternal && sender_user_id) {\n      senderUserId = sender_user_id;\n    }\n"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/web/src/app/api/notifications/broadcast/route.js",
+      "oursContent": "    // Optional emails: if the user enabled `email_on_broadcast`, we will also email them.\n    // NOTE: emails are sent using the sender/admin user's Resend credentials.\n    let emailAttempted = 0;\n    let emailSent = 0;\n    let emailSkippedReason = null;\n    let emailError = null;\n    let emailPreview = null;\n\n    if (!senderUserId) {\n      emailSkippedReason = allowInternal\n        ? \"sender_user_id is required for email when using internal secret\"\n        : \"missing sender\";\n    } else {\n      const emailValues = [];\n\n      let emailWhere = `\n        WHERE COALESCE(uas.is_active, true) = true\n          AND COALESCE(uas.is_archived, false) = false\n          AND COALESCE(ns.email_on_broadcast, false) = true\n      `;\n\n      if (preferenceColumn) {\n        emailWhere += `\n          AND COALESCE(ns.${preferenceColumn}, true) = true\n        `;\n      }\n\n      if (Array.isArray(user_ids) && user_ids.length > 0) {\n        emailValues.push(user_ids);\n        emailWhere += `\n          AND au.id = ANY($${emailValues.length}::int[])\n        `;\n      }\n\n      const emailQuery = `\n        SELECT\n          au.id AS user_id,\n          au.name AS user_name,\n          COALESCE(NULLIF(ns.email, ''), au.email) AS recipient_email\n        FROM auth_users au\n        LEFT JOIN user_admin_state uas ON uas.user_id = au.id\n        LEFT JOIN notification_settings ns ON ns.user_id = au.id\n        ${emailWhere}\n          AND COALESCE(NULLIF(ns.email, ''), au.email) IS NOT NULL\n          AND COALESCE(NULLIF(ns.email, ''), au.email) <> ''\n        LIMIT 500\n      `;\n\n      const recipients = await sql(emailQuery, emailValues);\n\n      const wasCapped = (recipients?.length || 0) === 500;\n\n      if (recipients.length > 0) {\n        const tpl = renderBroadcastEmail({\n          title,\n          message,\n          url,\n          type,\n          recipientName: null,\n        });\n\n        emailPreview = {\n          subject: tpl.subject,\n          text: tpl.text,\n          html: tpl.html,\n        };\n\n        for (const r of recipients) {\n          emailAttempted += 1;\n          try {\n            const t = renderBroadcastEmail({\n              title,\n              message,\n              url,\n              type,\n              recipientName: r.user_name,\n            });\n\n            await sendEmail({\n              userId: senderUserId,\n              to: r.recipient_email,\n              subject: t.subject,\n              html: t.html,\n              text: t.text,\n            });\n            emailSent += 1;\n          } catch (err) {\n            emailError = err?.message || \"Failed to send email\";\n\n            // If Resend isn't configured, stop trying.\n            if (\n              typeof emailError === \"string\" &&\n              emailError.toLowerCase().includes(\"resend not configured\")\n            ) {\n              break;\n            }\n          }\n        }\n      }\n\n      if (wasCapped) {\n        emailSkippedReason =\n          \"email recipients capped at 500; send to a smaller set (user_ids) for full email coverage\";\n      }\n    }\n",
+      "theirsContent": "    // Optional email sending for important updates.\n    // Safeguards:\n    // - Only for important_update\n    // - Requires senderUserId (to load Resend API key)\n    // - Caps total emails per call\n    const emailSummary = {\n      attempted: 0,\n      sent: 0,\n      failed: 0,\n      skipped: 0,\n      error: null,\n      preview: null,\n      capped: false,\n    };\n\n    if (type === \"important_update\") {\n      if (!senderUserId) {\n        emailSummary.skipped = inserted?.length || 0;\n        emailSummary.error =\n          \"Email sending skipped: missing sender_user_id (internal call) or session user.\";\n      } else {\n        const maxEmails = 200;\n\n        const emailValues = [];\n        let emailWhere = `\n          WHERE COALESCE(uas.is_active, true) = true\n            AND COALESCE(uas.is_archived, false) = false\n            AND COALESCE(ns.important_updates, true) = true\n            AND COALESCE(ns.email_on_broadcast, false) = true\n        `;\n\n        if (Array.isArray(user_ids) && user_ids.length > 0) {\n          emailValues.push(user_ids);\n          emailWhere += `\n            AND au.id = ANY($${emailValues.length}::int[])\n          `;\n        }\n\n        // Only email users where we can determine a destination.\n        const recipientsQuery = `\n          SELECT\n            au.id AS user_id,\n            COALESCE(NULLIF(ns.email, ''), au.email) AS email\n          FROM auth_users au\n          LEFT JOIN user_admin_state uas ON uas.user_id = au.id\n          LEFT JOIN notification_settings ns ON ns.user_id = au.id\n          ${emailWhere}\n            AND COALESCE(NULLIF(ns.email, ''), au.email) IS NOT NULL\n          LIMIT ${maxEmails + 1}\n        `;\n\n        const recipients = await sql(recipientsQuery, emailValues);\n        const list = Array.isArray(recipients) ? recipients : [];\n\n        const finalRecipients = list.slice(0, maxEmails);\n        if (list.length > maxEmails) {\n          emailSummary.capped = true;\n        }\n\n        const tpl = renderBroadcastEmail({\n          title,\n          message,\n          url: url || null,\n        });\n\n        for (const r of finalRecipients) {\n          if (!r?.email) {\n            emailSummary.skipped += 1;\n            continue;\n          }\n\n          emailSummary.attempted += 1;\n\n          try {\n            await sendEmail({\n              userId: senderUserId,\n              to: r.email,\n              subject: tpl.subject,\n              html: tpl.html,\n              text: tpl.text,\n            });\n            emailSummary.sent += 1;\n          } catch (e) {\n            emailSummary.failed += 1;\n            if (!emailSummary.error) {\n              emailSummary.error = e?.message || \"Failed to send email\";\n              emailSummary.preview = {\n                to: r.email,\n                subject: tpl.subject,\n                text: tpl.text,\n                html: tpl.html,\n              };\n            }\n\n            // If Resend isn't configured, don't hammer it 200 times.\n            if (\n              String(e?.message || \"\")\n                .toLowerCase()\n                .includes(\"resend not configured\")\n            ) {\n              break;\n            }\n          }\n        }\n      }\n    }\n"
+    },
+    {
+      "blockIndex": 4,
+      "filePath": "/apps/web/src/app/api/notifications/broadcast/route.js",
+      "oursContent": "      email_attempted: emailAttempted,\n      email_sent: emailSent,\n      email_skipped_reason: emailSkippedReason,\n      email_error: emailError,\n      email_preview: emailPreview,",
+      "theirsContent": "      email: emailSummary,"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/teams/accept-invite/route.js",
+      "oursContent": "    // Also notify other team admins/owners (helps teams stay in the loop)\n    const teamRows = await sql`\n      SELECT name FROM teams WHERE id = ${invitation.team_id} LIMIT 1\n    `;\n    const teamName = teamRows?.[0]?.name || \"your team\";\n\n    const adminMembers = await sql`\n      SELECT user_id\n      FROM team_members\n      WHERE team_id = ${invitation.team_id}\n        AND role IN ('owner', 'admin')\n    `;\n\n    const alreadyNotified = new Set([invitation.invited_by, userId]);\n\n    for (const member of adminMembers) {\n      const adminUserId = member.user_id;\n      if (alreadyNotified.has(adminUserId)) {\n        continue;\n      }\n      alreadyNotified.add(adminUserId);\n\n      await createNotification({\n        userId: adminUserId,\n        notificationType: \"team_member_joined\",\n        title: `${users[0].name || users[0].email} joined ${teamName}`,\n        message: `Role: ${invitation.role}`,\n        metadata: { teamId: invitation.team_id, memberUserId: userId },\n      });\n    }\n",
+      "theirsContent": "    // Also notify the user who accepted (useful confirmation)\n    await createNotification({\n      userId,\n      notificationType: \"team_joined\",\n      title: \"You joined a team\",\n      message: `You're now a member (role: ${invitation.role}).`,\n      metadata: { teamId: invitation.team_id, url: \"/teams\" },\n    });\n"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/workflows/import/route.js",
+      "oursContent": "    await createNotification({\n      userId,\n      notificationType: \"workflow_created\",\n      title: `Workflow imported: ${workflow.name}`,\n      message: \"Your workflow was imported as a draft.\",\n      metadata: { workflowId: workflow.id, source: \"import\" },\n    });\n",
+      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow imported: ${workflow.name}`,\n        message: \"We imported your workflow — open it to review and tweak.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      console.error(\n        \"Failed to create workflow_created notification (import)\",\n        e,\n      );\n    }\n"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/web/src/app/api/utils/notify.js",
+    "/apps/web/src/app/api/workflows/route.js",
+    "/apps/web/src/app/settings/notifications/page.jsx",
+    "/apps/web/src/app/api/notifications/broadcast/route.js",
+    "/apps/web/src/app/api/teams/accept-invite/route.js",
+    "/apps/web/src/app/api/workflows/import/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

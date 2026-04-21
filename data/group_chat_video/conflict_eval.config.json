@@ -1,0 +1,52 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/group-video/[groupId].jsx",
+      "oursContent": "  const expoGoHint = isExpoGo\n    ? \"Du kjører i Expo Go. Kamera/mikrofon i innebygd nettleser kan være litt ustabilt — hvis det ikke virker, trykk på lenke-ikonet for å åpne i nettleser.\"\n    : null;\n",
+      "theirsContent": "  const expoGoWarningText = isExpoGo\n    ? \"Du kjører i Expo Go. Kamera/mikrofon i WebView kan være begrenset. Hvis det ikke funker, trykk på ekstern lenke.\"\n    : null;\n"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/group-video/[groupId].jsx",
+      "oursContent": "      {expoGoHint ? (\n        <View style={{ padding: 12, backgroundColor: colors.surface }}>\n          <Text style={{ color: colors.textSecondary, lineHeight: 18 }}>\n            {expoGoHint}\n          </Text>\n        </View>\n      ) : null}\n",
+      "theirsContent": "      {expoGoWarningText ? (\n        <View style={{ padding: 12, backgroundColor: \"#FFFBEB\" }}>\n          <Text style={{ color: \"#92400E\", fontWeight: \"600\" }}>\n            {expoGoWarningText}\n          </Text>\n        </View>\n      ) : null}\n"
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/group-video/[groupId].jsx",
+      "oursContent": "        onHttpError={(event) => {\n          console.error(\"WebView http error\", event?.nativeEvent);\n          setWebViewError(String(event?.nativeEvent?.statusCode || \"http\"));\n        }}\n        javaScriptEnabled\n        domStorageEnabled\n        originWhitelist={[\"*\"]}",
+      "theirsContent": "        // Some Jitsi builds also fire a httpError for blocked resources\n        onHttpError={(event) => {\n          console.error(\"WebView http error\", event?.nativeEvent);\n          setWebViewError(\n            event?.nativeEvent?.description ||\n              `HTTP ${event?.nativeEvent?.statusCode}`,\n          );\n        }}"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "    if (isExpoGo) {\n      const safeGroupId = String(groupId || \"group\").replace(\n        /[^a-zA-Z0-9_-]/g,\n        \"-\",\n      );\n      router.push(`/group-video/${safeGroupId}`);\n      return;\n    }",
+      "theirsContent": "    // ✅ Open video chat inside the app (works in Expo Go too)\n    const groupIdStr = Array.isArray(groupId) ? groupId[0] : groupId;\n    router.push(\n      `/group-video/${encodeURIComponent(String(groupIdStr))}?audio=0`,\n    );\n  }, [groupId]);"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "    setShowVideoCall(true);\n  }, [groupId, isExpoGo]);\n",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 2,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "    if (isExpoGo) {\n      const safeGroupId = String(groupId || \"group\").replace(\n        /[^a-zA-Z0-9_-]/g,\n        \"-\",\n      );\n      router.push(`/group-video/${safeGroupId}?audio=1`);\n      return;\n    }",
+      "theirsContent": "    // ✅ Audio-only mode via query param\n    const groupIdStr = Array.isArray(groupId) ? groupId[0] : groupId;\n    router.push(\n      `/group-video/${encodeURIComponent(String(groupIdStr))}?audio=1`,\n    );\n  }, [groupId]);"
+    },
+    {
+      "blockIndex": 3,
+      "filePath": "/apps/mobile/src/app/group-chat/[groupId].jsx",
+      "oursContent": "    setShowVideoCall(true);\n  }, [groupId, isExpoGo]);\n",
+      "theirsContent": ""
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/group-video/[groupId].jsx",
+    "/apps/mobile/src/app/group-chat/[groupId].jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

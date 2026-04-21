@@ -1,0 +1,9 @@
+{
+  "name": "app_head_layout",
+  "description": "Merge conflict with 2 conflict(s) across 2 file(s)",
+  "sourceConflictId": "a603ccff-a6a7-4186-a0e0-c29a5d350004",
+  "sourceTimestamp": "2026-01-07T12:55:58.910Z",
+  "language": "javascript",
+  "conflictedFileCount": 2,
+  "conflictBlockCount": 4
+}

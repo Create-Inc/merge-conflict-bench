@@ -1,0 +1,47 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "      const p = String(getPathname(url) || \"\").toLowerCase();\n      const isApiToken = p === \"/api/auth/token\";\n\n      // Show exchanging banner.",
+      "theirsContent": ""
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+      "oursContent": "\n      // IMPORTANT:\n      // When we're on /api/auth/token, we expect it to postMessage AUTH_SUCCESS directly\n      // from the WebView HTML response. Do NOT also run a native POST exchange here.\n      // Native token exchange has proven unreliable across WKWebView/TestFlight builds.\n      if (!isApiToken) {\n        // Fire-and-forget (we can't block onLoadEnd).\n        exchangeTokenNative(url);\n      }",
+      "theirsContent": "      // NOTE: do NOT start native exchange here; wait for /api/auth/token (GET)\n      // to postMessage back."
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "import React, { useEffect, useMemo } from \"react\";",
+      "theirsContent": "import React, { useEffect, useMemo, useState } from \"react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/mobile-auth/callback/page.jsx",
+      "oursContent": "  // Stable helper route for mobile auth flows.\n  // Immediately redirect to /api/auth/token, which posts AUTH_SUCCESS back to the app.",
+      "theirsContent": "  // Stable helper route for native mobile WebViews.\n  // IMPORTANT: We finish auth by navigating the WebView to /api/auth/token (GET).\n  // /api/auth/token returns HTML that posts AUTH_SUCCESS back to the WebView."
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "import React, { useEffect, useMemo } from \"react\";",
+      "theirsContent": "import React, { useEffect, useMemo, useState } from \"react\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/mobile-auth/complete/page.jsx",
+      "oursContent": "  // Stable helper route for mobile auth flows.\n  // Immediately redirect to /api/auth/token, which posts AUTH_SUCCESS back to the app.",
+      "theirsContent": "  // Stable helper route for native mobile WebViews.\n  // IMPORTANT: We finish auth by navigating the WebView to /api/auth/token (GET).\n  // /api/auth/token returns HTML that posts AUTH_SUCCESS back to the WebView."
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/utils/auth/handlers/webViewHandlers.js",
+    "/apps/web/src/app/mobile-auth/callback/page.jsx",
+    "/apps/web/src/app/mobile-auth/complete/page.jsx"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}

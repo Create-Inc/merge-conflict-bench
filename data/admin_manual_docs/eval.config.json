@@ -1,0 +1,9 @@
+{
+  "name": "admin_manual_docs",
+  "description": "Merge conflict with 5 conflict(s) across 5 file(s)",
+  "sourceConflictId": "bf52436c-681c-4de8-b564-a1da0d8301a7",
+  "sourceTimestamp": "2026-01-28T05:58:50.921Z",
+  "language": "javascript",
+  "conflictedFileCount": 5,
+  "conflictBlockCount": 5
+}

@@ -1,0 +1,35 @@
+{
+  "conflictBlocks": [
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/auth/signin.jsx",
+      "oursContent": "      if (data.token) {\n        // Store both token + user so native can work offline and useUser has a fallback\n        await setAuth({ token: data.token, user: data.user });",
+      "theirsContent": "      const data = await response.json();\n\n      if (data.token && data.user) {\n        await setAuth({ token: data.token, user: data.user });"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/mobile/src/app/auth/signup.jsx",
+      "oursContent": "      if (signinData.token) {\n        await setAuth({ token: signinData.token, user: signinData.user });",
+      "theirsContent": "      const data = await signinResponse.json();\n\n      if (data.token && data.user) {\n        await setAuth({ token: data.token, user: data.user });"
+    },
+    {
+      "blockIndex": 0,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "import { verify, hash } from \"argon2\";",
+      "theirsContent": "import { hash, verify } from \"argon2\";"
+    },
+    {
+      "blockIndex": 1,
+      "filePath": "/apps/web/src/app/api/auth/token/route.js",
+      "oursContent": "export async function PUT(request) {\n  try {\n    const { email, password, name } = await request.json();\n\n    if (!email || !password) {\n      return Response.json(\n        { error: \"Email og passord er påkrevd\" },\n        { status: 400 },\n      );\n    }\n\n    if (password.length < 6) {\n      return Response.json(\n        { error: \"Passordet må være minst 6 tegn\" },\n        { status: 400 },\n      );\n    }\n\n    const existing = await sql`\n      SELECT id FROM auth_users WHERE email = ${email} LIMIT 1\n    `;\n\n    if (existing.length > 0) {\n      return Response.json(\n        { error: \"Bruker finnes allerede\" },\n        { status: 400 },\n      );\n    }\n\n    const [createdUser] = await sql`\n      INSERT INTO auth_users (name, email, role)\n      VALUES (${name || \"Ny bruker\"}, ${email}, 'customer')\n      RETURNING id, name, email, role\n    `;\n\n    const hashedPassword = await hash(password);\n\n    await sql`\n      INSERT INTO auth_accounts (\n        \"userId\",\n        type,\n        provider,\n        \"providerAccountId\",\n        password\n      )\n      VALUES (\n        ${createdUser.id},\n        'credentials',\n        'credentials',\n        ${createdUser.id},\n        ${hashedPassword}\n      )\n    `;\n\n    const token = await signUserToken(createdUser);\n\n    return Response.json({\n      success: true,\n      token,\n      user: createdUser,\n    });\n  } catch (error) {\n    console.error(\"Signup error:\", error);\n    return Response.json({ error: \"Serverfeil\" }, { status: 500 });\n  }\n}\n",
+      "theirsContent": "export async function PUT(request) {\n  try {\n    const { name, email, password } = await request.json();\n\n    if (!name || !email || !password) {\n      return Response.json(\n        { error: \"Navn, email og passord er påkrevd\" },\n        { status: 400 },\n      );\n    }\n\n    if (password.length < 6) {\n      return Response.json(\n        { error: \"Passordet må være minst 6 tegn\" },\n        { status: 400 },\n      );\n    }\n\n    // Sjekk om bruker allerede eksisterer\n    const existingUser = await sql`\n      SELECT id FROM auth_users WHERE email = ${email} LIMIT 1\n    `;\n\n    if (existingUser.length > 0) {\n      return Response.json(\n        { error: \"En bruker med denne e-postadressen eksisterer allerede\" },\n        { status: 400 },\n      );\n    }\n\n    // Hash passord\n    const hashedPassword = await hash(password);\n\n    // Lag bruker\n    const [newUser] = await sql`\n      INSERT INTO auth_users (name, email, role)\n      VALUES (${name}, ${email}, 'customer')\n      RETURNING id, name, email, role\n    `;\n\n    // Lag account for credentials\n    await sql`\n      INSERT INTO auth_accounts (\"userId\", type, provider, \"providerAccountId\", password)\n      VALUES (${newUser.id}, 'credentials', 'credentials', ${newUser.id}, ${hashedPassword})\n    `;\n\n    return Response.json({\n      success: true,\n      user: newUser,\n    });\n  } catch (error) {\n    console.error(\"Signup error:\", error);\n    return Response.json(\n      { error: \"Kunne ikke opprette konto\" },\n      { status: 500 },\n    );\n  }\n}\n"
+    }
+  ],
+  "conflictedFiles": [
+    "/apps/mobile/src/app/auth/signin.jsx",
+    "/apps/mobile/src/app/auth/signup.jsx",
+    "/apps/web/src/app/api/auth/token/route.js"
+  ],
+  "testFile": "merge.test.js",
+  "preservedBehaviors": []
+}
