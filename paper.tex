@@ -37,7 +37,7 @@
 
 % --- Abstract ---
 \begin{abstract}
-We introduce \textsc{MergeConflictBench}, an evaluation suite for measuring the ability of LLM agents to resolve real merge conflicts while preserving behavior from both branches. The benchmark consists of 20 cases extracted from production merge conflict tracking in a commercial codebase, spanning 63 conflicted files with 364 conflict blocks across domains including authentication, mobile UI, regulatory data processing, and animation systems. Each case is paired with a hidden holdout test suite that verifies behaviors originating from all three code lineages: the common base, the ``ours'' branch, and the ``theirs'' branch. An agent's task is to produce resolved files free of conflict markers; its output is scored by executing the hidden tests, directly measuring whether the resolution correctly integrates both branches' contributions. This design extends the principle established by \textsc{RefactorBench}---\emph{behavioral preservation is a functional property best verified by functional tests}---from single-branch refactoring to multi-branch integration, where the agent must synthesize semantically compatible code from two divergent change sets. Preliminary evaluation on five cases demonstrates that exact-match comparison is too strict: resolutions that differ textually from the reference can nonetheless pass all hidden behavioral tests, confirming that functional evaluation is the appropriate methodology.
+We introduce \textsc{MergeConflictBench}, an evaluation suite for measuring the ability of LLM agents to resolve real merge conflicts while preserving behavior from both branches. The benchmark consists of 86 cases extracted from production merge conflict tracking in a commercial codebase, spanning 288 conflicted files with 1{,}063 conflict blocks across domains including authentication, mobile UI, regulatory data processing, animation systems, fleet management, e-commerce, and CRM tooling. Each case is paired with a hidden holdout test suite---2{,}533 tests in total across all 86 cases---that verifies behaviors originating from all three code lineages: the common base, the ``ours'' branch, and the ``theirs'' branch. An agent's task is to produce resolved files free of conflict markers; its output is scored by executing the hidden tests, directly measuring whether the resolution correctly integrates both branches' contributions. This design extends the principle established by \textsc{RefactorBench}---\emph{behavioral preservation is a functional property best verified by functional tests}---from single-branch refactoring to multi-branch integration, where the agent must synthesize semantically compatible code from two divergent change sets. Preliminary evaluation on five cases demonstrates that exact-match comparison is too strict: resolutions that differ textually from the reference can nonetheless pass all hidden behavioral tests, confirming that functional evaluation is the appropriate methodology.
 \end{abstract}
 
 \medskip
@@ -64,10 +64,10 @@ LLM-based agents can potentially resolve conflicts that require semantic underst
 
 We address this with hidden functional tests. Each benchmark case includes a test suite---invisible to the resolving agent---that exercises behaviors from all three code lineages: the common ancestor (base), the current branch (ours), and the incoming branch (theirs). A resolution passes if and only if it preserves all three categories of behavior.
 
-This paper introduces \textsc{MergeConflictBench}, a benchmark of 20 merge conflict cases from production, and makes the following contributions:
+This paper introduces \textsc{MergeConflictBench}, a benchmark of 86 merge conflict cases from production, and makes the following contributions:
 
 \begin{enumerate}[leftmargin=2em]
-\item \textbf{\textsc{MergeConflictBench} itself}: a benchmark of 20 real merge conflict cases spanning 63 files and 364 conflict blocks, with hidden test suites covering behaviors from base, ours, and theirs branches.
+\item \textbf{\textsc{MergeConflictBench} itself}: a benchmark of 86 real merge conflict cases spanning 288 files and 1{,}063 conflict blocks, with 2{,}533 hidden tests covering behaviors from base, ours, and theirs branches across all cases.
 
 \item \textbf{Extension of behavioral evaluation to merge resolution}: we demonstrate that the hidden-test methodology from \textsc{RefactorBench} transfers naturally to the merge conflict domain, where it must verify the \emph{synthesis} of two change sets rather than the \emph{preservation} of one.
 
@@ -181,39 +181,63 @@ The \emph{Passes Tests} score is the primary metric. The other scores provide di
 \label{sec:corpus}
 % ============================================================
 
-The corpus consists of 20 cases totaling 63 conflicted files and 364 conflict blocks. Table~\ref{tab:corpus} presents the full inventory, organized by complexity tier.
+The corpus consists of 86 cases totaling 288 conflicted files, 1{,}063 conflict blocks, and 2{,}533 hidden tests. All cases are JavaScript/JSX. Block counts range from 2 to 46, file counts from 1 to 8, and per-case test counts from 9 to 94. Table~\ref{tab:corpus} presents a representative sample of 40 cases spanning all complexity tiers, followed by aggregate statistics for the full corpus.
 
 \begin{table}[H]
 \centering
-\caption{\textsc{MergeConflictBench} corpus. Files = number of conflicted files. Blocks = total conflict blocks. Domain describes the functional area of the code.}
+\caption{\textsc{MergeConflictBench} corpus (representative sample). Files = number of conflicted files. Blocks = total conflict blocks. Tests = hidden holdout tests per case. Domain describes the functional area of the code.}
 \label{tab:corpus}
 \small
-\begin{tabular}{llrrl}
+\begin{tabular}{llrrrl}
 \toprule
-\textbf{Case} & \textbf{Tier} & \textbf{Files} & \textbf{Blocks} & \textbf{Domain} \\
+\textbf{Case} & \textbf{Tier} & \textbf{Files} & \textbf{Blocks} & \textbf{Tests} & \textbf{Domain} \\
 \midrule
-\texttt{state\_parser\_apply}       & Complex  & 1 & 45 & Regulatory data import API \\
-\texttt{mobile\_auth\_flow}         & Complex  & 4 & 32 & Mobile auth via WebView \\
-\texttt{account\_auth\_pages}       & Complex  & 4 & 30 & Signup/signin/reset pages \\
-\texttt{campaign\_mapping\_tool}    & Complex  & 7 & 25 & Campaign canvas \& toolbar \\
-\texttt{state\_parser\_preview}     & Complex  & 8 & 25 & Admin preview with registry \\
-\texttt{celebration\_overlay}       & Complex  & 1 & 24 & Confetti animation \& audio \\
-\texttt{bulk\_product\_status}      & Complex  & 3 & 22 & Bulk status change \& preview \\
-\texttt{legal\_compliance\_settings}& Complex  & 2 & 22 & EULA/SMS document URLs \\
-\texttt{mobile\_task\_detail}       & Complex  & 5 & 21 & Task modal with comments \\
-\texttt{route\_mileage\_planning}   & Complex  & 3 & 21 & Mileage estimation hooks \\
+\texttt{fleet\_parts\_transfers}   & Complex  & 4 & 46 & 44  & Fleet parts transfer workflow \\
+\texttt{state\_parser\_apply}      & Complex  & 1 & 45 & 40  & Regulatory data import API \\
+\texttt{account\_statements}       & Complex  & 2 & 36 & 35  & Account statement generation \\
+\texttt{fleet\_parts\_receipts}    & Complex  & 3 & 34 & 34  & Fleet parts receipt processing \\
+\texttt{stats\_home\_page}         & Complex  & 2 & 33 & 29  & Statistics dashboard home \\
+\texttt{mobile\_auth\_flow}        & Complex  & 4 & 32 & 55  & Mobile auth via WebView \\
+\texttt{dispatch\_sidebar\_nav}    & Complex  & 2 & 31 & 28  & Dispatch sidebar navigation \\
+\texttt{account\_auth\_pages}      & Complex  & 4 & 30 & 63  & Signup/signin/reset pages \\
+\texttt{state\_parser\_preview}    & Complex  & 8 & 25 & 94  & Admin preview with registry \\
+\texttt{campaign\_mapping\_tool}   & Complex  & 7 & 25 & 63  & Campaign canvas \& toolbar \\
+\texttt{listing\_watchlist}        & Complex  & 3 & 25 & 22  & Listing watchlist feature \\
+\texttt{celebration\_overlay}      & Complex  & 1 & 24 & 73  & Confetti animation \& audio \\
+\texttt{mobile\_chat\_profile}     & Complex  & 5 & 22 & 20  & Mobile chat profile views \\
+\texttt{bulk\_product\_status}     & Complex  & 3 & 22 & 32  & Bulk status change \& preview \\
+\texttt{legal\_compliance\_settings}& Complex & 2 & 22 & 32  & EULA/SMS document URLs \\
+\texttt{mobile\_task\_detail}      & Complex  & 5 & 21 & 62  & Task modal with comments \\
+\texttt{route\_mileage\_planning}  & Complex  & 3 & 21 & 34  & Mileage estimation hooks \\
+\texttt{navigation\_layout\_tailwind}& Complex& 3 & 20 & 31  & Navigation layout styling \\
 \midrule
-\texttt{trade\_show\_form}          & Moderate & 1 & 19 & Mobile trade show creation \\
-\texttt{onboarding\_agreement}      & Moderate & 4 & 16 & PDF/HTML agreement flow \\
-\texttt{mobile\_tab\_navigation}    & Moderate & 4 & 14 & Bottom tab bar \& badges \\
-\texttt{org\_switcher}              & Moderate & 3 & 12 & Org switcher with RBAC \\
-\texttt{legal\_compliance\_v2}      & Moderate & 2 & 12 & Document link storage \\
-\texttt{auth\_api\_routes}          & Moderate & 4 &  8 & Login/signup/OTP routes \\
+\texttt{resource\_crud\_modals}    & Moderate & 7 & 19 & 29  & Resource CRUD modal forms \\
+\texttt{checkout\_payment\_verify} & Moderate & 3 & 19 & 28  & Checkout payment verification \\
+\texttt{trade\_show\_form}         & Moderate & 1 & 19 & 83  & Mobile trade show creation \\
+\texttt{dealer\_integration\_csv}  & Moderate & 3 & 17 & 27  & Dealer CSV integration \\
+\texttt{onboarding\_agreement}     & Moderate & 4 & 16 & 60  & PDF/HTML agreement flow \\
+\texttt{invoice\_create\_modal}    & Moderate & 4 & 15 & 46  & Invoice creation modal \\
+\texttt{mobile\_tab\_navigation}   & Moderate & 4 & 14 & 41  & Bottom tab bar \& badges \\
+\texttt{ai\_studio\_animation}     & Moderate & 2 & 13 & 40  & AI studio animations \\
+\texttt{org\_switcher}             & Moderate & 3 & 12 & 58  & Org switcher with RBAC \\
+\texttt{legal\_compliance\_v2}     & Moderate & 2 & 12 & 25  & Document link storage \\
+\texttt{globe\_renderer\_animation}& Moderate & 4 & 10 & 33  & Globe renderer animation \\
+\texttt{auth\_api\_routes}         & Moderate & 4 &  8 & 49  & Login/signup/OTP routes \\
 \midrule
-\texttt{athlete\_contact\_api}      & Simple   & 1 &  6 & Contact endpoint \& email rules \\
-\texttt{mobile\_customer\_filters}  & Simple   & 4 &  4 & Customer search \& team queries \\
-\texttt{campaign\_call\_panel}      & Simple   & 1 &  4 & Call panel \& speaker tracking \\
-\texttt{product\_import\_modal}     & Simple   & 1 &  2 & Field mapping for imports \\
+\texttt{billing\_pricing\_pages}   & Simple   & 3 &  7 & 18  & Billing \& pricing pages \\
+\texttt{athlete\_contact\_api}     & Simple   & 1 &  6 & 30  & Contact endpoint \& email rules \\
+\texttt{signin\_academy\_service}  & Simple   & 2 &  6 & 22  & Signin \& academy service \\
+\texttt{password\_reset\_full}     & Simple   & 5 &  5 & 22  & Password reset flow (full) \\
+\texttt{mobile\_customer\_filters} & Simple   & 4 &  4 & 51  & Customer search \& team queries \\
+\texttt{presales\_copilot\_products}& Simple  & 4 &  4 & 39  & Presales copilot products \\
+\texttt{campaign\_call\_panel}     & Simple   & 1 &  4 & 31  & Call panel \& speaker tracking \\
+\texttt{sme\_leader\_domains}      & Simple   & 3 &  3 & 18  & SME leader domains \\
+\texttt{product\_import\_modal}    & Simple   & 1 &  2 & 46  & Field mapping for imports \\
+\texttt{matchmaking\_user\_helpers}& Simple   & 2 &  2 & 12  & Matchmaking user helpers \\
+\midrule
+\multicolumn{2}{l}{\emph{Remaining 46 cases}} & \multicolumn{4}{l}{\emph{(see supplementary data for full inventory)}} \\
+\midrule
+\textbf{Full corpus (86 cases)} &          & \textbf{288} & \textbf{1{,}063} & \textbf{2{,}533} & \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -223,12 +247,14 @@ The corpus consists of 20 cases totaling 63 conflicted files and 364 conflict bl
 Cases are stratified into three complexity tiers based on the number of conflict blocks:
 
 \begin{itemize}[leftmargin=2em]
-\item \textbf{Complex (20+ blocks):} 10 cases. These involve extensive interleaving of changes, often requiring the agent to understand how both branches restructured the same functions, state management, or API surfaces. The most complex case (\texttt{state\_parser\_apply}) has 45 conflict blocks in a single file---a regulatory data import API where both branches restructured function signatures, parameter handling, and handler logic.
+\item \textbf{Complex (20+ blocks):} 18 cases (21\%), containing 514 conflict blocks across 62 files with 791 hidden tests. These involve extensive interleaving of changes, often requiring the agent to understand how both branches restructured the same functions, state management, or API surfaces. The most complex case (\texttt{fleet\_parts\_transfers}) has 46 conflict blocks across 4 files---a fleet parts transfer workflow where both branches restructured transfer logic, receipt handling, and validation. The single-file maximum is \texttt{state\_parser\_apply} with 45 blocks in one file---a regulatory data import API where both branches restructured function signatures, parameter handling, and handler logic.
 
-\item \textbf{Moderate (8--19 blocks):} 6 cases. These involve meaningful conflicts across multiple files but with more localized changes. For example, \texttt{onboarding\_agreement} (16 blocks across 4 files) involves conflicts in invitation flow state building, parameter passing, and rendering mode (iframe vs.\ direct).
+\item \textbf{Moderate (8--19 blocks):} 29 cases (34\%), containing 370 conflict blocks across 114 files with 948 hidden tests. These involve meaningful conflicts across multiple files but with more localized changes. For example, \texttt{onboarding\_agreement} (16 blocks across 4 files) involves conflicts in invitation flow state building, parameter passing, and rendering mode (iframe vs.\ direct). The median case in this tier has 13 blocks across 3 files.
 
-\item \textbf{Simple (2--7 blocks):} 4 cases. These have few conflict blocks but still require semantic understanding beyond accept-ours/theirs. For example, \texttt{athlete\_contact\_api} (6 blocks in 1 file) involves conflicting changes to email uniqueness rules, contact type checking, and error response formatting.
+\item \textbf{Simple (2--7 blocks):} 39 cases (45\%), containing 179 conflict blocks across 112 files with 794 hidden tests. Despite having fewer conflict blocks, these cases still require semantic understanding beyond accept-ours/theirs. For example, \texttt{athlete\_contact\_api} (6 blocks in 1 file) involves conflicting changes to email uniqueness rules, contact type checking, and error response formatting. Several simple cases have high test counts (e.g., \texttt{mobile\_customer\_filters} with 51 tests for 4 blocks), reflecting dense behavioral coverage even in structurally small conflicts.
 \end{itemize}
+
+The overall distribution has a median of 8.5 blocks per case (mean 12.4), with the bulk of cases in the simple-to-moderate range. This reflects the natural distribution of merge conflicts in production: most conflicts are localized, but a meaningful tail of highly complex multi-block conflicts exists and poses the greatest challenge for automated resolution.
 
 \subsection{Conflict Type Taxonomy}
 
@@ -248,7 +274,7 @@ Across the corpus, we observe recurring categories of semantic conflict:
 
 \subsection{Preserved Behavior Contract}
 
-Each case with a completed test suite includes a \texttt{preservedBehaviors} list documenting what the hidden tests verify. Each entry specifies an \texttt{origin} (base, ours, or theirs) and a human-readable \texttt{description}. For example, the \texttt{athlete\_contact\_api} case has 19 preserved behaviors: 10 from base (existing validation, auth checks, constraint error handling), 4 from ours (new email conflict detection logic), and 5 from theirs (contact type checking, updated error responses). This structure ensures that the test suite explicitly covers all three lineages and makes coverage gaps visible during test authoring.
+Each case includes a \texttt{preservedBehaviors} list documenting what the hidden tests verify. Each entry specifies an \texttt{origin} (base, ours, or theirs) and a human-readable \texttt{description}. For example, the \texttt{athlete\_contact\_api} case has 19 preserved behaviors: 10 from base (existing validation, auth checks, constraint error handling), 4 from ours (new email conflict detection logic), and 5 from theirs (contact type checking, updated error responses). This structure ensures that the test suite explicitly covers all three lineages and makes coverage gaps visible during test authoring.
 
 % ============================================================
 \section{Evaluation Methodology}
@@ -378,11 +404,9 @@ A key difference is that merge conflict resolution does not typically change the
 \subsection{Future Work}
 
 \begin{itemize}[leftmargin=2em]
-\item \textbf{Complete test suites for all 20 cases.} The current corpus has 20 extracted cases but only a subset have completed hidden test suites. Completing coverage across all complexity tiers will enable full benchmark evaluation.
+\item \textbf{Multi-model evaluation.} Systematic evaluation across models (Claude Sonnet~4, Claude Opus~4, Gemini~2.5~Pro, GPT-4.1) and tool configurations will establish baselines and reveal model-specific strengths and weaknesses, as \textsc{RefactorBench} did for refactoring. With all 86 cases now equipped with hidden test suites, full benchmark runs are possible.
 
-\item \textbf{Multi-model evaluation.} Systematic evaluation across models (Claude Sonnet~4, Claude Opus~4, Gemini~2.5~Pro, GPT-4.1) and tool configurations will establish baselines and reveal model-specific strengths and weaknesses, as \textsc{RefactorBench} did for refactoring.
-
-\item \textbf{Language diversity.} The current corpus is entirely JavaScript/TypeScript. Extending to Python, Go, Rust, and other languages would test generalization, as merge conflict patterns differ across languages (e.g., import conflicts in Python vs.\ TypeScript, ownership conflicts in Rust).
+\item \textbf{Language diversity.} The current corpus is entirely JavaScript/JSX. Extending to Python, Go, Rust, and other languages would test generalization, as merge conflict patterns differ across languages (e.g., import conflicts in Python vs.\ TypeScript, ownership conflicts in Rust).
 
 \item \textbf{Automated test generation.} Manually authoring hidden test suites is the primary bottleneck. Exploring automated or semi-automated test generation from the three-way diff---potentially using an LLM to draft tests from the \texttt{preservedBehaviors} contract, with human review---could scale the benchmark significantly.
 
@@ -398,7 +422,7 @@ A key difference is that merge conflict resolution does not typically change the
 
 We introduced \textsc{MergeConflictBench}, a benchmark for evaluating LLM agents on merge conflict resolution using hidden behavioral tests. The benchmark extends the principle established by \textsc{RefactorBench}---behavioral preservation is a functional property best verified by functional tests---from single-branch refactoring to multi-branch integration.
 
-The corpus consists of 20 real merge conflict cases from production, spanning 63 conflicted files with 364 conflict blocks across complexity tiers from 2-block import conflicts to 45-block function restructuring conflicts. Each case's hidden test suite verifies behaviors from all three code lineages (base, ours, theirs), ensuring that a correct resolution must genuinely integrate both branches' contributions rather than favoring one side.
+The corpus consists of 86 real merge conflict cases from production, spanning 288 conflicted files with 1{,}063 conflict blocks and 2{,}533 hidden tests across complexity tiers from 2-block import conflicts to 46-block fleet management workflows. All 86 cases have complete hidden test suites covering behaviors from all three code lineages (base, ours, theirs), ensuring that a correct resolution must genuinely integrate both branches' contributions rather than favoring one side.
 
 Preliminary evaluation confirms the methodology's value: exact-match comparison is too strict for merge conflict resolution, where multiple textually distinct resolutions can be functionally correct. The hidden tests correctly distinguish functionally correct resolutions from those that drop behavior from one branch---a subtle failure mode invisible to compilation-based or structural evaluation.
 
