@@ -48,5 +48,24 @@
     "/apps/web/src/app/api/password-reset/request/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "forgot-password page has email input and submit button",
+    "forgot-password page normalizes email input",
+    "forgot-password page shows success message without revealing account existence",
+    "API route always responds with ok:true to prevent email enumeration",
+    "API route generates random token and stores in database",
+    "API route invalidates previous tokens before creating new one",
+    "API route sends email via sendEmail utility",
+    "forgot-password page has sendHint state for email delivery issues",
+    "forgot-password page has devResetUrl state for development convenience",
+    "forgot-password page has devEmailError state",
+    "forgot-password page displays sendHint warning when email delivery fails",
+    "forgot-password page shows email_send_failed hint when sending fails in prod",
+    "forgot-password page references RESEND_API_KEY in error message",
+    "API route returns devResetUrl in non-production environments",
+    "API route returns devEmailError in non-production environments",
+    "API route returns hint email_send_failed in prod when email configured but send fails",
+    "API route checks emailConfigured flag based on RESEND_API_KEY",
+    "API route uses getAppBaseUrl to construct reset URL matching request environment"
+  ]
 }

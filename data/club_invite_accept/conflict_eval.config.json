@@ -55,5 +55,70 @@
     "/apps/web/src/app/api/invitations/[token]/accept/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "invitation route.js exports a GET handler",
+      "side": "base"
+    },
+    {
+      "description": "invitation route.js returns 404 when invitation not found",
+      "side": "base"
+    },
+    {
+      "description": "invitation route.js checks expiration",
+      "side": "base"
+    },
+    {
+      "description": "invitation route.js distinguishes share links from email invites",
+      "side": "base"
+    },
+    {
+      "description": "accept route.js exports a POST handler",
+      "side": "base"
+    },
+    {
+      "description": "accept route.js requires authentication",
+      "side": "base"
+    },
+    {
+      "description": "accept route.js checks for existing membership (409)",
+      "side": "base"
+    },
+    {
+      "description": "accept route.js marks email invitations as accepted but keeps share links reusable",
+      "side": "base"
+    },
+    {
+      "description": "invite-link route.js uses COALESCE for both NULL and empty email",
+      "side": "base"
+    },
+    {
+      "description": "invite-link route.js generates 30-day expiration for new links",
+      "side": "base"
+    },
+    {
+      "description": "invitation route.js normalizes email with trim() for share-link detection",
+      "side": "ours"
+    },
+    {
+      "description": "accept route.js normalizes email with trim() for share-link detection",
+      "side": "ours"
+    },
+    {
+      "description": "accept route.js validates share-link invitation.status is still active",
+      "side": "theirs"
+    },
+    {
+      "description": "accept route.js checks email invite status is pending (single-use)",
+      "side": "theirs"
+    },
+    {
+      "description": "accept route.js verifies email mismatch returns 403",
+      "side": "theirs"
+    },
+    {
+      "description": "invite-link revokes existing active links using COALESCE for schema compatibility",
+      "side": "theirs"
+    }
+  ]
 }

@@ -211,5 +211,50 @@
     "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Receipt POST validates PO is not cancelled before allowing receipt",
+      "source": "theirs"
+    },
+    {
+      "description": "Receipt POST validates PO branch matches selected branch",
+      "source": "base"
+    },
+    {
+      "description": "Receipt POST derives vendor from PO if not provided",
+      "source": "base"
+    },
+    {
+      "description": "Receipt POST validates part_ids belong to the branch",
+      "source": "base"
+    },
+    {
+      "description": "Receipt POST uses CTE for atomic receipt + lines insert",
+      "source": "base"
+    },
+    {
+      "description": "Receipt posting uses single atomic CTE with inventory update, cost layers, movements, avg recompute, PO status update",
+      "source": "theirs"
+    },
+    {
+      "description": "Receipt posting returns 409 if atomic CTE produces no rows",
+      "source": "theirs"
+    },
+    {
+      "description": "Transfer receive guards against double-receive with status check in UPDATE WHERE clause",
+      "source": "theirs"
+    },
+    {
+      "description": "Transfer receive finds or creates matching part in target branch by part_number",
+      "source": "base"
+    },
+    {
+      "description": "Transfer receive uses receiptWithCost for inventory costing",
+      "source": "base"
+    },
+    {
+      "description": "GET handler supports search, status, and branch_id filters with pagination",
+      "source": "base"
+    }
+  ]
 }

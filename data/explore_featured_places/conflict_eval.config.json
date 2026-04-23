@@ -37,5 +37,30 @@
     "/apps/web/src/app/api/content/itineraries/handlers/perksHandler.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "perksHandler freeStateBoostSql conditionally includes state boost in ORDER BY",
+      "side": "ours"
+    },
+    {
+      "description": "PlaceCard is a named export (not default export)",
+      "side": "theirs"
+    },
+    {
+      "description": "PlaceCardSkeleton is exported from PlaceCard file",
+      "side": "theirs"
+    },
+    {
+      "description": "FeaturedPlacesSection imports and uses PlaceCardSkeleton from PlaceCard",
+      "side": "theirs"
+    },
+    {
+      "description": "PlaceCard uses perkGold variable for perk badge color",
+      "side": "theirs"
+    },
+    {
+      "description": "perksHandler stateBoost SQL expression is conditional on stateParamProvided",
+      "side": "theirs"
+    }
+  ]
 }

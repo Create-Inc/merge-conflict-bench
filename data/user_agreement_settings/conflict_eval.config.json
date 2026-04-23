@@ -43,5 +43,18 @@
     "/apps/web/src/app/api/user-agreements/accept/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "GlobalLayout renders UserAgreementGate component",
+    "GlobalLayout skips agreement gate on auth routes",
+    "settings/public route returns user_agreement_text and user_agreement_version",
+    "user-agreements/accept route validates user authentication",
+    "user-agreements/accept route inserts agreement acceptance into database",
+    "GlobalLayout does NOT memoize onAuthRoute check",
+    "settings/public route treats agreement as configured when version is set",
+    "settings/public route preserves formatting of agreement text",
+    "GlobalLayout also skips agreement gate on onboarding routes",
+    "user-agreements/accept route checks if agreement version exists before accepting",
+    "user-agreements/accept route returns 400 when no agreement is configured",
+    "settings/public route returns null version when no agreement is configured"
+  ]
 }

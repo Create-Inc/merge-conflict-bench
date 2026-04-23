@@ -61,5 +61,78 @@
     "/apps/web/src/app/api/auth/platform-signout/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "FloatingDemoCTA links to /demo/access",
+      "side": "base"
+    },
+    {
+      "description": "FloatingDemoCTA shows after scrolling past 240px",
+      "side": "base"
+    },
+    {
+      "description": "pricing page shows feature list with Check icons",
+      "side": "base"
+    },
+    {
+      "description": "pricing page has Request Custom Pricing button",
+      "side": "base"
+    },
+    {
+      "description": "platform-signout route exports a POST handler",
+      "side": "base"
+    },
+    {
+      "description": "platform-signout clears multiple cookie names including authjs and next-auth variants",
+      "side": "base"
+    },
+    {
+      "description": "platform-signout sets Clear-Site-Data header",
+      "side": "base"
+    },
+    {
+      "description": "platform-signout deletes auth_sessions from DB",
+      "side": "base"
+    },
+    {
+      "description": "FloatingDemoCTA uses inline style color #ffffff for forced white text",
+      "side": "ours"
+    },
+    {
+      "description": "FloatingDemoCTA spans also have inline style color #ffffff",
+      "side": "ours"
+    },
+    {
+      "description": "platform-signout clearCookie function has domain parameter",
+      "side": "ours"
+    },
+    {
+      "description": "FloatingDemoCTA uses text-white and !text-white classes",
+      "side": "theirs"
+    },
+    {
+      "description": "pricing page has removed the Guided Setup box (only in comment)",
+      "side": "theirs"
+    },
+    {
+      "description": "platform-signout uses getHostNameFromRequest with x-forwarded-host",
+      "side": "theirs"
+    },
+    {
+      "description": "platform-signout uses getCandidateDomains for domain variants",
+      "side": "theirs"
+    },
+    {
+      "description": "platform-signout appendClearCookies takes request object",
+      "side": "theirs"
+    },
+    {
+      "description": "platform-signout handles __Host- cookies specially",
+      "side": "theirs"
+    },
+    {
+      "description": "platform-signout clears cookies on both / and /api/auth paths",
+      "side": "theirs"
+    }
+  ]
 }

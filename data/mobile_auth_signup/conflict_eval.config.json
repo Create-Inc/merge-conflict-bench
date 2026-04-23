@@ -31,5 +31,42 @@
     "/apps/web/src/app/api/auth/token/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "signin.jsx checks data.token (not requiring data.user) to determine successful login, with user fallback",
+      "side": "ours"
+    },
+    {
+      "description": "signup.jsx checks signupData.token for immediate login after signup, with fallback sign-in flow",
+      "side": "ours"
+    },
+    {
+      "description": "token/route.js PUT (signup) returns token along with user on successful account creation",
+      "side": "ours"
+    },
+    {
+      "description": "token/route.js PUT allows email+password without requiring name (uses 'Ny bruker' as fallback name)",
+      "side": "ours"
+    },
+    {
+      "description": "token/route.js PUT returns error when user with email already exists",
+      "side": "theirs"
+    },
+    {
+      "description": "signin.jsx uses /api/auth/token POST with email/password and validates both fields",
+      "side": "base"
+    },
+    {
+      "description": "signup.jsx validates minimum password length of 6 characters",
+      "side": "base"
+    },
+    {
+      "description": "token/route.js POST uses argon2 verify and returns token+user on success, 401 on bad credentials",
+      "side": "base"
+    },
+    {
+      "description": "token/route.js PUT inserts into auth_users and auth_accounts with role 'customer' and provider 'credentials'",
+      "side": "base"
+    }
+  ]
 }

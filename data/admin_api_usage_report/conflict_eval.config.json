@@ -67,5 +67,94 @@
     "/apps/web/src/app/api/admin/reports/handlers/apiUsage.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "version.js exports APP_VERSION with the correct version string",
+      "side": "base"
+    },
+    {
+      "description": "apiUsage handler exports GET and POST handlers",
+      "side": "base"
+    },
+    {
+      "description": "apiUsage handler has normalizeResetConfig function",
+      "side": "base"
+    },
+    {
+      "description": "apiUsage handler stores reset config in app_settings with UPSERT",
+      "side": "base"
+    },
+    {
+      "description": "apiUsage handler supports three timezone options: EST, PST, UTC",
+      "side": "base"
+    },
+    {
+      "description": "apiUsage GET returns groups including youtube, spotify, tmdb",
+      "side": "base"
+    },
+    {
+      "description": "ApiUsageReportSection component uses useQuery and useMutation",
+      "side": "base"
+    },
+    {
+      "description": "ApiUsageReportSection renders daily reset controls",
+      "side": "base"
+    },
+    {
+      "description": "version.js comment mentions daily reset time default is 3AM EST",
+      "side": "ours"
+    },
+    {
+      "description": "ApiUsageReportSection imports useCallback",
+      "side": "ours"
+    },
+    {
+      "description": "ApiUsageReportSection defines RESET_DEFAULT with timeZoneLabel",
+      "side": "ours"
+    },
+    {
+      "description": "ApiUsageReportSection defines TZ_OPTIONS array",
+      "side": "ours"
+    },
+    {
+      "description": "ApiUsageReportSection has picker modal for hour and timezone",
+      "side": "ours"
+    },
+    {
+      "description": "apiUsage handler returns todayTimeZoneLabel in windows response",
+      "side": "ours"
+    },
+    {
+      "description": "apiUsage handler DEFAULT_RESET includes timeZoneLabel",
+      "side": "ours"
+    },
+    {
+      "description": "ApiUsageReportSection note text includes todayTzLabel",
+      "side": "ours"
+    },
+    {
+      "description": "apiUsage handler has computeTodayStart function",
+      "side": "theirs"
+    },
+    {
+      "description": "apiUsage handler computeTodayStart falls back to yesterday when before reset",
+      "side": "theirs"
+    },
+    {
+      "description": "apiUsage handler has hour12To24 conversion function",
+      "side": "theirs"
+    },
+    {
+      "description": "apiUsage handler normalizeResetConfig accepts hour12 field name",
+      "side": "theirs"
+    },
+    {
+      "description": "apiUsage handler normalizeResetConfig accepts tz alias for timeZone",
+      "side": "theirs"
+    },
+    {
+      "description": "ApiUsageReportSection uses timeline modal for YouTube hourly breakdown",
+      "side": "theirs"
+    }
+  ]
 }

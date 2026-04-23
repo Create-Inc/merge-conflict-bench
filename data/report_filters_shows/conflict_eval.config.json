@@ -43,5 +43,16 @@
     "/apps/web/src/app/api/reports/advanced/data/fetchAccessibleShows.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "useReportFilters initializes dateStart and dateEnd to empty strings",
+    "useReportFilters returns all expected filter state",
+    "fetchAccessibleShows checks for explicit show IDs",
+    "fetchAccessibleShows uses parameterized SQL queries",
+    "fetchAccessibleShows bypasses date/type filters when explicit shows are selected",
+    "ReportControls mentions that filters never hide explicitly selected events",
+    "fetchAccessibleShows applies start date filter independently",
+    "fetchAccessibleShows uses event date overlap logic",
+    "fetchAccessibleShows filters by event type when not all",
+    "fetchAccessibleShows checks RBAC for viewAll permissions"
+  ]
 }

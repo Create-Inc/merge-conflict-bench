@@ -30,5 +30,38 @@
     "/apps/web/src/app/api/auth/token/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "expo-web-success uses auth() + createMobileJwtFromSessionUser instead of getToken for session-based JWT generation",
+      "side": "ours"
+    },
+    {
+      "description": "expo-web-success has a reusable htmlResponse helper with Cache-Control no-store headers",
+      "side": "ours"
+    },
+    {
+      "description": "expo-web-success exports both GET and POST handlers (POST delegates to GET)",
+      "side": "ours"
+    },
+    {
+      "description": "expo-web-success includes try/catch error handling returning 500 on failure",
+      "side": "ours"
+    },
+    {
+      "description": "token/route.js uses auth() + createMobileJwtFromSessionUser with Cache-Control no-store headers",
+      "side": "ours"
+    },
+    {
+      "description": "token/route.js exports POST handler delegating to GET for client parity",
+      "side": "ours"
+    },
+    {
+      "description": "Message payload includes type AUTH_SUCCESS with jwt and user, serialized via JSON.stringify in postMessage",
+      "side": "theirs"
+    },
+    {
+      "description": "Both routes postMessage AUTH_ERROR on unauthorized and AUTH_SUCCESS with jwt/user on success",
+      "side": "base"
+    }
+  ]
 }

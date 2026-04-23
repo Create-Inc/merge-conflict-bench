@@ -90,5 +90,20 @@
     "/apps/web/src/app/api/auth/token/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "expo-web-success: htmlWithPostMessage with ReactNativeWebView and parent.postMessage",
+    "expo-web-success: retry posting with setTimeout delays",
+    "expo-web-success: GET handler with getToken (raw and decoded)",
+    "expo-web-success: AUTH_ERROR for missing jwt or token",
+    "expo-web-success: AUTH_SUCCESS with jwt and user data",
+    "token route: GET handler returns HTML for WebView",
+    "token route: imports getToken, defines safeRequestUrl and isSecureRequest",
+    "shared: Cache-Control no-store headers",
+    "shared: secure cookie detection from protocol",
+    "token route: separate GET (HTML) and POST (JSON) handlers",
+    "expo-web-success: safe URL parsing with AUTH_URL/APP_URL fallback",
+    "token route: separate HTML and JSON header objects",
+    "token route: POST returns JSON responses",
+    "token route: GET always returns HTML for WKWebView"
+  ]
 }

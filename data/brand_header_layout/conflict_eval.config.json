@@ -39,5 +39,34 @@
     "/apps/web/src/components/Layout/Header.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "mobile and web brand.js use the d3dcc884 wordmark asset URL",
+      "side": "ours"
+    },
+    {
+      "description": "AppHeader uses wordmark dimensions 225x30 for readability",
+      "side": "ours"
+    },
+    {
+      "description": "ScribeHeader uses wordmark dimensions 225x30 for readability",
+      "side": "ours"
+    },
+    {
+      "description": "web Header uses larger wordmark height (h-10 or h-12)",
+      "side": "ours"
+    },
+    {
+      "description": "AppHeader has wordmark fallback with onError handler and BRAND_NAME text",
+      "side": "theirs"
+    },
+    {
+      "description": "ScribeHeader has wordmark fallback with onError handler and BRAND_NAME text",
+      "side": "theirs"
+    },
+    {
+      "description": "web Header has wordmark fallback with onError handler and brandName text",
+      "side": "theirs"
+    }
+  ]
 }

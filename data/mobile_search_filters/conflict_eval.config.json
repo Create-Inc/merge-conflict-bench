@@ -63,5 +63,54 @@
     "/apps/mobile/src/app/search/genre.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "version.js exports APP_VERSION with correct version string",
+      "side": "base"
+    },
+    {
+      "description": "decade.jsx imports and uses buildSongDetailParams",
+      "side": "base"
+    },
+    {
+      "description": "year.jsx imports and uses buildSongDetailParams",
+      "side": "base"
+    },
+    {
+      "description": "generation.jsx imports and uses buildSongDetailParams",
+      "side": "base"
+    },
+    {
+      "description": "genre.jsx imports and uses buildSongDetailParams",
+      "side": "base"
+    },
+    {
+      "description": "all search screens navigate to /details/song with params from buildSongDetailParams",
+      "side": "base"
+    },
+    {
+      "description": "all search screens validate songParams identity before navigation",
+      "side": "base"
+    },
+    {
+      "description": "all search screens navigate to /details/artist for artist items",
+      "side": "base"
+    },
+    {
+      "description": "all search screens include artist_name as an artist fallback",
+      "side": "ours"
+    },
+    {
+      "description": "version.js comment mentions song-card taps fix",
+      "side": "ours"
+    },
+    {
+      "description": "version.js comment mentions route path display for screen IDs",
+      "side": "theirs"
+    },
+    {
+      "description": "all search screens use variable named songParams",
+      "side": "theirs"
+    }
+  ]
 }

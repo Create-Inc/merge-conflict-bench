@@ -16,7 +16,7 @@
       "blockIndex": 0,
       "filePath": "/apps/web/src/app/api/workflows/route.js",
       "oursContent": "    await createNotification({\n      userId,\n      notificationType: \"workflow_created\",\n      title: `Workflow created: ${workflow.name}`,\n      message: \"Your workflow was created as a draft.\",\n      metadata: { workflowId: workflow.id },\n    });\n",
-      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow created: ${workflow.name}`,\n        message: \"Ready when you are — open it to start building.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      // Non-fatal\n      console.error(\"Failed to create workflow_created notification\", e);\n    }\n"
+      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow created: ${workflow.name}`,\n        message: \"Ready when you are \u2014 open it to start building.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      // Non-fatal\n      console.error(\"Failed to create workflow_created notification\", e);\n    }\n"
     },
     {
       "blockIndex": 0,
@@ -76,7 +76,7 @@
       "blockIndex": 0,
       "filePath": "/apps/web/src/app/api/workflows/import/route.js",
       "oursContent": "    await createNotification({\n      userId,\n      notificationType: \"workflow_created\",\n      title: `Workflow imported: ${workflow.name}`,\n      message: \"Your workflow was imported as a draft.\",\n      metadata: { workflowId: workflow.id, source: \"import\" },\n    });\n",
-      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow imported: ${workflow.name}`,\n        message: \"We imported your workflow — open it to review and tweak.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      console.error(\n        \"Failed to create workflow_created notification (import)\",\n        e,\n      );\n    }\n"
+      "theirsContent": "    // In-app notification (respects user preferences via notify.js)\n    try {\n      await createNotification({\n        userId,\n        notificationType: \"workflow_created\",\n        title: `Workflow imported: ${workflow.name}`,\n        message: \"We imported your workflow \u2014 open it to review and tweak.\",\n        metadata: {\n          workflowId: workflow.id,\n          url: `/workflows/${workflow.id}`,\n        },\n      });\n    } catch (e) {\n      console.error(\n        \"Failed to create workflow_created notification (import)\",\n        e,\n      );\n    }\n"
     }
   ],
   "conflictedFiles": [
@@ -88,5 +88,20 @@
     "/apps/web/src/app/api/workflows/import/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "notify: workflow_created maps to workflow_activity preference",
+    "notify: createNotification export with respectPreferences",
+    "workflows route: auth, domain check, and permission check",
+    "workflows route: creates workflow_created notification",
+    "import route: creates notification for imported workflow",
+    "accept-invite: token validation, expiration, email match",
+    "accept-invite: notifies inviter on acceptance",
+    "broadcast route: admin gating with internal secret",
+    "notification settings: ToggleRow and fetch from API",
+    "notify: team_member_joined maps to team_invites",
+    "broadcast route: renderBroadcastEmail and sendEmail",
+    "settings page: email_on_broadcast toggle",
+    "notify: team_joined maps to team_invites",
+    "broadcast route: handles Resend not configured"
+  ]
 }

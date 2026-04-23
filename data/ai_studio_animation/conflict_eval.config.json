@@ -70,7 +70,7 @@
       "blockIndex": 0,
       "filePath": "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnalyzingAnimation.jsx",
       "oursContent": "",
-      "theirsContent": "              {/* More visible sci‑fi scan layers */}"
+      "theirsContent": "              {/* More visible sci\u2011fi scan layers */}"
     },
     {
       "blockIndex": 1,
@@ -84,5 +84,20 @@
     "/apps/web/src/components/ai-studio/HairSystemTabBeta/AnalyzingAnimation.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "AnalyzingAnimation: returns null when no previewImageUrl",
+    "AnalyzingAnimation: renders AnimationStyles component",
+    "AnalyzingAnimation: scan overlay layers (dim, edge-trace, noise, grid, target, band, line, corners, glow)",
+    "AnalyzingAnimation: HUD elements (SCANNING chip, readout lines, v0.6)",
+    "AnimationStyles: keyframe definitions (hsBadgeMove, hsScanLine, hsPulseGlow, hsGridDrift, hsTargetMove)",
+    "AnimationStyles: prefers-reduced-motion disables animations",
+    "AnimationStyles: scan-frame, scan-overlay, hud-chip classes",
+    "AnalyzingAnimation: sweep layer present",
+    "AnalyzingAnimation: crosshair element present",
+    "AnimationStyles: hsMeshShimmer, hsReadoutFlicker, hsCrosshairPulse keyframes",
+    "AnimationStyles: gradient dim background",
+    "AnimationStyles: edge trace contrast(3.4) brightness(1.75)",
+    "AnimationStyles: scan target 6px border-radius, scan line 26px height",
+    "AnimationStyles: hsSweep keyframe for diagonal sweep"
+  ]
 }

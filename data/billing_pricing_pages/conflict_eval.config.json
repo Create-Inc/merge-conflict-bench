@@ -49,5 +49,24 @@
     "/apps/web/src/app/pricing/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "landing page has 360 Assistant feature card",
+    "billing page has assistantDescription array",
+    "billing page has allAccessIncludes array",
+    "pricing page has All-access and Concierge plan cards",
+    "pricing page mentions unlimited seats/users",
+    "pricing page lists standard support",
+    "pricing page lists role-based permissions",
+    "landing page description mentions background and not a chatbot",
+    "billing page assistant description mentions not a chatbot",
+    "pricing page mentions ROI + performance reports",
+    "pricing page 360 Assistant section mentions background operation",
+    "pricing page mentions tasks and team management",
+    "pricing page mentions travel and logistics tracking",
+    "pricing page mentions budget and expense tracking",
+    "billing page lists document review capabilities",
+    "billing page mentions email forwarding support",
+    "pricing page 360 Assistant mentions helping with data entry",
+    "pricing page mentions document review for invoices receipts etc"
+  ]
 }

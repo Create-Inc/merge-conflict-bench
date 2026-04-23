@@ -49,5 +49,74 @@
     "/apps/web/src/app/api/company-users/invite/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "route.js exports a POST handler",
+      "side": "base"
+    },
+    {
+      "description": "route.js validates email requiring valid format",
+      "side": "base"
+    },
+    {
+      "description": "route.js validates departmentId is required",
+      "side": "base"
+    },
+    {
+      "description": "route.js validates termStartDate and termEndDate as ISO dates",
+      "side": "base"
+    },
+    {
+      "description": "route.js validates role against ALLOWED_ROLES",
+      "side": "base"
+    },
+    {
+      "description": "route.js handles existing users by upserting company_users",
+      "side": "base"
+    },
+    {
+      "description": "CreateUserModal renders ROLE_OPTIONS with 8 roles",
+      "side": "base"
+    },
+    {
+      "description": "CreateUserModal renders a checkbox for setAsHead",
+      "side": "base"
+    },
+    {
+      "description": "UsersPage defines canManageUsers based on admin/manager/operations/director/super_admin roles",
+      "side": "base"
+    },
+    {
+      "description": "route.js includes normalizeDepartmentIdArray and validateDepartmentsExist for headDepartmentIds",
+      "side": "ours"
+    },
+    {
+      "description": "route.js builds headDeptIds array with deptId included when shouldBeDeptHead, with deduplication",
+      "side": "ours"
+    },
+    {
+      "description": "route.js gates setUserAsHeadForDepartments on headDeptIds.length",
+      "side": "ours"
+    },
+    {
+      "description": "UsersPage uses useDepartments hook",
+      "side": "ours"
+    },
+    {
+      "description": "UsersPage includes departmentsQuery.isFetching in isLoading condition",
+      "side": "ours"
+    },
+    {
+      "description": "route.js derives shouldBeDeptHead from role === dept_head OR setAsDepartmentHead",
+      "side": "theirs"
+    },
+    {
+      "description": "UsersPage renders department error banner when departmentsQuery.isError",
+      "side": "theirs"
+    },
+    {
+      "description": "UsersPage passes company in the departments query enable condition",
+      "side": "theirs"
+    }
+  ]
 }

@@ -141,5 +141,42 @@
     "/apps/mobile/src/app/group-chat/[groupId].jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "No global chat button in layout - live chat is profile-only",
+      "source": "base"
+    },
+    {
+      "description": "Chat tab redirects to profile with openLiveChat param using router.replace",
+      "source": "theirs"
+    },
+    {
+      "description": "Chat tab shows transitional UI with translated text while redirecting",
+      "source": "theirs"
+    },
+    {
+      "description": "Profile screen uses ref guard to prevent re-opening live chat on re-render",
+      "source": "ours"
+    },
+    {
+      "description": "Profile screen reads openLiveChat param to auto-open live chat",
+      "source": "theirs"
+    },
+    {
+      "description": "HelpSupportSection navigates to profile with openLiveChat=1 param",
+      "source": "theirs"
+    },
+    {
+      "description": "Group chat uses multi-language locale map for time formatting",
+      "source": "theirs"
+    },
+    {
+      "description": "Profile contains live chat, family children, and transfer UI sections",
+      "source": "base"
+    },
+    {
+      "description": "Group chat supports video/audio calls, message polling, and moderation",
+      "source": "base"
+    }
+  ]
 }

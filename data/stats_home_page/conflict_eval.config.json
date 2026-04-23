@@ -204,5 +204,42 @@
     "/apps/web/src/app/api/stats/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Stats API uses RANGE_TO_INTERVAL lookup table for time range parsing",
+      "source": "theirs"
+    },
+    {
+      "description": "Stats API uses shared timeClause variable for all query filters",
+      "source": "theirs"
+    },
+    {
+      "description": "Stats API returns 8+ data sections including requestsOverTime, latencyOverTime, tokensOverTime, summary, sources, feedback, recentActivity, requestsLast24h",
+      "source": "base"
+    },
+    {
+      "description": "Dashboard page uses useCallback for xTickFormatter",
+      "source": "theirs"
+    },
+    {
+      "description": "Dashboard displays 4 stat cards: Requests, Success rate, Avg latency, Token volume",
+      "source": "base"
+    },
+    {
+      "description": "Dashboard has area chart, pie charts, bar chart, and recent activity table",
+      "source": "base"
+    },
+    {
+      "description": "Dashboard has link to Audit Log at /query-history",
+      "source": "base"
+    },
+    {
+      "description": "Stats API enforces role-based access with requireAnyRole",
+      "source": "base"
+    },
+    {
+      "description": "Time range options include 7d, 30d, 90d, 12m",
+      "source": "base"
+    }
+  ]
 }

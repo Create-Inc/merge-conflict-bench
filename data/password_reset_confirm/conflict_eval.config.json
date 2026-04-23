@@ -32,5 +32,46 @@
     "/apps/web/src/app/api/password-reset/request/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "forgot-password page has normalizeEmail function that strips mailto: and http/https prefixes and lowercases",
+      "side": "ours"
+    },
+    {
+      "description": "request/route.js normalizes email input and invalidates previous unused tokens before creating new ones",
+      "side": "ours"
+    },
+    {
+      "description": "confirm/route.js marks reset token as used after successful password update",
+      "side": "ours"
+    },
+    {
+      "description": "reset-password page mentions link expiry (1 hour) in messaging",
+      "side": "ours"
+    },
+    {
+      "description": "forgot-password page propagates callbackUrl to sign-in href",
+      "side": "theirs"
+    },
+    {
+      "description": "reset-password page has readTokenFromUrl helper and builds signInHref with callbackUrl",
+      "side": "theirs"
+    },
+    {
+      "description": "confirm/route.js handles both UPDATE existing and INSERT new credentials account (upsert pattern)",
+      "side": "theirs"
+    },
+    {
+      "description": "confirm/route.js validates token+password required, password >= 8 chars, and returns 400/500 on errors",
+      "side": "base"
+    },
+    {
+      "description": "request/route.js always returns ok:true to prevent account enumeration, even on errors",
+      "side": "base"
+    },
+    {
+      "description": "Both pages use useMutation, BrandLogo, and useTheme with getThemeClasses for consistent styling",
+      "side": "base"
+    }
+  ]
 }

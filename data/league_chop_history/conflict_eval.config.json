@@ -24,5 +24,34 @@
     "/apps/web/src/app/api/leagues/[id]/chopped/history/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "ChopTab imports Users and Crosshair icons and shows teams remaining / chop target labels",
+      "source": "ours"
+    },
+    {
+      "description": "ChopTab historyQuery has enabled: Boolean(leagueId) guard",
+      "source": "ours"
+    },
+    {
+      "description": "ChopTab imports History icon and uses it in Chop History section header",
+      "source": "theirs"
+    },
+    {
+      "description": "route.js selects only id, league_type (not SELECT *) from leagues table",
+      "source": "theirs"
+    },
+    {
+      "description": "route.js returns history with fallback to empty array (history || [])",
+      "source": "theirs"
+    },
+    {
+      "description": "ChopTab shows choppedAt timestamp from created_at in history rows via toLocaleString",
+      "source": "theirs"
+    },
+    {
+      "description": "route.js validates auth, league id, league existence, and chopped type",
+      "source": "base"
+    }
+  ]
 }

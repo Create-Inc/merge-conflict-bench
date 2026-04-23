@@ -43,5 +43,22 @@
     "/apps/web/src/app/api/meta/oauth/start/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "MetaConnectSection handles connected meta param",
+    "MetaConnectSection handles forbidden meta param",
+    "MetaConnectSection handles config_error meta param",
+    "callback route validates code and state params",
+    "callback route verifies state signature",
+    "start route requires businessId parameter",
+    "start route checks META_APP_ID and META_APP_SECRET",
+    "callback route redirects to dashboard with config_error when Meta app config is missing",
+    "callback route checks Accept header for HTML-friendly redirects",
+    "callback route redirects to signin on 401 with callback URL preservation",
+    "start route redirects to signin on 401 with callbackUrl",
+    "start route checks Accept header for HTML-friendly redirects",
+    "MetaConnectSection handles signin_required meta param",
+    "callback route redirects to forbidden on 403 status",
+    "start route redirects to dashboard with error as catch-all",
+    "start route uses safeDashboardRedirect helper"
+  ]
 }

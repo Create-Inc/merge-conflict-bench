@@ -25,5 +25,38 @@
     "/apps/web/src/app/account/signup/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "All pages import designSystem from @/design-system and use ds.colors/ds.shadows for styling",
+      "source": "ours"
+    },
+    {
+      "description": "Pages use named export functions (LogoutPage, SignInPage, SignUpPage) not MainComponent",
+      "source": "ours"
+    },
+    {
+      "description": "Logout page wraps signOut in try/catch with console.error error handling",
+      "source": "ours"
+    },
+    {
+      "description": "Signin page uses useMemo callbackSearch for preserving query string in navigation links",
+      "source": "ours"
+    },
+    {
+      "description": "Signin page maps CredentialsSignin to 'Incorrect email or password. Try again.'",
+      "source": "ours"
+    },
+    {
+      "description": "All pages include Space Grotesk and Inter font imports via style jsx global",
+      "source": "ours"
+    },
+    {
+      "description": "Logout page has 'Back to jobs' link pointing to /jobs",
+      "source": "ours"
+    },
+    {
+      "description": "All pages import useAuth from @/utils/useAuth",
+      "source": "base"
+    }
+  ]
 }

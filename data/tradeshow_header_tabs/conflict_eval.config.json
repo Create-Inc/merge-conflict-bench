@@ -31,5 +31,38 @@
     "/apps/web/src/components/Tradeshow/MainHeader.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "ai-concierge tab label is 'Concierge' (not 'Travel Concierge')",
+      "side": "ours"
+    },
+    {
+      "description": "ai-concierge tab has addon: 'concierge' property marking it as a paid add-on",
+      "side": "ours"
+    },
+    {
+      "description": "MainHeader trial chip text includes 'All-access trial' prefix to clarify scope",
+      "side": "ours"
+    },
+    {
+      "description": "Pricing page concierge add-on note mentions 'Not included in trial'",
+      "side": "ours"
+    },
+    {
+      "description": "Pricing page concierge card note mentions 'White-glove' support",
+      "side": "theirs"
+    },
+    {
+      "description": "tradeShowTabs includes all 14 tabs: overview, tasks, leads, travel, schedule, inventory, shipping, budget, team, vendors, roi, reports, ai-concierge, chat",
+      "side": "base"
+    },
+    {
+      "description": "Pricing page has three plan cards: All-access $99/month, Annual $999/year, Concierge $299/month",
+      "side": "base"
+    },
+    {
+      "description": "MainHeader shows trial chip when trialDaysLeft <= 3 and billing chip when plan selection needed",
+      "side": "base"
+    }
+  ]
 }

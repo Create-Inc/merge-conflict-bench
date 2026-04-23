@@ -61,5 +61,74 @@
     "/apps/web/src/app/arena/[gameId]/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "SeatingMap component exports a named function",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap accepts homeColor and awayColor props",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap renders SVG with sections and tiers",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap renders a court area inside the bowl",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap uses energyByUserId for heat coloring",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap sections are rendered using arcWedgePath",
+      "side": "base"
+    },
+    {
+      "description": "SeatingMap accepts a variant prop with card and fullscreen modes",
+      "side": "ours"
+    },
+    {
+      "description": "SeatingMap hides title/legend in fullscreen mode",
+      "side": "ours"
+    },
+    {
+      "description": "SeatingMap adjusts outerWrapStyle and cardStyle based on variant",
+      "side": "ours"
+    },
+    {
+      "description": "SeatingMap adjusts SVG height based on variant (100% for fullscreen)",
+      "side": "ours"
+    },
+    {
+      "description": "arena-preview page uses SeatingMap with variant=fullscreen",
+      "side": "ours"
+    },
+    {
+      "description": "game page uses SeatingMap with variant=fullscreen",
+      "side": "ours"
+    },
+    {
+      "description": "arena-preview page renders SponsorRing",
+      "side": "ours"
+    },
+    {
+      "description": "game page renders SponsorRing",
+      "side": "ours"
+    },
+    {
+      "description": "SeatingMap sections use 3 tiers with 18 sections per tier",
+      "side": "theirs"
+    },
+    {
+      "description": "SeatingMap header shows capacity and occupied count",
+      "side": "theirs"
+    },
+    {
+      "description": "SeatingMap renders Home and Away legends with colored dots",
+      "side": "theirs"
+    }
+  ]
 }

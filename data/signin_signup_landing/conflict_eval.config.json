@@ -85,5 +85,20 @@
     "/apps/web/src/app/account/signin/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "landing page: cashmike SMTP checker with user selection",
+    "landing page: admin and alonsy-y links with callbackUrl",
+    "signin page: form with email/password inputs",
+    "signin page: error handling for auth errors",
+    "signin page: username-to-email @smtp-checker.local transform",
+    "signin page: callbackUrl from URL params",
+    "signup page: disabled state with link to home",
+    "landing page: admin button uses bg-blue-600",
+    "signin page: signInWithCredentials from useAuth",
+    "signup page: exports SignUpDisabledPage",
+    "landing page: callbackUrl first in query string",
+    "signin page: lockedUser as boolean from query param",
+    "signin page: username placeholder and Back to home link",
+    "signup page: pre-made accounts wording"
+  ]
 }

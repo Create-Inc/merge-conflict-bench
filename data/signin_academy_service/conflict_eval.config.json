@@ -42,5 +42,54 @@
     "/apps/web/src/app/services/lyf-academy/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "signin page reads callbackUrl from URL and only allows paths starting with /",
+      "side": "ours"
+    },
+    {
+      "description": "signin page has isStaffFlow detection based on /staff prefix",
+      "side": "ours"
+    },
+    {
+      "description": "signin page shows invite-only note for staff flow",
+      "side": "ours"
+    },
+    {
+      "description": "signin page hides signup CTA for staff flow",
+      "side": "ours"
+    },
+    {
+      "description": "signin page passes callbackUrl to signUpHref",
+      "side": "ours"
+    },
+    {
+      "description": "signin page shows Back to portal link in staff flow",
+      "side": "ours"
+    },
+    {
+      "description": "lyf-academy page has LYF Academy title and Leading Youth Forward acronym",
+      "side": "ours"
+    },
+    {
+      "description": "signin page uses gradient background from-[#cc0000] via-[#b30000] to-black",
+      "side": "theirs"
+    },
+    {
+      "description": "lyf-academy page describes 5 key areas: Academic readiness, Athletic development, Family education, Accountability, Long-term planning",
+      "side": "theirs"
+    },
+    {
+      "description": "lyf-academy page includes Monthly Coaching Sessions and Life Skills Curriculum sections",
+      "side": "theirs"
+    },
+    {
+      "description": "lyf-academy page includes Recruiting Education section",
+      "side": "theirs"
+    },
+    {
+      "description": "lyf-academy page shows $400/month pricing with 12-month commitment",
+      "side": "theirs"
+    }
+  ]
 }

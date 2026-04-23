@@ -30,5 +30,30 @@
     "/apps/web/src/app/layout.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Uses a versioned PATH (e.g. /api/site-icon-v20260107) instead of query-param cache busting (?v=) for favicon URLs",
+      "side": "theirs"
+    },
+    {
+      "description": "All favicon link tags reference the same versioned path variable consistently across head.jsx and layout.jsx",
+      "side": "theirs"
+    },
+    {
+      "description": "Includes a plain icon link without explicit sizes (catch-all favicon) from ours",
+      "side": "ours"
+    },
+    {
+      "description": "Layout.jsx client-side favicon uses same-origin /api/ route path",
+      "side": "base"
+    },
+    {
+      "description": "Head.jsx renders title MINERSME and theme-color #0A0F1C meta tags",
+      "side": "base"
+    },
+    {
+      "description": "Layout.jsx wraps children in QueryClientProvider with staleTime/cacheTime/retry/refetchOnWindowFocus config",
+      "side": "base"
+    }
+  ]
 }

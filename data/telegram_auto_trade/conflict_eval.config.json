@@ -42,5 +42,18 @@
     "/apps/web/src/app/api/telegram/webhook/handlers/buttonPressHandler/autoTradeHandlers.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "buttonPressHandler exports handleButtonPress function",
+    "buttonPressHandler handles admin-only buttons in private chat check",
+    "buttonPressHandler has subscription expiry guard",
+    "autoTradeHandlers exports handleAutoTradeToggle and handleAutoTradeEntry",
+    "autoTradeHandlers has AUTOTRADE_BOT_DISABLED flag set to true",
+    "autoTradeHandlers sends disabled message when AUTOTRADE_BOT_DISABLED is true",
+    "buttonPressHandler has legacy autotrade text set for removed buttons",
+    "buttonPressHandler handles all legacy autotrade button texts",
+    "buttonPressHandler sends removal message for legacy autotrade buttons",
+    "buttonPressHandler refreshes keyboard after legacy autotrade button press",
+    "buttonPressHandler handles new menu entries (candles, subscription, forex, etc)",
+    "autoTradeHandlers disabled message instructs user to type /start to update menu"
+  ]
 }

@@ -58,5 +58,66 @@
     "/apps/web/src/components/form/TextInput.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Dropdown component renders a custom dropdown with button, menu, and search",
+      "side": "base"
+    },
+    {
+      "description": "TextInput component renders an input with Poppins font",
+      "side": "base"
+    },
+    {
+      "description": "TextArea component renders a textarea with Poppins font",
+      "side": "base"
+    },
+    {
+      "description": "CheckboxInput renders a checkbox input with orange accent",
+      "side": "base"
+    },
+    {
+      "description": "RadioInput renders a radio input with orange accent",
+      "side": "base"
+    },
+    {
+      "description": "FileInput component renders a file input with preview",
+      "side": "base"
+    },
+    {
+      "description": "Dropdown button includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "Dropdown search input includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "CheckboxInput includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "RadioInput includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "TextInput base className includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "TextArea base className includes focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "FileInput buttons include focus:outline-none",
+      "side": "ours"
+    },
+    {
+      "description": "FileInput buttons include hover:border-orange-300 for interactive hover style",
+      "side": "theirs"
+    },
+    {
+      "description": "Dropdown button does not have redundant styling",
+      "side": "theirs"
+    }
+  ]
 }

@@ -25,5 +25,38 @@
     "/apps/web/src/app/products/[productId]/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "product-views route has safeInt utility function for safe number parsing",
+      "source": "theirs"
+    },
+    {
+      "description": "product-views route queries only active products (active = true in WHERE clause)",
+      "source": "theirs"
+    },
+    {
+      "description": "product-views route returns ok: true, skipped: true for inactive products without leaking info",
+      "source": "theirs"
+    },
+    {
+      "description": "popular-products route returns dynamic mode variable in response (not hardcoded string)",
+      "source": "theirs"
+    },
+    {
+      "description": "Product page uses recordProductView function and productId-based localStorage key",
+      "source": "theirs"
+    },
+    {
+      "description": "Product page falls back to calling recordProductView when localStorage is blocked",
+      "source": "theirs"
+    },
+    {
+      "description": "Product page checks typeof window before localStorage access",
+      "source": "ours"
+    },
+    {
+      "description": "Product page uses 30-minute localStorage throttle for view tracking",
+      "source": "base"
+    }
+  ]
 }

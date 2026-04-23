@@ -18,5 +18,34 @@
     "/apps/mobile/src/components/explore/search/SearchResultItem.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "FilterBar imports FILTERS from @/utils/explore/search/constants (ours path)",
+      "source": "ours"
+    },
+    {
+      "description": "SearchResultItem imports helpers from @/utils/explore/search/helpers (ours path)",
+      "source": "ours"
+    },
+    {
+      "description": "SearchResultItem uses optional chaining for item properties and Array.isArray guard for tripDraft",
+      "source": "ours"
+    },
+    {
+      "description": "SearchResultItem shows title || 'Untitled' fallback for missing titles",
+      "source": "ours"
+    },
+    {
+      "description": "SearchResultItem computes showMemberTag and renders Member badge with #FDE68A color",
+      "source": "theirs"
+    },
+    {
+      "description": "SearchResultItem renders Perk badge for PERKS kind",
+      "source": "theirs"
+    },
+    {
+      "description": "Both components use withAlpha helper and Bookmark icon from lucide-react-native",
+      "source": "base"
+    }
+  ]
 }

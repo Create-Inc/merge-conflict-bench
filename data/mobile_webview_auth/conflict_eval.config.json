@@ -43,5 +43,20 @@
     "/apps/web/src/app/mobile-auth/complete/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "webViewHandlers exports createWebViewHandlers function",
+    "webViewHandlers has isFinalStepUrl that recognizes auth token paths",
+    "webViewHandlers returns onNavigationStateChange, onLoadEnd, onError, onHttpError, onMessage handlers",
+    "callback page redirects to /api/auth/token inside WebView",
+    "complete page redirects to /api/auth/token inside WebView",
+    "callback and complete pages have Try again and Back to sign in links",
+    "webViewHandlers does NOT start native token exchange in onLoadEnd for final step URLs",
+    "webViewHandlers keeps exchangeTokenNative as last-resort fallback",
+    "callback page imports useState",
+    "complete page imports useState",
+    "callback page has redirectError state and displays error UI",
+    "complete page has redirectError state and displays error UI",
+    "callback page describes the /api/auth/token GET -> postMessage flow",
+    "complete page describes the /api/auth/token GET -> postMessage flow"
+  ]
 }

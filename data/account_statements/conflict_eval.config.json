@@ -222,5 +222,46 @@
     "/apps/mobile/src/app/account/[id].jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "AccountHeader conditionally renders account picker button via onOpenAccountPicker prop",
+      "source": "theirs"
+    },
+    {
+      "description": "AccountHeader uses border styling with borderColor on back button",
+      "source": "theirs"
+    },
+    {
+      "description": "Account details screen has 3-segment control: Activity, Transfer, Statements",
+      "source": "base"
+    },
+    {
+      "description": "Account details screen displays balance card with Available balance",
+      "source": "base"
+    },
+    {
+      "description": "Account details screen has transfer form via useTransferForm",
+      "source": "base"
+    },
+    {
+      "description": "Statement screen has WebModal for viewing and Browser button for external open",
+      "source": "base"
+    },
+    {
+      "description": "StatementsHeader accepts onOpenPeriod prop for period selection",
+      "source": "theirs"
+    },
+    {
+      "description": "Period range computation handles December-to-January rollover",
+      "source": "base"
+    },
+    {
+      "description": "Statement screen shows Summary with deposits, withdrawals, and transaction count",
+      "source": "base"
+    },
+    {
+      "description": "Missing EXPO_PUBLIC_BASE_URL shows error text",
+      "source": "base"
+    }
+  ]
 }

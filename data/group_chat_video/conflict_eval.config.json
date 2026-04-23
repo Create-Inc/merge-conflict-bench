@@ -48,5 +48,22 @@
     "/apps/mobile/src/app/group-chat/[groupId].jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "group-video screen renders WebView with Jitsi meet URL",
+    "group-video screen sanitizes room name",
+    "group-video screen supports audio-only mode via query param",
+    "group-video screen has external link button to open in browser",
+    "group-chat screen has video call and audio call buttons",
+    "group-chat screen handles sending messages",
+    "group-video screen shows Expo Go warning",
+    "group-video screen sets WebView error from onHttpError",
+    "group-video screen has javaScriptEnabled and domStorageEnabled",
+    "group-video screen has originWhitelist",
+    "group-chat startVideoCall navigates to group-video with audio=0",
+    "group-chat startAudioCall navigates to group-video with audio=1",
+    "group-chat always navigates to group-video screen",
+    "group-chat startVideoCall and startAudioCall have groupId as dependency",
+    "group-video screen uses description from httpError event in error message",
+    "group-video Expo Go warning uses yellow/amber background color"
+  ]
 }

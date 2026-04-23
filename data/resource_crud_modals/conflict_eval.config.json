@@ -125,5 +125,21 @@
     "/apps/web/src/app/api/resources/handlers/updateResourceHandler.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "createResourceHandler validates resource name required and enforces unique names per club",
+    "createResourceHandler validates category sizes",
+    "updateResourceHandler validates ID required, returns 404, enforces unique names on update",
+    "updateResourceHandler validates sublease/temporary assignments per category",
+    "updateResourceHandler validates membership type restriction",
+    "ResourcesTab shows resource list with category options",
+    "CreateResourceModal and EditResourceModal have isMoorage check",
+    "ResourceTable renders resources with sublease/temporary assignment info",
+    "ResourcesTab uses displayName for resource name display (theirs)",
+    "Create/Edit modals send resourceName unconditionally (theirs)",
+    "ResourceTable uses displayName and specialAssignmentHeaderLabel (theirs)",
+    "ResourceTable uses club sublease_verbiage directly (theirs)",
+    "createResourceHandler handles null/undefined resourceName safely (ours)",
+    "updateResourceHandler handles null/undefined resourceName safely (ours)",
+    "ResourcesTab uses numberLabel template with resourceTerm (ours)"
+  ]
 }

@@ -30,5 +30,34 @@
     "/apps/web/src/app/api/mfa/email/request/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "sendEmail throws an Error (not silently skips) when RESEND_API_KEY is missing, with message matching 'not configured'",
+      "side": "ours"
+    },
+    {
+      "description": "sendEmail does NOT return { skipped: true } sentinel when API key is missing",
+      "side": "ours"
+    },
+    {
+      "description": "sendEmail uses Resend dev domain (onboarding@resend.dev) as default/fallback from address",
+      "side": "base"
+    },
+    {
+      "description": "sendEmail sends to https://api.resend.com/emails with Authorization Bearer header",
+      "side": "base"
+    },
+    {
+      "description": "sendEmail wraps non-array 'to' into an array before sending",
+      "side": "base"
+    },
+    {
+      "description": "sendEmail retries with fallback domain when primary from address fails",
+      "side": "base"
+    },
+    {
+      "description": "sendEmail throws when both primary and fallback from addresses fail",
+      "side": "theirs"
+    }
+  ]
 }

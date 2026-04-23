@@ -25,5 +25,42 @@
     "/apps/web/src/app/account/signup/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "All pages use named export functions (LogoutPage, SignInPage, SignUpPage) not MainComponent",
+      "source": "ours"
+    },
+    {
+      "description": "Logout page has loading/error state with try/catch and console.error",
+      "source": "ours"
+    },
+    {
+      "description": "Logout page shows error message 'Could not sign out' and disabled button during loading",
+      "source": "ours"
+    },
+    {
+      "description": "Logout page has 'Back to app' link to /",
+      "source": "ours"
+    },
+    {
+      "description": "Signin page trims email before validation using safeEmail pattern",
+      "source": "ours"
+    },
+    {
+      "description": "Signin page uses FIRE OPS branding",
+      "source": "ours"
+    },
+    {
+      "description": "Signup page has fullName field with autoComplete='name' and passes name to signUpWithCredentials",
+      "source": "ours"
+    },
+    {
+      "description": "Signin and signup pages preserve query string in navigation links via linkSuffix",
+      "source": "ours"
+    },
+    {
+      "description": "All pages import useAuth from @/utils/useAuth",
+      "source": "base"
+    }
+  ]
 }

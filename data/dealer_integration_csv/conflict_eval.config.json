@@ -109,5 +109,21 @@
     "/apps/web/src/components/Settings/IntegrationsSection/useCsvHandlers.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "Logout page uses useAuth hook with auto-logout and final URL support",
+    "Logout page has error state display",
+    "useCsvHandlers validates CSV file type by name and mime",
+    "useCsvHandlers validates file is not empty",
+    "useCsvHandlers provides CSV URL, clear, and SFTP save functions",
+    "useCsvHandlers blocks inline:// placeholder from being saved as URL",
+    "IntegrationTab renders provider toggles, cards, and Add Integration modal",
+    "IntegrationTab supports frazer/dominion/autosoft editors with DMS request handling",
+    "Logout page handleSignOut is async with signOut callbackUrl (theirs)",
+    "Logout page navigates through /logout route first (ours)",
+    "useCsvHandlers has uploading=false and uses readFileAsText helper (theirs)",
+    "useCsvHandlers size limit is 900_000 (theirs)",
+    "useCsvHandlers stores csvInlineText as inlineText not trimmed (theirs)",
+    "IntegrationTab success messages use theirs wording",
+    "IntegrationTab imports useMemo (theirs) and useCallback (ours)"
+  ]
 }

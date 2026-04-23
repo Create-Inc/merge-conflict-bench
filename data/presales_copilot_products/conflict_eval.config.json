@@ -32,5 +32,62 @@
     "/apps/web/src/app/api/presales-copilot/products/[id]/merge/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "enrich/route.js checks for duplicate file hashes and returns 409 when duplicate detected",
+      "side": "ours"
+    },
+    {
+      "description": "enrich/route.js loads user LLM config, checks API key, returns llm_not_configured error if missing",
+      "side": "ours"
+    },
+    {
+      "description": "enrich/route.js builds structured LLM config with provider, model, temperature, maxTokens",
+      "side": "ours"
+    },
+    {
+      "description": "enrich/route.js has pickExtractionMethod supporting both llamaparse and claude extraction",
+      "side": "ours"
+    },
+    {
+      "description": "enrich/route.js has performMergeAnalysis detecting newFields, conflicts, and enhancements",
+      "side": "ours"
+    },
+    {
+      "description": "merge/route.js has setNestedValue for deep object updates and handles use_new/manual/keep_existing conflict resolutions",
+      "side": "ours"
+    },
+    {
+      "description": "products/route.js GET supports pagination with page/limit (max 100) and returns totalPages metadata",
+      "side": "theirs"
+    },
+    {
+      "description": "products/route.js GET supports sorting with normalizeSort/normalizeOrder and whitelisted columns defaulting to updated_at",
+      "side": "theirs"
+    },
+    {
+      "description": "products/route.js GET supports filtering by vendor, productType, category, search (ILIKE), and includeInactive flag",
+      "side": "theirs"
+    },
+    {
+      "description": "products/[id]/route.js GET returns sources array, sourceCount, and lastEnrichedAt from product_sources table",
+      "side": "theirs"
+    },
+    {
+      "description": "products/[id]/route.js PUT supports dynamic field updates including specs as jsonb, sets reviewed_by on approval",
+      "side": "theirs"
+    },
+    {
+      "description": "products/route.js GET requires orgId as UUID and checks org access, returns 400/403 on violations",
+      "side": "base"
+    },
+    {
+      "description": "products/route.js POST requires isPlatformAdmin, returns 403 for non-admins",
+      "side": "base"
+    },
+    {
+      "description": "products/[id]/route.js DELETE soft-deletes by setting is_active = false",
+      "side": "base"
+    }
+  ]
 }

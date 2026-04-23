@@ -25,5 +25,46 @@
     "/apps/web/src/app/api/utils/recurringPlans.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "RecurringPlanModal supports tech assignment via canAssignTech prop, assignedTechId, and techOptions",
+      "source": "ours"
+    },
+    {
+      "description": "RecurringPlanModal has day-of-week selection with DOW_LABELS (Sun-Sat)",
+      "source": "ours"
+    },
+    {
+      "description": "RecurringPlanModal has shiftDay and setSlotAndTime callbacks for date manipulation",
+      "source": "ours"
+    },
+    {
+      "description": "RecurringPlanModal includes preferred_day_of_week and assigned_tech_id in save payload",
+      "source": "ours"
+    },
+    {
+      "description": "recurringPlans.js has addMonths helper that handles month-end overflow",
+      "source": "theirs"
+    },
+    {
+      "description": "recurringPlans.js computeNextOccurrence validates cadence is 3, 6, or 12",
+      "source": "theirs"
+    },
+    {
+      "description": "recurringPlans.js ensureJobsForPlan inserts jobs with ON CONFLICT DO NOTHING",
+      "source": "theirs"
+    },
+    {
+      "description": "recurringPlans.js updates next_run_at and last_ensured_at on recurring plans",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomerRecurringPlan mutationFn accepts destructured payload with default {}",
+      "source": "theirs"
+    },
+    {
+      "description": "useCustomerRecurringPlan invalidates customer and scheduleJobs queries on success",
+      "source": "base"
+    }
+  ]
 }

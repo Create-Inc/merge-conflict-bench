@@ -55,5 +55,86 @@
     "/apps/web/src/app/api/assessments/[id]/convert-to-engagement-survey/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "useAssessmentDetail checks for employee_engagement_survey template_key",
+      "side": "base"
+    },
+    {
+      "description": "useAssessmentDetail exports isEngagementSurvey in the return object",
+      "side": "base"
+    },
+    {
+      "description": "useAssessmentDetail returns templateLabel as a useMemo",
+      "side": "base"
+    },
+    {
+      "description": "useAssessmentDetail checks looksLikeEngagementSurveyType based on typeName",
+      "side": "base"
+    },
+    {
+      "description": "setup-engagement page has looksLikeEngagementSurveyType function",
+      "side": "base"
+    },
+    {
+      "description": "setup-engagement page offers convert when shouldOfferConvert is true",
+      "side": "base"
+    },
+    {
+      "description": "API route exports POST handler for convert-to-engagement-survey",
+      "side": "base"
+    },
+    {
+      "description": "API route checks for assessment_admin and company_admin roles",
+      "side": "base"
+    },
+    {
+      "description": "useAssessmentDetail extracts category and uses isEngagementCategory",
+      "side": "ours"
+    },
+    {
+      "description": "useAssessmentDetail defines isLiftBusiness, isHiringFactor, isJobFitFactor, isLiftSales",
+      "side": "ours"
+    },
+    {
+      "description": "isEngagementSurvey includes isEngagementCategory in its disjunction",
+      "side": "ours"
+    },
+    {
+      "description": "API route looksLikeEngagementSurveyType accepts category parameter",
+      "side": "ours"
+    },
+    {
+      "description": "setup-engagement page checks category === engagement",
+      "side": "ours"
+    },
+    {
+      "description": "useAssessmentDetail defines looksLikeEngagementSurveyName based on nameLower",
+      "side": "theirs"
+    },
+    {
+      "description": "isEngagementSurvey includes looksLikeEngagementSurveyName as a fallback",
+      "side": "theirs"
+    },
+    {
+      "description": "templateLabel useMemo includes looksLikeEngagementSurveyName and looksLikeEngagementSurveyType in deps",
+      "side": "theirs"
+    },
+    {
+      "description": "templateLabel falls back to Employee Engagement Survey when name/type hints match",
+      "side": "theirs"
+    },
+    {
+      "description": "API route looksLikeEngagementSurveyType accepts assessmentName parameter",
+      "side": "theirs"
+    },
+    {
+      "description": "API route passes assessmentName to looksLikeEngagementSurveyType call",
+      "side": "theirs"
+    },
+    {
+      "description": "setup-engagement page uses assessment name as a hint for engagement detection",
+      "side": "theirs"
+    }
+  ]
 }

@@ -37,5 +37,42 @@
     "/apps/web/src/app/api/account/email/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "account route.js records last-sent timestamp via UPDATE auth_users SET verification_email_last_sent_at",
+      "side": "ours"
+    },
+    {
+      "description": "after-signup page reads retryAfterSeconds from sendVerification response",
+      "side": "ours"
+    },
+    {
+      "description": "email route.js records last-sent timestamp before sending",
+      "side": "ours"
+    },
+    {
+      "description": "email route.js uses verification URL that points to /api/account/email",
+      "side": "ours"
+    },
+    {
+      "description": "after-signup page computes a throttled message string for display",
+      "side": "theirs"
+    },
+    {
+      "description": "account route.js uses getRequestOrigin helper for building verifyUrl",
+      "side": "theirs"
+    },
+    {
+      "description": "email route.js reuses existing unexpired tokens before creating new ones",
+      "side": "theirs"
+    },
+    {
+      "description": "email route.js cleans old records before inserting fresh tokens when no valid one exists",
+      "side": "theirs"
+    },
+    {
+      "description": "email route.js returns throttled true when cooldown hasn't passed",
+      "side": "theirs"
+    }
+  ]
 }

@@ -284,5 +284,62 @@
     "/apps/web/src/app/api/fleet/parts/transfers/[id]/receive/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Receipt POST validates PO cancelled status and branch match",
+      "source": "theirs"
+    },
+    {
+      "description": "Receipt POST checks null receipt result and returns 500",
+      "source": "theirs"
+    },
+    {
+      "description": "Receipt posting uses single atomic CTE for entire flow (inventory, cost layers, movements, avg recompute, PO status)",
+      "source": "theirs"
+    },
+    {
+      "description": "Receipt posting returns 409 when atomic CTE produces no rows",
+      "source": "theirs"
+    },
+    {
+      "description": "Dispatch validates part exists and belongs to from_branch",
+      "source": "base"
+    },
+    {
+      "description": "Dispatch prevents transferring reserved stock",
+      "source": "base"
+    },
+    {
+      "description": "Dispatch checks insufficient stock",
+      "source": "base"
+    },
+    {
+      "description": "Dispatch uses issueWithCost and stores unit_cost on transfer lines",
+      "source": "base"
+    },
+    {
+      "description": "Dispatch sets transfer status to in_transit with dispatched_at",
+      "source": "base"
+    },
+    {
+      "description": "Receive guards against double-receive with AND status = in_transit in UPDATE",
+      "source": "theirs"
+    },
+    {
+      "description": "Receive uses destructured array syntax for SQL result rows",
+      "source": "theirs"
+    },
+    {
+      "description": "Receive finds or creates matching part in target branch by part_number",
+      "source": "base"
+    },
+    {
+      "description": "Receive uses receiptWithCost for inventory costing with stock_transfer ref type",
+      "source": "base"
+    },
+    {
+      "description": "Receive scopes authorization to to_branch_id",
+      "source": "base"
+    }
+  ]
 }

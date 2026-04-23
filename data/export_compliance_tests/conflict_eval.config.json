@@ -39,5 +39,46 @@
     "/apps/web/src/app/api/settings/__tests__/retention.route.test.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "autonomy-decisions test requires owner role for export",
+      "side": "ours"
+    },
+    {
+      "description": "executions test checks Content-Disposition header contains filename with workspace id",
+      "side": "ours"
+    },
+    {
+      "description": "autonomy-decisions test verifies emitTimeline is called",
+      "side": "ours"
+    },
+    {
+      "description": "executions test verifies emitTimeline is called",
+      "side": "ours"
+    },
+    {
+      "description": "access report test verifies can_export_audit is true for owners",
+      "side": "ours"
+    },
+    {
+      "description": "compliance-blocks test verifies decision field is blocked",
+      "side": "theirs"
+    },
+    {
+      "description": "compliance-blocks test verifies CSV contains reason_code value no_consent",
+      "side": "theirs"
+    },
+    {
+      "description": "retention test verifies PATCH clamps values (3650 max, 0 min, integer)",
+      "side": "theirs"
+    },
+    {
+      "description": "retention test verifies GET creates policy if missing with two dbOne calls",
+      "side": "theirs"
+    },
+    {
+      "description": "access report test has CSV format test with membership_id header",
+      "side": "theirs"
+    }
+  ]
 }

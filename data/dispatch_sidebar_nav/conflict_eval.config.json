@@ -192,5 +192,46 @@
     "/apps/web/src/components/Dispatch/Sidebar.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Uses PanelLeftClose/PanelLeftOpen icons instead of ChevronLeft/ChevronRight",
+      "source": "theirs"
+    },
+    {
+      "description": "Shows mini logo avatar when sidebar is collapsed on desktop",
+      "source": "theirs"
+    },
+    {
+      "description": "Guards primaryModules and secondaryModules with Array.isArray",
+      "source": "theirs"
+    },
+    {
+      "description": "Nav items have aria-label for accessibility",
+      "source": "theirs"
+    },
+    {
+      "description": "Close menu button has aria-label",
+      "source": "theirs"
+    },
+    {
+      "description": "Sign out link renders at /account/logout",
+      "source": "base"
+    },
+    {
+      "description": "Organization settings link at /tenant with CurrentOrganizationBadge",
+      "source": "base"
+    },
+    {
+      "description": "Mobile backdrop overlay shown when sidebar is open",
+      "source": "base"
+    },
+    {
+      "description": "Labels hidden with lg:hidden class when sidebar collapsed",
+      "source": "base"
+    },
+    {
+      "description": "Sidebar width reduces to lg:w-20 when collapsed",
+      "source": "base"
+    }
+  ]
 }

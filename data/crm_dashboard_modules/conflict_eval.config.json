@@ -105,5 +105,22 @@
     "/apps/web/src/app/modules/crm/tasks/page.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "CustomerHeader accepts both onNewTicket and setTicketOpen props",
+    "CustomerHeader renders New ticket button with LifeBuoy icon",
+    "All CRM pages import CreateTicketModal and have DEFAULT_TICKET_DRAFT",
+    "All CRM pages createTicketMutation posts to /api/helpdesk/tickets",
+    "Ticket creation validates subject and formats with area tag prefix",
+    "Ticket creation detects field work tags for autoCreateJobCard",
+    "Tasks page has status filter and due filter and mineOnly toggle",
+    "Deals page has pipeline and list view toggle",
+    "Dashboard page has pipeline BarChart and wins LineChart",
+    "Dashboard page shows overdue and open tasks cards",
+    "CustomerHeader prefers onNewTicket callback over setTicketOpen (ours)",
+    "Customer detail page passes onNewTicket to CustomerHeader (ours)",
+    "Dashboard isLoading checks dashboardQuery.isLoading (theirs)",
+    "Tasks and deals pages import LifeBuoy from lucide-react (theirs)",
+    "Tasks and deals pages have New ticket button with LifeBuoy (theirs)",
+    "Dashboard page imports LifeBuoy and has New ticket button (theirs)"
+  ]
 }

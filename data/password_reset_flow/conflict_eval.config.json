@@ -32,5 +32,50 @@
     "/apps/web/src/app/api/password-reset/request/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "forgot-password page preserves callbackUrl in sign-in link via signInHref",
+      "side": "ours"
+    },
+    {
+      "description": "reset-password page reads token from URL params on mount and shows error when missing",
+      "side": "ours"
+    },
+    {
+      "description": "request/route.js generates token with crypto.randomBytes, builds reset URL, and sets 1 hour expiry",
+      "side": "ours"
+    },
+    {
+      "description": "confirm/route.js validates token is unused and unexpired in DB, then marks used after reset",
+      "side": "theirs"
+    },
+    {
+      "description": "confirm/route.js handles upsert for auth_accounts (UPDATE existing OR INSERT new credentials)",
+      "side": "theirs"
+    },
+    {
+      "description": "request/route.js has getAppBaseUrl helper falling back to request origin when APP_URL is unset",
+      "side": "theirs"
+    },
+    {
+      "description": "request/route.js wraps sendEmail in nested try/catch for best-effort email delivery",
+      "side": "theirs"
+    },
+    {
+      "description": "reset-password page has readTokenFromUrl helper for extracting token from URL",
+      "side": "theirs"
+    },
+    {
+      "description": "confirm/route.js validates token+password required and password >= 8 chars, returns 400/500 on errors",
+      "side": "base"
+    },
+    {
+      "description": "request/route.js always returns ok:true to prevent account enumeration",
+      "side": "base"
+    },
+    {
+      "description": "reset-password page validates passwords match and shows success message after update",
+      "side": "base"
+    }
+  ]
 }

@@ -67,5 +67,22 @@
     "/apps/web/src/app/api/utils/get-session.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "get-session: locked account returns null",
+    "get-session: error handling catches and returns null",
+    "get-session: calls auth() from @/auth",
+    "get-session: queries auth_users by user id",
+    "onboarding: redirects to signin with callbackUrl",
+    "onboarding: 4-step wizard",
+    "onboarding: submits to /api/profile with PUT",
+    "useUser: imports useSession from @auth/create/react",
+    "useUser: fetches /api/profile for richer data",
+    "get-session: expanded field selection (approved, terms_accepted_at)",
+    "get-session: email fallback lookup",
+    "get-session: session spreading into return value",
+    "useUser: credentials include and Accept header",
+    "useUser: warns on non-ok response",
+    "onboarding: callbackUrl in signin redirect",
+    "useUser: unauthenticated fallback with profile fetch"
+  ]
 }

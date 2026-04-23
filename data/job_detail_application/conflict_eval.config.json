@@ -30,5 +30,34 @@
     "/apps/web/src/components/JobDetail/JobStatus.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "GeneratedApplication uses getTrackingStatusLabel(t, job.application_status) from enumLabels for status translation",
+      "side": "ours"
+    },
+    {
+      "description": "GeneratedApplication uses optional chaining job?.application_status for safety",
+      "side": "ours"
+    },
+    {
+      "description": "JobStatus uses getTrackingStatusLabel(t, applicationStatus) from enumLabels for status translation",
+      "side": "ours"
+    },
+    {
+      "description": "GeneratedApplication falls back to raw application_status when label is unavailable (|| fallback pattern)",
+      "side": "theirs"
+    },
+    {
+      "description": "JobStatus falls back to raw applicationStatus when label is unavailable (|| fallback pattern)",
+      "side": "theirs"
+    },
+    {
+      "description": "GeneratedApplication renders email subject, email body, conditional cover letter, and status badge sections",
+      "side": "base"
+    },
+    {
+      "description": "JobStatus shows research and application status with complete/pending/notGenerated states",
+      "side": "base"
+    }
+  ]
 }

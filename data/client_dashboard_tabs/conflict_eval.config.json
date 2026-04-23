@@ -43,5 +43,19 @@
     "/apps/web/src/components/ClientDashboard/TabNavigation.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "page.jsx renders ClientHeader and DashboardContent",
+    "ClientSummaryPanel has delete confirmation modal with name typing requirement",
+    "ClientSummaryPanel has client file modal",
+    "TabNavigation renders all tab keys",
+    "ClientSummaryPanel has View Client File button",
+    "ClientSummaryPanel has Mark as Active/Inactive buttons",
+    "page.jsx does NOT pass actions prop to TabNavigation",
+    "ClientSummaryPanel accepts variant prop for inline mode",
+    "ClientSummaryPanel determines inline mode from variant prop",
+    "TabNavigation accepts padClassName and showBorder props",
+    "TabNavigation uses wrapperClassName for conditional border",
+    "ClientSummaryPanel renders actionsRow as a reusable variable",
+    "ClientSummaryPanel inline branch renders actionsRow plus modals"
+  ]
 }

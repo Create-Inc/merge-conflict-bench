@@ -157,5 +157,42 @@
     "/apps/web/src/app/api/watchlist/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "Watchlist query uses auth?.id in query key for cache isolation",
+      "source": "base"
+    },
+    {
+      "description": "Optimistic update pattern with rollback for watchlist mutations",
+      "source": "base"
+    },
+    {
+      "description": "Multi-source token extraction (authorization header, x-session-token, body fallback)",
+      "source": "ours"
+    },
+    {
+      "description": "Strict typeof token validation before API calls",
+      "source": "theirs"
+    },
+    {
+      "description": "Session expired error detection with sign-in redirect in alert",
+      "source": "theirs"
+    },
+    {
+      "description": "Safe JSON response parsing with .catch fallback",
+      "source": "ours"
+    },
+    {
+      "description": "API route uses getTokenFromRequest with requireUserIdFromToken for auth",
+      "source": "ours"
+    },
+    {
+      "description": "Duplicate watchlist entries handled with ON CONFLICT DO NOTHING",
+      "source": "base"
+    },
+    {
+      "description": "x-session-token header sent alongside authorization header",
+      "source": "ours"
+    }
+  ]
 }

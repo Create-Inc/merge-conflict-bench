@@ -3,8 +3,8 @@
     {
       "blockIndex": 0,
       "filePath": "/apps/web/tailwind.config.js",
-      "oursContent": "        // Text helpers (so we stop sprinkling raw hex for muted text)\n        \"ink-secondary\": \"#D4C8B0\",\n        \"ink-muted\": \"#A89A82\",\n\n        // Retro console accent colors (Dreamcast/SNES energy) — used sparingly\n        // to keep the UI unique without becoming \"neon\".\n        \"dreamcast-teal\": \"#00D1C1\",\n        \"mana-cyan\": \"#4AF0FF\",\n        \"arcade-blue\": \"#2C7DF6\",\n\n        // IMPORTANT: Site-wide aesthetic migration\n        // Map Tailwind's purple/pink utilities to our D&D + retro palette.\n        // This lets older pages keep their classnames while matching the new theme.",
-      "theirsContent": "        // NEW: Dreamcast / SNES-ish accent (teal) to keep us away from “Twitch purple”.\n        // We intentionally remap Tailwind's `purple-*` utilities to a teal range,\n        // so existing older classnames still work but feel unique."
+      "oursContent": "        // Text helpers (so we stop sprinkling raw hex for muted text)\n        \"ink-secondary\": \"#D4C8B0\",\n        \"ink-muted\": \"#A89A82\",\n\n        // Retro console accent colors (Dreamcast/SNES energy) \u2014 used sparingly\n        // to keep the UI unique without becoming \"neon\".\n        \"dreamcast-teal\": \"#00D1C1\",\n        \"mana-cyan\": \"#4AF0FF\",\n        \"arcade-blue\": \"#2C7DF6\",\n\n        // IMPORTANT: Site-wide aesthetic migration\n        // Map Tailwind's purple/pink utilities to our D&D + retro palette.\n        // This lets older pages keep their classnames while matching the new theme.",
+      "theirsContent": "        // NEW: Dreamcast / SNES-ish accent (teal) to keep us away from \u201cTwitch purple\u201d.\n        // We intentionally remap Tailwind's `purple-*` utilities to a teal range,\n        // so existing older classnames still work but feel unique."
     },
     {
       "blockIndex": 0,
@@ -40,7 +40,7 @@
       "blockIndex": 5,
       "filePath": "/apps/web/src/app/layout.jsx",
       "oursContent": "\n          {/* Pixel grid overlay (very subtle) */}\n          <div className=\"absolute inset-0 pixel-grid-bg opacity-40\" />\n\n          {/* CRT scanlines overlay (super subtle) */}\n          <div\n            className=\"absolute inset-0 opacity-[0.07]\"\n            style={{\n              backgroundImage:\n                \"repeating-linear-gradient(0deg, rgba(0,0,0,0.0) 0px, rgba(0,0,0,0.0) 2px, rgba(0,0,0,0.55) 3px, rgba(0,0,0,0.55) 4px)\",\n            }}\n          />",
-      "theirsContent": "\n          {/* Subtle pixel grid overlay (retro menu vibe) */}\n          <div className=\"absolute inset-0 opacity-70 pixel-grid-bg\" />\n\n          {/* Very subtle scanlines for “CRT” nostalgia (kept light for readability) */}\n          <div className=\"absolute inset-0 opacity-20 crt-scanlines\" />"
+      "theirsContent": "\n          {/* Subtle pixel grid overlay (retro menu vibe) */}\n          <div className=\"absolute inset-0 opacity-70 pixel-grid-bg\" />\n\n          {/* Very subtle scanlines for \u201cCRT\u201d nostalgia (kept light for readability) */}\n          <div className=\"absolute inset-0 opacity-20 crt-scanlines\" />"
     },
     {
       "blockIndex": 6,
@@ -82,7 +82,7 @@
       "blockIndex": 0,
       "filePath": "/apps/web/src/components/Navigation.jsx",
       "oursContent": "      <BetaBanner onReportClick={() => setShowBugReport(true)} />",
-      "theirsContent": "      {/* Beta Banner - keep strong red for visibility */}\n      <div className=\"bg-dragon-blood border-b border-crimson-danger py-2 px-4 text-center sticky top-0 z-30\">\n        <button\n          onClick={() => setShowBugReport(true)}\n          className=\"text-cream-white text-xs md:text-sm hover:text-treasure-gold transition-colors font-semibold\"\n        >\n          ⚠️ Beta - Click here to report bugs or issues\n        </button>\n      </div>"
+      "theirsContent": "      {/* Beta Banner - keep strong red for visibility */}\n      <div className=\"bg-dragon-blood border-b border-crimson-danger py-2 px-4 text-center sticky top-0 z-30\">\n        <button\n          onClick={() => setShowBugReport(true)}\n          className=\"text-cream-white text-xs md:text-sm hover:text-treasure-gold transition-colors font-semibold\"\n        >\n          \u26a0\ufe0f Beta - Click here to report bugs or issues\n        </button>\n      </div>"
     },
     {
       "blockIndex": 1,
@@ -127,5 +127,23 @@
     "/apps/web/src/components/Navigation.jsx"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    "Tailwind config has D&D retro gaming theme colors and font families",
+    "Tailwind config has gold-glow and forest-glow box shadows",
+    "Layout has Press A 2 Start metadata and social share configuration",
+    "Layout imports ClientProviders and has pixel-grid-bg styling",
+    "Navigation uses useUser, useNotifications, useConversations hooks",
+    "Navigation has BetaBanner, DesktopNav, MobileNav, MobileMenu components",
+    "Navigation renders PressA2StartWordmark and ReportModal",
+    "Tailwind config has dreamcast-teal and remaps purple to teal range (theirs)",
+    "Tailwind config has teal-glow box shadow (theirs)",
+    "Layout body uses bg-[#07110F] with Dreamcast teal gradient accents (theirs)",
+    "Layout has CRT scanlines effect and pixel grid with teal color (theirs)",
+    "Layout scrollbar uses dark teal colors (theirs)",
+    "Tailwind config has ink-secondary and ink-muted text helpers (ours)",
+    "Layout uses text-cream-white and font-inter (ours)",
+    "Navigation nav has bg-dungeon-stone/95, border-pixel-border, sticky top-9 (ours)",
+    "Navigation uses treasure-gold for wordmark (ours)",
+    "Navigation uses DesktopNav, MobileNav, MobileNotificationsDropdown, MobileMenu components (ours)"
+  ]
 }

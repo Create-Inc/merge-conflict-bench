@@ -37,5 +37,38 @@
     "/apps/mobile/src/utils/reflectConstructPrelude.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "reflectConstructPolyfill.js checks needsReplacement based on typeof construct and typeof construct.apply",
+      "side": "ours"
+    },
+    {
+      "description": "reflectConstructPrelude.js checks needsReplacement based on typeof construct and typeof construct.apply",
+      "side": "ours"
+    },
+    {
+      "description": "metroconfig.js comment references the Anything project context",
+      "side": "theirs"
+    },
+    {
+      "description": "reflectConstructPolyfill.js creates a next object and copies existing keys before replacing",
+      "side": "theirs"
+    },
+    {
+      "description": "reflectConstructPolyfill.js tries g.Reflect = next with fallback to existing.construct",
+      "side": "theirs"
+    },
+    {
+      "description": "reflectConstructPolyfill.js uses reflectObj variable to track the active Reflect reference",
+      "side": "theirs"
+    },
+    {
+      "description": "reflectConstructPrelude.js creates a next object and copies existing keys before replacing",
+      "side": "theirs"
+    },
+    {
+      "description": "reflectConstructPrelude.js tries g.Reflect = next with fallback to existing.construct",
+      "side": "theirs"
+    }
+  ]
 }

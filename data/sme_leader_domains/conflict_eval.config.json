@@ -25,5 +25,34 @@
     "/apps/web/src/app/api/v2/sme-leader/smes/route.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "All routes use requireLeaderOrAdmin helper that allows platform admins to bypass role check",
+      "source": "ours"
+    },
+    {
+      "description": "All routes use safeTrim(error?.message) || 'Internal server error' in 500 error responses",
+      "source": "ours"
+    },
+    {
+      "description": "smes route imports safeTrim from authz for error message sanitization",
+      "source": "ours"
+    },
+    {
+      "description": "domain-assignments PATCH auto-reassigns tickets_v2 on upsert and unassigns on delete",
+      "source": "base"
+    },
+    {
+      "description": "domains route validates domain_name length <= 80 and rejects base domain names",
+      "source": "base"
+    },
+    {
+      "description": "domains POST/PATCH return 409 for unique constraint violations",
+      "source": "base"
+    },
+    {
+      "description": "All routes check 'Platform Admin must set x-org-id' for admin users without orgId",
+      "source": "base"
+    }
+  ]
 }

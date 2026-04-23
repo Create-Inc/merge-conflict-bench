@@ -18,5 +18,34 @@
     "/apps/web/src/app/api/matchmaking/utils/userHelpers.js"
   ],
   "testFile": "merge.test.js",
-  "preservedBehaviors": []
+  "preservedBehaviors": [
+    {
+      "description": "normalizeRole maps plural aliases (companies, partners, sellers, admins) to singular forms",
+      "source": "ours"
+    },
+    {
+      "description": "getUserRoleSet and route.js GET role endpoint use normalizeRole for mapping explicit roles",
+      "source": "ours"
+    },
+    {
+      "description": "getUserRoleSet derives roles from profile/manager tables via sql.transaction (back-compat for older accounts)",
+      "source": "theirs"
+    },
+    {
+      "description": "getUserRoleSet catches derived role lookup errors non-fatally with console.error",
+      "source": "theirs"
+    },
+    {
+      "description": "route.js GET role endpoint also derives roles from profile tables and returns Array.from(roleSet)",
+      "source": "theirs"
+    },
+    {
+      "description": "canUserSeeExpiredAssignment checks admin, partner, seller, company, consultant roles in roleSet",
+      "source": "base"
+    },
+    {
+      "description": "route.js POST validates role against ALLOWED_DASHBOARD_ROLES and uses normalizeRole",
+      "source": "base"
+    }
+  ]
 }
