@@ -1,0 +1,5 @@
+tier,cases,files,blocks,tests,behavior_descriptions,block_min,block_max,block_median
+Complex,18,62,514,790,403,20,46,25
+Moderate,29,114,370,956,537,8,19,13
+Simple,39,112,179,794,443,2,7,4
+Total,86,288,1063,2540,1383,2,46,8.5
