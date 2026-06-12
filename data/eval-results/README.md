@@ -11,9 +11,9 @@ This directory contains computed release-time metadata, reference-validation res
 - `mergeconflictbench_naive_baselines_per_case.csv` — per-case baseline outcomes.
 - `mergeconflictbench_accept_*_validation.json` — Vitest JSON reports for the deterministic baselines.
 - `mergeconflictbench_agent_full_run_summary.csv` — aggregate model pass rates and diagnostic metrics for the one-shot Escher model matrix.
-- `mergeconflictbench_agent_full_run_manifest.json` — Braintrust experiment IDs and reproducibility notes for the committed model-summary artifact.
-- `mergeconflictbench_agent_full_run_per_fixture.csv` — optional sanitized one-row-per-model-and-fixture result table from raw Escher exports. Not required for the paper tables.
-- `mergeconflictbench_agent_full_run_per_fixture.jsonl` — optional JSON Lines copy of the sanitized per-fixture rows.
+- `mergeconflictbench_agent_full_run_manifest.json` — Braintrust experiment IDs and reproducibility notes for the committed model-summary and per-fixture artifacts.
+- `mergeconflictbench_agent_full_run_per_fixture.csv` — sanitized one-row-per-model-and-fixture result table from the Braintrust summary view.
+- `mergeconflictbench_agent_full_run_per_fixture.jsonl` — JSON Lines copy of the sanitized per-fixture rows.
 
 ## Regeneration
 
@@ -27,12 +27,14 @@ node scripts/summarize-corpus.mjs
 
 node scripts/evaluate-naive-baselines.mjs
 
-node scripts/sanitize-agent-eval-results.mjs raw-eval-results data/eval-results
+BRAINTRUST_API_KEY=... node scripts/export-braintrust-agent-results.mjs
 ```
 
 The `jsdom` package is required for `celebration_overlay`, which uses a browser-like test environment.
 
-The agent sanitizer expects raw Escher eval exports with `experiments`, `results`, and `scores` arrays. It intentionally drops raw prompts, generated resolved files, and hidden-test messages while preserving per-fixture scores, token metadata, failure buckets, and source export identifiers.
+The Braintrust exporter reads the experiment IDs from `mergeconflictbench_agent_full_run_manifest.json` and writes only public-safe columns: fixture name, score values, diagnostic block counts, token counts, durations, row IDs, and timestamps. It does not write raw prompts, generated resolved files, hidden-test logs, or scorer message bodies.
+
+The legacy agent sanitizer expects raw Escher eval exports with `experiments`, `results`, and `scores` arrays. It is kept for private raw-export workflows, but the committed per-fixture artifacts were generated from Braintrust summary queries instead.
 
 The committed model-summary CSV was computed from Braintrust's one-row-per-fixture summary view for the following Escher experiments:
 

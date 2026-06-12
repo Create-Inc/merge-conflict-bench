@@ -1,9 +1,25 @@
 {
-  "generated_at": "2026-06-12T02:15:43Z",
+  "generated_at": "2026-06-12T04:37:53Z",
   "source": "Braintrust one-row-per-fixture summary queries for Escher merge-conflict eval experiments",
   "benchmark_fixture_count": 86,
   "case_pass_rate_rule": "cases_passed / 86; missing or unscored Passes Tests rows are counted as failures.",
-  "privacy_note": "The committed summary excludes raw prompts, generated resolved files, hidden-test messages, and scorer message bodies. Raw per-fixture exports can be sanitized with scripts/sanitize-agent-eval-results.mjs when needed.",
+  "privacy_note": "The committed summary and per-fixture rows exclude raw prompts, generated resolved files, hidden-test messages, and scorer message bodies.",
+  "per_fixture_artifacts": [
+    "mergeconflictbench_agent_full_run_per_fixture.csv",
+    "mergeconflictbench_agent_full_run_per_fixture.jsonl"
+  ],
+  "per_fixture_export": {
+    "script": "scripts/export-braintrust-agent-results.mjs",
+    "rows": 430,
+    "created_after": "2026-06-11T06:00:00.000Z",
+    "created_before": "2026-06-12T05:59:59.999Z",
+    "columns_exclude": [
+      "raw prompts",
+      "generated resolved files",
+      "hidden-test logs",
+      "scorer message bodies"
+    ]
+  },
   "experiments": [
     {
       "model_provider": "anthropic-opus-4.6",
