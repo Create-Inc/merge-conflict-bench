@@ -107,8 +107,9 @@ function runTests(caseDir: string, resolutionDir: string): boolean {
   const workspace = mkdtempSync(join(tmpdir(), 'mcb-eval-'));
 
   try {
-    // Copy resolved source files
-    cpSync(resolutionDir, workspace, { recursive: true });
+    // Tests import files from ./resolved/..., so keep the candidate resolution
+    // under that directory in the temporary workspace.
+    cpSync(resolutionDir, join(workspace, 'resolved'), { recursive: true });
 
     // Copy the hidden test file
     cpSync(testPath, join(workspace, testFile));
@@ -130,7 +131,8 @@ function runTests(caseDir: string, resolutionDir: string): boolean {
     if (!VERBOSE && output) {
       // Count pass/fail from output
       const text = output.toString();
-      const passMatch = text.match(/(\d+) passed/);
+      const passMatches = [...text.matchAll(/(\d+) passed/g)];
+      const passMatch = passMatches[passMatches.length - 1];
       if (passMatch) {
         console.log(`  ${passMatch[0]}`);
       }
@@ -158,7 +160,8 @@ function main() {
   console.log(`Preserved behaviors: ${conflictEvalConfig.preservedBehaviors.length}`);
 
   for (const behavior of conflictEvalConfig.preservedBehaviors) {
-    console.log(`  [${behavior.origin}] ${behavior.description}`);
+    const origin = behavior.origin ?? 'contract';
+    console.log(`  [${origin}] ${behavior.description}`);
   }
 
   console.log('');

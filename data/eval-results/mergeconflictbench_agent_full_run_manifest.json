@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-06-12T02:15:43Z",
+  "source": "Braintrust one-row-per-fixture summary queries for Escher merge-conflict eval experiments",
+  "benchmark_fixture_count": 86,
+  "case_pass_rate_rule": "cases_passed / 86; missing or unscored Passes Tests rows are counted as failures.",
+  "privacy_note": "The committed summary excludes raw prompts, generated resolved files, hidden-test messages, and scorer message bodies. Raw per-fixture exports can be sanitized with scripts/sanitize-agent-eval-results.mjs when needed.",
+  "experiments": [
+    {
+      "model_provider": "anthropic-opus-4.6",
+      "model": "Claude Opus 4.6",
+      "experiment_id": "b2f6786f-07b0-4ecb-b196-bcf231952378",
+      "experiment_name": "June 11, 2026 at 4:32:41 PM PDT - anthropic-opus-4.6 - No agent mode - block-replacement"
+    },
+    {
+      "model_provider": "google-2.5-pro",
+      "model": "Gemini 2.5 Pro",
+      "experiment_id": "c94b3174-f020-44a0-86be-2f0f75755730",
+      "experiment_name": "June 11, 2026 at 2:39:49 PM PDT - google-2.5-pro - No agent mode - block-replacement"
+    },
+    {
+      "model_provider": "anthropic-sonnet-4.6",
+      "model": "Claude Sonnet 4.6",
+      "experiment_id": "2ba64133-4a63-452b-9599-633688193cb1",
+      "experiment_name": "June 11, 2026 at 4:32:42 PM PDT - anthropic-sonnet-4.6 - No agent mode - block-replacement"
+    },
+    {
+      "model_provider": "google-2.5-flash",
+      "model": "Gemini 2.5 Flash",
+      "experiment_id": "927e4e8b-4a1a-42ca-b27b-360f1137f0ab",
+      "experiment_name": "June 11, 2026 at 2:39:49 PM PDT - google-2.5-flash - No agent mode - block-replacement"
+    },
+    {
+      "model_provider": "openai-gpt-4.1",
+      "model": "GPT-4.1",
+      "experiment_id": "0ea8ae12-ef6f-41bf-ae48-855ec36663b9",
+      "experiment_name": "June 11, 2026 at 6:47:49 PM PDT - openai-gpt-4.1 - No agent mode - block-replacement"
+    }
+  ]
+}

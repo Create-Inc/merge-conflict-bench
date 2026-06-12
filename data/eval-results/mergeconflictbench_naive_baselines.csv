@@ -1,0 +1,4 @@
+strategy,total_cases,cases_passed,case_pass_rate,vitest_tests_passed,vitest_tests_failed,reference_total_tests,description
+accept_ours,86,17,0.1977,2121,331,2540,Use only the current-branch side of every conflict block.
+accept_theirs,86,10,0.1163,2025,354,2540,Use only the incoming-branch side of every conflict block.
+accept_both,86,48,0.5581,2032,42,2540,Concatenate the current-branch side followed by the incoming-branch side.

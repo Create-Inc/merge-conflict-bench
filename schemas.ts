@@ -42,8 +42,8 @@ export type ConflictBlock = {
 };
 
 export type PreservedBehavior = {
-  /** Which branch introduced this behavior */
-  origin: 'base' | 'ours' | 'theirs';
+  /** Which branch introduced this behavior, when explicitly tagged */
+  origin?: 'base' | 'ours' | 'theirs';
   /** Human-readable description of the behavior that must be preserved */
   description: string;
 };

@@ -1,10 +1,12 @@
 # MergeConflictBench
 
-An evaluation suite for measuring the ability of LLM agents to resolve merge conflicts correctly.
+An evaluation suite for measuring the ability of LLM agents to resolve merge conflicts in React.js, Next.js, and React Native code correctly.
+
+**Paper:** [MergeConflictBench: Evaluating LLM Agents on Semantically Correct Merge Conflict Resolution](paper.pdf) ([source](paper.tex))
 
 ## Overview
 
-MergeConflictBench consists of 86 real merge conflicts extracted from production, each with the conflicted merge result containing conflict markers. An agent's task is to resolve the conflicts; its output is scored by executing 2,533 hidden holdout tests that verify behavior from both branches was preserved.
+MergeConflictBench consists of 86 real merge conflicts extracted from production React-family application code: React.js and Next.js web surfaces, React Native mobile surfaces, and adjacent JavaScript/JSX API and helper modules. Each case includes the conflicted merge result containing conflict markers. An agent's task is to resolve the conflicts; its output is scored by executing 2,540 hidden holdout tests that verify behavior from both branches was preserved.
 
 The benchmark is grounded in the same principle as [RefactorBench](../refactor-bench): *behavioral preservation is a functional property, and functional properties are best verified by functional tests.*
 
@@ -17,7 +19,7 @@ The hidden test suite for each case covers all three categories. A resolution pa
 
 ## Corpus
 
-86 cases, 2,533 tests across three tiers.
+86 React-family JavaScript/JSX cases, 2,540 executable hidden tests across three tiers. These counts are computed from the checked-in configs and reference-validation report in `data/eval-results/`.
 
 ### Complex (20+ conflict blocks)
 
@@ -34,7 +36,7 @@ The hidden test suite for each case covers all three categories. A resolution pa
 | `state_parser_preview` | 8 | 25 | 94 | Admin state-parser preview/apply with version registry |
 | `campaign_mapping_tool` | 7 | 25 | 63 | Campaign canvas with toolbar and form components |
 | `listing_watchlist` | 3 | 25 | 22 | Listing detail with watchlist API and mobile views |
-| `celebration_overlay` | 1 | 24 | 73 | Confetti animation with audio chime synthesis |
+| `celebration_overlay` | 1 | 24 | 72 | Confetti animation with audio chime synthesis |
 | `mobile_chat_profile` | 5 | 22 | 20 | Mobile chat, profile, and help support sections |
 | `bulk_product_status` | 3 | 22 | 32 | Admin bulk product status change with preview |
 | `legal_compliance_settings` | 2 | 22 | 32 | EULA/SMS document URL management |
@@ -56,12 +58,12 @@ The hidden test suite for each case covers all three categories. A resolution pa
 | `state_parser_sources` | 7 | 15 | 41 | State parser source discovery and registration UI |
 | `telephony_voice_test` | 7 | 15 | 28 | Admin telephony and voice test pages with Twilio |
 | `invoice_create_modal` | 4 | 15 | 46 | Invoice creation modal with mobile invoice views |
-| `mobile_tab_navigation` | 4 | 14 | 41 | Bottom tab bar with badge counts and theme support |
+| `mobile_tab_navigation` | 4 | 14 | 45 | Bottom tab bar with badge counts and theme support |
 | `expo_auth_token_v2` | 2 | 14 | 34 | Expo auth token exchange and web success callback |
 | `notification_workflow` | 6 | 13 | 35 | Notification settings with workflow import and broadcast |
 | `signin_signup_landing` | 3 | 13 | 29 | Landing page with signin and signup flows |
 | `ai_studio_animation` | 2 | 13 | 40 | AI studio analyzing animation and styles |
-| `org_switcher` | 3 | 12 | 58 | Organization switcher with deletion and RBAC |
+| `org_switcher` | 3 | 12 | 60 | Organization switcher with deletion and RBAC |
 | `dashboard_data_hooks` | 3 | 12 | 37 | Dashboard data API route and hooks for web/mobile |
 | `legal_compliance_v2` | 2 | 12 | 25 | Document link storage (parallel variant) |
 | `ai_studio_beta_tabs` | 5 | 11 | 31 | AI studio beta tabs with mobile and web views |
@@ -69,10 +71,10 @@ The hidden test suite for each case covers all three categories. A resolution pa
 | `session_onboarding_user` | 3 | 10 | 23 | Session management, onboarding page, and user hook |
 | `admin_api_usage_report` | 3 | 10 | 22 | Admin API usage report with mobile version display |
 | `mobile_search_filters` | 5 | 9 | 12 | Mobile search filters for decade, genre, and year |
-| `pricing_signout_cta` | 3 | 9 | 19 | Pricing page with signout route and floating demo CTA |
+| `pricing_signout_cta` | 3 | 9 | 18 | Pricing page with signout route and floating demo CTA |
 | `arena_seating_map` | 3 | 9 | 17 | Arena seating map with game preview page |
 | `form_input_components` | 6 | 8 | 15 | Form input components: text, file, radio, checkbox, dropdown |
-| `auth_api_routes` | 4 | 8 | 49 | Login, signup, OTP routes and error boundary |
+| `auth_api_routes` | 4 | 8 | 52 | Login, signup, OTP routes and error boundary |
 | `assessment_engagement` | 3 | 8 | 20 | Assessment engagement survey setup and conversion |
 | `club_invite_accept` | 3 | 8 | 16 | Club invite link generation and acceptance flow |
 
@@ -99,7 +101,7 @@ The hidden test suite for each case covers all three categories. A resolution pa
 | `account_signup_email` | 3 | 5 | 19 | Account signup with email verification API routes |
 | `mobile_metro_polyfill` | 3 | 5 | 17 | Metro bundler config with Reflect.construct polyfill |
 | `explore_featured_places` | 3 | 5 | 15 | Explore featured places with itinerary perks handler |
-| `mobile_customer_filters` | 4 | 4 | 51 | Customer search with territories and team queries |
+| `mobile_customer_filters` | 4 | 4 | 47 | Customer search with territories and team queries |
 | `presales_copilot_products` | 4 | 4 | 39 | Presales copilot product CRUD with merge and enrich |
 | `password_reset_confirm` | 4 | 4 | 33 | Password reset confirm/request API with form pages |
 | `password_reset_flow` | 4 | 4 | 26 | Password reset flow with request and confirm routes |
@@ -118,7 +120,7 @@ The hidden test suite for each case covers all three categories. A resolution pa
 | `league_chop_history` | 2 | 3 | 14 | League chop history API and chop tab UI |
 | `mobile_explore_search` | 2 | 2 | 14 | Mobile explore search results and filter bar |
 | `matchmaking_user_helpers` | 2 | 2 | 12 | Matchmaking user helpers and users API route |
-| `product_import_modal` | 1 | 2 | 46 | Field mapping utility for product variants and IDs |
+| `product_import_modal` | 1 | 2 | 50 | Field mapping utility for product variants and IDs |
 
 ## Layout
 
@@ -136,25 +138,76 @@ merge-conflict-bench/
   scripts/
     extract.ts                     # pull cases from BigQuery
     evaluate.ts                    # run hidden tests against a resolution
+    summarize-corpus.mjs           # compute case/tier summary CSVs
+    evaluate-naive-baselines.mjs   # compute deterministic merge baselines
+    sanitize-agent-eval-results.mjs # sanitize Escher model-eval exports
+  data/eval-results/               # computed corpus and validation summaries
+  paper.tex                         # LaTeX source for the paper
+  paper.pdf                         # compiled paper
+  arxiv_submission/                 # arXiv-ready source and PDF
 ```
 
 ## Scoring
 
-MergeConflictBench produces five scores per resolution attempt:
+MergeConflictBench's primary metric is binary hidden-test pass rate. The Escher model-eval harness also records parse and operational metadata that help distinguish invalid outputs from behavior-preservation failures:
 
 | Score | Type | Description |
 |-------|------|-------------|
 | **Passes Tests** | Binary | Do the hidden holdout tests pass? *Primary metric.* |
-| Agent Reported Success | Binary | Did the agent signal success via its termination tool? |
+| Resolution Reported Success | Binary | Did the resolver produce a complete marker-free candidate? |
+| Block Resolution Coverage | Ratio | Fraction of conflict blocks with parseable replacements. |
 | No Conflict Markers | Binary | Output contains no remaining `<<<<<<<` markers |
-| Compiles | Binary | Resolved files pass static analysis |
-| Cost | $ | Total LLM cost in dollars |
+| Usage Available | Binary | Did the provider route report usage metadata for the model call? |
+
+## Computed Evaluation Results
+
+Release-time validation runs all hidden tests against the checked-in reference resolutions:
+
+| Resolution | Cases passed | Tests passed |
+|------------|--------------|--------------|
+| Reference `resolved/` | 86 / 86 | 2,540 / 2,540 |
+| Accept ours | 17 / 86 | 2,121 passed before failures |
+| Accept theirs | 10 / 86 | 2,025 passed before failures |
+| Accept both | 48 / 86 | 2,032 passed before failures |
+
+The deterministic baselines are intentionally simple merge-editor strategies. Their failures show why the benchmark needs semantic resolution rather than a blanket accept-ours, accept-theirs, or accept-both policy.
+
+The current one-shot LLM matrix uses a small Escher block-replacement harness: each model receives the conflicted files, emits replacements for conflict blocks, and is scored by the hidden tests. Case pass rate counts missing or unscored rows as failures.
+
+| Model | Cases passed | Case rate | Blocks covered | Marker-free | Usage |
+|-------|--------------|-----------|----------------|-------------|-------|
+| Claude Opus 4.6 | 36 / 86 | 41.9% | 87.0% | 75.6% | 76 / 86 |
+| Gemini 2.5 Pro | 35 / 86 | 40.7% | 35.5% | 27.9% | 86 / 86 |
+| Claude Sonnet 4.6 | 30 / 86 | 34.9% | 84.5% | 61.6% | 76 / 86 |
+| Gemini 2.5 Flash | 29 / 86 | 33.7% | 65.3% | 38.4% | 86 / 86 |
+| GPT-4.1 | 25 / 86 | 29.1% | 84.0% | 41.9% | 86 / 86 |
+
+These one-shot model results establish a tool-free baseline, not a ceiling for agentic merge resolution. The best one-shot model is still below accept-both, which is useful signal: this task likely needs iterative repair, execution feedback, or a stronger merge-specific agent loop.
+
+Full LLM model runs are launched from Escher so they use the same provider aliases and eval logging stack as other Anything benchmarks:
+
+```bash
+cd ../escher
+yarn anything eval --type merge-conflict \
+  --providers anthropic-sonnet-4.6 \
+  --providers anthropic-opus-4.6 \
+  --providers google-2.5-flash \
+  --providers google-2.5-pro \
+  --providers openai-gpt-4.1 \
+  --concurrency 1
+```
+
+After exporting raw Escher eval rows, generate the public paper artifacts with:
+
+```bash
+node scripts/sanitize-agent-eval-results.mjs raw-eval-results data/eval-results
+```
 
 ## Preserved Behaviors
 
 Each case's `conflict_eval.config.json` includes a `preservedBehaviors` list documenting what the hidden tests verify. Each entry has:
-- `origin` — which branch (`base`, `ours`, or `theirs`) introduced the behavior
 - `description` — human-readable description of the behavior
+- `origin` — optional branch tag (`base`, `ours`, or `theirs`) for cases where the behavior contract has been explicitly labeled
 
 This serves as the "contract" of a correct merge. The hidden tests are the executable form of this contract.
 
@@ -171,7 +224,7 @@ Example:
 
 ## Data Sources
 
-The 86 cases and 2,533 tests are extracted from production merge conflict tracking:
+The 86 cases and 2,540 executable hidden tests are extracted from production merge conflict tracking:
 - **BigQuery**: `generation.fs_conflict_results` (3.3M rows) and `generation.merge_fs_conflict_resolution_results` (109K rows)
 - Extraction selects for resolved conflicts with `custom_resolution` or `accepted_both` strategies — the non-trivial cases where the agent had to actually think about how to combine both sides
 
@@ -187,4 +240,16 @@ doppler run --project flux-worker --config prd -- \
 # Extract cases
 doppler run --project flux-worker --config prd -- \
   npx tsx merge-conflict-bench/scripts/extract.ts --limit 50 --min-blocks 2
+```
+
+## Citation
+
+If you use MergeConflictBench in your work, please cite the paper:
+
+```bibtex
+@article{chen2026mergeconflictbench,
+  title={MergeConflictBench: Evaluating LLM Agents on Semantically Correct Merge Conflict Resolution},
+  author={Chen, Daniel},
+  year={2026}
+}
 ```
